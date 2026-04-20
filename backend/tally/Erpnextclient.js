@@ -2379,6 +2379,7 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
       customer:     v.partyName || "Guest",
       posting_date: v.voucherDate,
       company:      companyName,
+      docstatus:    1,   // submit so invoice is visible and posted in ERPNext
       items: [{
         item_name:      v.voucherNumber || "Sales Item",
         item_code:      "Sales Item",
@@ -2396,6 +2397,7 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
       supplier:     v.partyName || "Unknown Supplier",
       posting_date: v.voucherDate,
       company:      companyName,
+      docstatus:    1,   // submit so invoice is visible and posted in ERPNext
       items: [{
         item_name:       v.voucherNumber || "Purchase Item",
         item_code:       "Purchase Item",
@@ -2411,21 +2413,39 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
       await client.get("/api/resource/Item/" + encodeURIComponent(code));
       logger.info("Placeholder item already exists: " + code);
     } catch (_) {
-      // Item does not exist — create it. Throw if this fails so we don't
-      // attempt to POST invoices that will all fail with "Item not found".
       try {
+        // Try without HSN first (works if Property Setter patched it)
         await client.post("/api/resource/Item", {
-          doctype:       "Item",
-          item_code:     code,
-          item_name:     code,
-          item_group:    "All Item Groups",
-          stock_uom:     "Nos",
-          is_stock_item: 0,
+          doctype:          "Item",
+          item_code:        code,
+          item_name:        code,
+          item_group:       "All Item Groups",
+          stock_uom:        "Nos",
+          is_stock_item:    0,
+          is_sales_item:    1,
+          is_purchase_item: 1,
         });
         logger.info("Created placeholder item: " + code);
-      } catch (createErr) {
-        const msg = parseErpError(createErr);
-        logger.warn("Could not create placeholder item \"" + code + "\": " + msg + " — invoices using this item will fail");
+      } catch (firstErr) {
+        // ERPNext still enforcing HSN mandatory — retry with fallback HSN 99999999
+        try {
+          await ensureHsnCode(client, "99999999");
+          await client.post("/api/resource/Item", {
+            doctype:          "Item",
+            item_code:        code,
+            item_name:        code,
+            item_group:       "All Item Groups",
+            stock_uom:        "Nos",
+            is_stock_item:    0,
+            is_sales_item:    1,
+            is_purchase_item: 1,
+            gst_hsn_code:     "99999999",
+          });
+          logger.info("Created placeholder item (with fallback HSN): " + code);
+        } catch (createErr) {
+          const msg = parseErpError(createErr);
+          logger.warn("Could not create placeholder item \"" + code + "\": " + msg + " — invoices using this item will fail");
+        }
       }
     }
   }
@@ -2479,7 +2499,13 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
       logger.info("Pre-syncing " + uniqueCustomerNames.length + " customers before Sales Invoice batch");
       for (const customerName of uniqueCustomerNames) {
         try {
-          await client.get("/api/resource/Customer/" + encodeURIComponent(customerName));
+          // Search by customer_name (not ID) since ERPNext may have auto-renamed the doc
+          const res = await client.get("/api/resource/Customer", {
+            params: { filters: JSON.stringify([["Customer", "customer_name", "=", customerName]]), limit: 1 }
+          });
+          const exists = (res?.data?.data || []).length > 0;
+          if (!exists) throw new Error("not found");
+          // already exists — skip silently
         } catch (_) {
           try {
             await client.post("/api/resource/Customer", {
