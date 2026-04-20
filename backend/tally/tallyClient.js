@@ -518,12 +518,10 @@ export async function fetchTallyStockItems(companyName) {
     // FIX: Use HSNDETAILS.LIST.HSNCODE (nested list path) instead of flat HSNDETAILS.HSNCODE.
     // TallyPrime stores HSN data inside a HSNDETAILS.LIST sub-list; the flat key returns empty.
     // Also fetch GSTRATE, GSTTYPEOFSUPPLY, and TAXABILITY for complete GST info.
-    "NAME,GUID,PARENT,CATEGORY,BASEUNITS,HSNDETAILS.LIST.HSNCODE,HSNDETAILS.LIST.GSTRATE,GSTDETAILS.LIST.GSTAPPLICABLE,GSTDETAILS.LIST.GSTTYPEOFSUPPLY,GSTDETAILS.LIST.TAXABILITY,OPENINGBALANCE,CLOSINGBALANCE,OPENINGVALUE,CLOSINGVALUE",
+    "NAME,GUID,PARENT,CATEGORY,BASEUNITS,HSNDETAILS.LIST.HSNCODE,HSNDETAILS.LIST.GSTRATE,GSTAPPLICABLE,GSTTYPEOFSUPPLY,TAXABILITY,OPENINGBALANCE,CLOSINGBALANCE,OPENINGVALUE,CLOSINGVALUE",
     companyName
   );
   const raw = await postXml(xml);
-  // DEBUG: dump first 6000 chars of raw Tally XML to inspect GST field structure
-  logger.info("[Tally XML dump] " + raw.substring(0, 6000));
   const parsed = await parseXml(raw, false);
   const rawItems =
     parsed?.ENVELOPE?.BODY?.DATA?.COLLECTION?.["STOCK-ITEM"] ||
@@ -613,61 +611,11 @@ export async function fetchTallyStockItems(companyName) {
     return { hsnCode, gstRate };
   }
 
-  // Extract TAXABILITY, GSTTYPEOFSUPPLY, GSTAPPLICABLE from GSTDETAILS.LIST
-  // These are nested sub-list fields — same pattern as HSNDETAILS.LIST
-  function extractGstDetails(s) {
-    let taxability      = null;
-    let gstTypeOfSupply = null;
-    let gstApplicable   = null;
-
-    // Path 1: xml2js explicitArray=false → s["GSTDETAILS.LIST"]
-    const detailsList = s["GSTDETAILS.LIST"];
-    if (detailsList) {
-      const arr = Array.isArray(detailsList) ? detailsList : [detailsList];
-      for (const entry of arr) {
-        if (!taxability)      taxability      = val(entry.TAXABILITY)      || val(entry["GSTDETAILS.LIST.TAXABILITY"]);
-        if (!gstTypeOfSupply) gstTypeOfSupply = val(entry.GSTTYPEOFSUPPLY) || val(entry["GSTDETAILS.LIST.GSTTYPEOFSUPPLY"]);
-        if (!gstApplicable)   gstApplicable   = val(entry.GSTAPPLICABLE)   || val(entry["GSTDETAILS.LIST.GSTAPPLICABLE"]);
-        if (taxability && gstTypeOfSupply && gstApplicable) break;
-      }
-    }
-
-    // Path 2: s.GSTDETAILS nested object
-    if (!taxability || !gstTypeOfSupply || !gstApplicable) {
-      const gstDetails = s.GSTDETAILS;
-      if (gstDetails) {
-        const arr = Array.isArray(gstDetails) ? gstDetails : [gstDetails];
-        for (const entry of arr) {
-          const list = entry?.LIST || entry?.["GSTDETAILS.LIST"];
-          if (list) {
-            const listArr = Array.isArray(list) ? list : [list];
-            for (const le of listArr) {
-              if (!taxability)      taxability      = val(le.TAXABILITY);
-              if (!gstTypeOfSupply) gstTypeOfSupply = val(le.GSTTYPEOFSUPPLY);
-              if (!gstApplicable)   gstApplicable   = val(le.GSTAPPLICABLE);
-            }
-          }
-          if (!taxability)      taxability      = val(entry.TAXABILITY);
-          if (!gstTypeOfSupply) gstTypeOfSupply = val(entry.GSTTYPEOFSUPPLY);
-          if (!gstApplicable)   gstApplicable   = val(entry.GSTAPPLICABLE);
-        }
-      }
-    }
-
-    // Path 3: flat fallback (older Tally versions)
-    if (!taxability)      taxability      = val(s.TAXABILITY);
-    if (!gstTypeOfSupply) gstTypeOfSupply = val(s.GSTTYPEOFSUPPLY);
-    if (!gstApplicable)   gstApplicable   = val(s.GSTAPPLICABLE);
-
-    return { taxability, gstTypeOfSupply, gstApplicable };
-  }
-
   const items = itemsArr
     .map((s) => {
       const name = s.$?.NAME || val(s.NAME) || null;
       if (!name) return null;
       const { hsnCode, gstRate } = extractHsnDetails(s);
-      const { taxability, gstTypeOfSupply, gstApplicable } = extractGstDetails(s);
       return {
         guid:            val(s.GUID),
         name,
@@ -676,9 +624,9 @@ export async function fetchTallyStockItems(companyName) {
         baseUnit:        val(s.BASEUNITS),
         hsnCode,
         gstRate,         // numeric GST % from Tally (e.g. 18, 5, 28) — used for Item Tax Template
-        gstApplicable,
-        gstTypeOfSupply,
-        taxability,      // "Taxable" / "Non-GST" / "Exempt" / "Nil-Rated"
+        gstApplicable:   val(s.GSTAPPLICABLE),
+        gstTypeOfSupply: val(s.GSTTYPEOFSUPPLY),
+        taxability:      val(s.TAXABILITY),       // "Taxable" / "Non-GST" / "Exempt" / "Nil-Rated"
         openingQty:      parseTallyAmount(s.OPENINGBALANCE?._ || s.OPENINGBALANCE),
         closingQty:      parseTallyAmount(s.CLOSINGBALANCE?._ || s.CLOSINGBALANCE),
         openingValue:    parseTallyAmount(s.OPENINGVALUE?._ || s.OPENINGVALUE),
@@ -869,7 +817,7 @@ async function fetchTallyVouchersChunk(companyName, fromDate, toDate) {
     <TDLMESSAGE>
      <COLLECTION NAME="VoucherCollection" ISMODIFY="No">
       <TYPE>Voucher</TYPE>
-      <FETCH>GUID,DATE,VOUCHERTYPENAME,VOUCHERNUMBER,REFERENCE,PARTYLEDGERNAME,NARRATION,ISINVOICE,ISOPTIONAL,ISPOSTDATED,ALLLEDGERENTRIES.LIST.LEDGERNAME,ALLLEDGERENTRIES.LIST.AMOUNT,ALLLEDGERENTRIES.LIST.ISDEEMEDPOSITIVE</FETCH>
+      <FETCH>GUID,DATE,VOUCHERTYPENAME,VOUCHERNUMBER,REFERENCE,PARTYLEDGERNAME,NARRATION,ISINVOICE,ISOPTIONAL,ISPOSTDATED,ALLLEDGERENTRIES.LIST.LEDGERNAME,ALLLEDGERENTRIES.LIST.AMOUNT,ALLLEDGERENTRIES.LIST.ISDEEMEDPOSITIVE,ALLINVENTORYENTRIES.LIST.STOCKITEMNAME,ALLINVENTORYENTRIES.LIST.ACTUALQTY,ALLINVENTORYENTRIES.LIST.RATE,ALLINVENTORYENTRIES.LIST.AMOUNT</FETCH>
      </COLLECTION>
     </TDLMESSAGE>
    </TDL>
@@ -916,20 +864,36 @@ async function fetchTallyVouchersChunk(companyName, fromDate, toDate) {
       if (ledgerName) entries.push({ ledger: ledgerName, amount, isDebit: isDeemedPositive });
     }
 
+    // Parse inventory (stock item) line entries
+    const rawInv = v["ALLINVENTORYENTRIES.LIST"] || [];
+    const invArr = Array.isArray(rawInv) ? rawInv : (rawInv && typeof rawInv === "object" ? [rawInv] : []);
+    const inventoryItems = invArr
+      .map((e) => {
+        if (!e || typeof e !== "object") return null;
+        const itemName = val(e.STOCKITEMNAME?.[0] || e.STOCKITEMNAME);
+        if (!itemName) return null;
+        const qty    = Math.abs(parseTallyAmount(val(e.ACTUALQTY?.[0]  || e.ACTUALQTY)));
+        const rate   = Math.abs(parseTallyAmount(val(e.RATE?.[0]       || e.RATE)));
+        const amount = Math.abs(parseTallyAmount(val(e.AMOUNT?.[0]     || e.AMOUNT)));
+        return { itemName, qty: qty || 1, rate, amount };
+      })
+      .filter(Boolean);
+
     vouchers.push({
       guid,
-      voucherDate:   tallyDateToISO(val(v.DATE?.[0])),
-      voucherType:   val(v.VOUCHERTYPENAME?.[0] || v.VOUCHERTYPE?.[0]),
-      voucherNumber: val(v.VOUCHERNUMBER?.[0]),
-      referenceNo:   val(v.REFERENCE?.[0]),
-      partyName:     val(v.PARTYLEDGERNAME?.[0]),
-      narration:     val(v.NARRATION?.[0]),
+      voucherDate:    tallyDateToISO(val(v.DATE?.[0])),
+      voucherType:    val(v.VOUCHERTYPENAME?.[0] || v.VOUCHERTYPE?.[0]),
+      voucherNumber:  val(v.VOUCHERNUMBER?.[0]),
+      referenceNo:    val(v.REFERENCE?.[0]),
+      partyName:      val(v.PARTYLEDGERNAME?.[0]),
+      narration:      val(v.NARRATION?.[0]),
       netAmount,
       entries,
-      lineItemCount: entries.length,
-      isInvoice:    val(v.ISINVOICE?.[0])   === "Yes",
-      isOptional:   val(v.ISOPTIONAL?.[0])  === "Yes",
-      isPostDated:  val(v.ISPOSTDATED?.[0]) === "Yes",
+      inventoryItems,  // stock line items (Bottle, ProductA, etc.)
+      lineItemCount:  entries.length,
+      isInvoice:      val(v.ISINVOICE?.[0])   === "Yes",
+      isOptional:     val(v.ISOPTIONAL?.[0])  === "Yes",
+      isPostDated:    val(v.ISPOSTDATED?.[0]) === "Yes",
     });
   }
 

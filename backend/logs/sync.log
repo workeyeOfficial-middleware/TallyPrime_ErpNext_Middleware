@@ -1,5 +1,2518 @@
 [
   {
+    "id": 1776669773697.2976,
+    "ts": "2026-04-20T07:22:53.697Z",
+    "level": "info",
+    "message": "Full sync job full-1776669678344-bfuoq done",
+    "meta": {}
+  },
+  {
+    "id": 1776669773694.754,
+    "ts": "2026-04-20T07:22:53.694Z",
+    "level": "info",
+    "message": "Full sync complete: warning",
+    "meta": {
+      "company": "Test Company"
+    }
+  },
+  {
+    "id": 1776669773690.6482,
+    "ts": "2026-04-20T07:22:53.691Z",
+    "level": "success",
+    "message": "Invoice sync done - sales: +0 new/24 updated/2 failed | purchase: +0 new/17 updated/0 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776669773687.5056,
+    "ts": "2026-04-20T07:22:53.687Z",
+    "level": "info",
+    "message": "Submit Purchase Invoice: 0 submitted, 0 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776669773111.2178,
+    "ts": "2026-04-20T07:22:53.111Z",
+    "level": "info",
+    "message": "Submit Sales Invoice: 0 submitted, 0 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776669756723.7961,
+    "ts": "2026-04-20T07:22:36.723Z",
+    "level": "info",
+    "message": "[Purchase Invoice] 10/17 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776669726994.0059,
+    "ts": "2026-04-20T07:22:06.994Z",
+    "level": "info",
+    "message": "[Sales Invoice] 20/26 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776669714638.4517,
+    "ts": "2026-04-20T07:21:54.638Z",
+    "level": "warn",
+    "message": "ERPNext sync error [Sales Invoice]: Could not find Customer: Guest",
+    "meta": {}
+  },
+  {
+    "id": 1776669713004.7332,
+    "ts": "2026-04-20T07:21:53.004Z",
+    "level": "warn",
+    "message": "ERPNext sync error [Sales Invoice]: Could not find Customer: Guest",
+    "meta": {}
+  },
+  {
+    "id": 1776669706160.5845,
+    "ts": "2026-04-20T07:21:46.160Z",
+    "level": "info",
+    "message": "[Sales Invoice] 10/26 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776669690464.6853,
+    "ts": "2026-04-20T07:21:30.464Z",
+    "level": "info",
+    "message": "Pre-syncing 12 customers before Sales Invoice batch",
+    "meta": {}
+  },
+  {
+    "id": 1776669690171.3193,
+    "ts": "2026-04-20T07:21:30.171Z",
+    "level": "info",
+    "message": "Pre-syncing 8 suppliers before Purchase Invoice batch",
+    "meta": {}
+  },
+  {
+    "id": 1776669690166.7979,
+    "ts": "2026-04-20T07:21:30.166Z",
+    "level": "info",
+    "message": "Placeholder item already exists: Purchase Item",
+    "meta": {}
+  },
+  {
+    "id": 1776669690064.2397,
+    "ts": "2026-04-20T07:21:30.064Z",
+    "level": "info",
+    "message": "Placeholder item already exists: Sales Item",
+    "meta": {}
+  },
+  {
+    "id": 1776669687515.7131,
+    "ts": "2026-04-20T07:21:27.515Z",
+    "level": "info",
+    "message": "Invoice breakdown - sales: 26, purchase: 17",
+    "meta": {}
+  },
+  {
+    "id": 1776669687510.0571,
+    "ts": "2026-04-20T07:21:27.510Z",
+    "level": "info",
+    "message": "Using default Territory: India",
+    "meta": {}
+  },
+  {
+    "id": 1776669687505.2385,
+    "ts": "2026-04-20T07:21:27.505Z",
+    "level": "info",
+    "message": "Using Supplier Group: Services",
+    "meta": {}
+  },
+  {
+    "id": 1776669687095.1536,
+    "ts": "2026-04-20T07:21:27.095Z",
+    "level": "info",
+    "message": "Using Customer Group: Commercial",
+    "meta": {}
+  },
+  {
+    "id": 1776669686174.4316,
+    "ts": "2026-04-20T07:21:26.174Z",
+    "level": "info",
+    "message": "HSN/SAC field set as non-mandatory via Property Setter",
+    "meta": {}
+  },
+  {
+    "id": 1776669683613.8364,
+    "ts": "2026-04-20T07:21:23.613Z",
+    "level": "info",
+    "message": "Syncing invoices to ERPNext for Test Company (abbr: TC)",
+    "meta": {}
+  },
+  {
+    "id": 1776669680644.9521,
+    "ts": "2026-04-20T07:21:20.644Z",
+    "level": "info",
+    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3530000000",
+    "meta": {}
+  },
+  {
+    "id": 1776669678787.9646,
+    "ts": "2026-04-20T07:21:18.787Z",
+    "level": "info",
+    "message": "Using ERPNext company: \"Test Company\" (from Sync UI)",
+    "meta": {}
+  },
+  {
+    "id": 1776669678780.5332,
+    "ts": "2026-04-20T07:21:18.780Z",
+    "level": "success",
+    "message": "Fetched 129 vouchers (2025-01-01 → 2026-04-30)",
+    "meta": {
+      "company": "Tally"
+    }
+  },
+  {
+    "id": 1776669678370.0703,
+    "ts": "2026-04-20T07:21:18.370Z",
+    "level": "info",
+    "message": "Fetching all vouchers (JS date filter: 2025-01-01 → 2026-04-30)",
+    "meta": {
+      "company": "Tally"
+    }
+  },
+  {
+    "id": 1776669678362.431,
+    "ts": "2026-04-20T07:21:18.362Z",
+    "level": "info",
+    "message": "Fetching vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": "2025-01-01",
+      "toDate": "2026-04-30"
+    }
+  },
+  {
+    "id": 1776669678352.1384,
+    "ts": "2026-04-20T07:21:18.352Z",
+    "level": "info",
+    "message": "Full sync: fetching Tally data sequentially...",
+    "meta": {}
+  },
+  {
+    "id": 1776669678344.5806,
+    "ts": "2026-04-20T07:21:18.344Z",
+    "level": "info",
+    "message": "Full sync job full-1776669678344-bfuoq started for: Tally",
+    "meta": {
+      "syncLedgers": false,
+      "syncStock": false,
+      "syncVouchers": false,
+      "syncGodowns": false,
+      "syncCostCentres": false,
+      "syncOpeningBalances": false,
+      "syncInvoices": true,
+      "syncTaxes": false,
+      "syncChartOfAccounts": false
+    }
+  },
+  {
+    "id": 1776669675370.2202,
+    "ts": "2026-04-20T07:21:15.370Z",
+    "level": "info",
+    "message": "Run POST /api/middleware/check to validate all Tally data",
+    "meta": {}
+  },
+  {
+    "id": 1776669675365.9673,
+    "ts": "2026-04-20T07:21:15.365Z",
+    "level": "info",
+    "message": "Tally endpoint: http://localhost:9000",
+    "meta": {}
+  },
+  {
+    "id": 1776669675357.6523,
+    "ts": "2026-04-20T07:21:15.357Z",
+    "level": "info",
+    "message": "Tally Middleware server running on http://localhost:4000",
+    "meta": {}
+  },
+  {
+    "id": 1776669562578.7285,
+    "ts": "2026-04-20T07:19:22.578Z",
+    "level": "info",
+    "message": "Full sync job full-1776669436133-4gpo9 done",
+    "meta": {}
+  },
+  {
+    "id": 1776669562571.6943,
+    "ts": "2026-04-20T07:19:22.571Z",
+    "level": "info",
+    "message": "Full sync complete: warning",
+    "meta": {
+      "company": "Test Company"
+    }
+  },
+  {
+    "id": 1776669562567.295,
+    "ts": "2026-04-20T07:19:22.567Z",
+    "level": "success",
+    "message": "Invoice sync done - sales: +0/2 failed | purchase: +0/0 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776669562563.75,
+    "ts": "2026-04-20T07:19:22.563Z",
+    "level": "info",
+    "message": "Submit Purchase Invoice: 0 submitted, 0 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776669561961.351,
+    "ts": "2026-04-20T07:19:21.961Z",
+    "level": "info",
+    "message": "Submit Sales Invoice: 0 submitted, 0 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776669544763.6648,
+    "ts": "2026-04-20T07:19:04.763Z",
+    "level": "info",
+    "message": "[Purchase Invoice] 10/17 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776669515141.5798,
+    "ts": "2026-04-20T07:18:35.141Z",
+    "level": "info",
+    "message": "[Sales Invoice] 20/26 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776669502892.8008,
+    "ts": "2026-04-20T07:18:22.892Z",
+    "level": "warn",
+    "message": "ERPNext sync error [Sales Invoice]: Could not find Customer: Guest",
+    "meta": {}
+  },
+  {
+    "id": 1776669481185.6702,
+    "ts": "2026-04-20T07:18:01.185Z",
+    "level": "warn",
+    "message": "[Sales Invoice:undefined] attempt 1/5 failed (network) — read ECONNRESET — retrying in 8000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776669460223.9685,
+    "ts": "2026-04-20T07:17:40.223Z",
+    "level": "warn",
+    "message": "ERPNext sync error [Sales Invoice]: Could not find Customer: Guest",
+    "meta": {}
+  },
+  {
+    "id": 1776669453551.1614,
+    "ts": "2026-04-20T07:17:33.551Z",
+    "level": "info",
+    "message": "[Sales Invoice] 10/26 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776669437690.8242,
+    "ts": "2026-04-20T07:17:17.690Z",
+    "level": "info",
+    "message": "Pre-syncing 12 customers before Sales Invoice batch",
+    "meta": {}
+  },
+  {
+    "id": 1776669437344.0586,
+    "ts": "2026-04-20T07:17:17.344Z",
+    "level": "info",
+    "message": "Pre-syncing 8 suppliers before Purchase Invoice batch",
+    "meta": {}
+  },
+  {
+    "id": 1776669437341.5564,
+    "ts": "2026-04-20T07:17:17.341Z",
+    "level": "info",
+    "message": "Placeholder item already exists: Purchase Item",
+    "meta": {}
+  },
+  {
+    "id": 1776669437244.5066,
+    "ts": "2026-04-20T07:17:17.244Z",
+    "level": "info",
+    "message": "Placeholder item already exists: Sales Item",
+    "meta": {}
+  },
+  {
+    "id": 1776669437045.6216,
+    "ts": "2026-04-20T07:17:17.045Z",
+    "level": "info",
+    "message": "Invoice breakdown - sales: 26, purchase: 17",
+    "meta": {}
+  },
+  {
+    "id": 1776669437040.8254,
+    "ts": "2026-04-20T07:17:17.040Z",
+    "level": "info",
+    "message": "Using default Territory: India",
+    "meta": {}
+  },
+  {
+    "id": 1776669437035.9663,
+    "ts": "2026-04-20T07:17:17.035Z",
+    "level": "info",
+    "message": "Using Supplier Group: Services",
+    "meta": {}
+  },
+  {
+    "id": 1776669436960.9075,
+    "ts": "2026-04-20T07:17:16.960Z",
+    "level": "info",
+    "message": "Using Customer Group: Commercial",
+    "meta": {}
+  },
+  {
+    "id": 1776669436932.517,
+    "ts": "2026-04-20T07:17:16.932Z",
+    "level": "info",
+    "message": "HSN/SAC field set as non-mandatory via Property Setter",
+    "meta": {}
+  },
+  {
+    "id": 1776669436794.3098,
+    "ts": "2026-04-20T07:17:16.794Z",
+    "level": "info",
+    "message": "Syncing invoices to ERPNext for Test Company (abbr: TC)",
+    "meta": {}
+  },
+  {
+    "id": 1776669436720.218,
+    "ts": "2026-04-20T07:17:16.720Z",
+    "level": "info",
+    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3531000000",
+    "meta": {}
+  },
+  {
+    "id": 1776669436600.9287,
+    "ts": "2026-04-20T07:17:16.600Z",
+    "level": "info",
+    "message": "Using ERPNext company: \"Test Company\" (from Sync UI)",
+    "meta": {}
+  },
+  {
+    "id": 1776669436592.5542,
+    "ts": "2026-04-20T07:17:16.592Z",
+    "level": "success",
+    "message": "Fetched 129 vouchers (2025-01-01 → 2026-04-30)",
+    "meta": {
+      "company": "Tally"
+    }
+  },
+  {
+    "id": 1776669436163.205,
+    "ts": "2026-04-20T07:17:16.163Z",
+    "level": "info",
+    "message": "Fetching all vouchers (JS date filter: 2025-01-01 → 2026-04-30)",
+    "meta": {
+      "company": "Tally"
+    }
+  },
+  {
+    "id": 1776669436149.4512,
+    "ts": "2026-04-20T07:17:16.149Z",
+    "level": "info",
+    "message": "Fetching vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": "2025-01-01",
+      "toDate": "2026-04-30"
+    }
+  },
+  {
+    "id": 1776669436144.5798,
+    "ts": "2026-04-20T07:17:16.144Z",
+    "level": "info",
+    "message": "Full sync: fetching Tally data sequentially...",
+    "meta": {}
+  },
+  {
+    "id": 1776669436133.6157,
+    "ts": "2026-04-20T07:17:16.133Z",
+    "level": "info",
+    "message": "Full sync job full-1776669436133-4gpo9 started for: Tally",
+    "meta": {
+      "syncLedgers": false,
+      "syncStock": false,
+      "syncVouchers": false,
+      "syncGodowns": false,
+      "syncCostCentres": false,
+      "syncOpeningBalances": false,
+      "syncInvoices": true,
+      "syncTaxes": false,
+      "syncChartOfAccounts": false
+    }
+  },
+  {
+    "id": 1776669432821.236,
+    "ts": "2026-04-20T07:17:12.821Z",
+    "level": "info",
+    "message": "Run POST /api/middleware/check to validate all Tally data",
+    "meta": {}
+  },
+  {
+    "id": 1776669432817.5674,
+    "ts": "2026-04-20T07:17:12.817Z",
+    "level": "info",
+    "message": "Tally endpoint: http://localhost:9000",
+    "meta": {}
+  },
+  {
+    "id": 1776669432811.8357,
+    "ts": "2026-04-20T07:17:12.811Z",
+    "level": "info",
+    "message": "Tally Middleware server running on http://localhost:4000",
+    "meta": {}
+  },
+  {
+    "id": 1776668811488.4753,
+    "ts": "2026-04-20T07:06:51.488Z",
+    "level": "info",
+    "message": "Full sync job full-1776668666868-90u6q done",
+    "meta": {}
+  },
+  {
+    "id": 1776668811483.4265,
+    "ts": "2026-04-20T07:06:51.483Z",
+    "level": "info",
+    "message": "Full sync complete: warning",
+    "meta": {
+      "company": "Test Company"
+    }
+  },
+  {
+    "id": 1776668811479.653,
+    "ts": "2026-04-20T07:06:51.479Z",
+    "level": "success",
+    "message": "Invoice sync done - sales: +24/2 failed | purchase: +17/0 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776668811472.087,
+    "ts": "2026-04-20T07:06:51.472Z",
+    "level": "info",
+    "message": "Submit Purchase Invoice: 17 submitted, 0 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776668791107.5576,
+    "ts": "2026-04-20T07:06:31.107Z",
+    "level": "info",
+    "message": "Submit Sales Invoice: 24 submitted, 0 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776668759528.6912,
+    "ts": "2026-04-20T07:05:59.528Z",
+    "level": "info",
+    "message": "[Purchase Invoice] 10/17 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776668716430.8958,
+    "ts": "2026-04-20T07:05:16.430Z",
+    "level": "info",
+    "message": "[Sales Invoice] 20/26 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776668703034.1992,
+    "ts": "2026-04-20T07:05:03.034Z",
+    "level": "warn",
+    "message": "ERPNext sync error [Sales Invoice]: Could not find Customer: Guest",
+    "meta": {}
+  },
+  {
+    "id": 1776668701396.7393,
+    "ts": "2026-04-20T07:05:01.396Z",
+    "level": "warn",
+    "message": "ERPNext sync error [Sales Invoice]: Could not find Customer: Guest",
+    "meta": {}
+  },
+  {
+    "id": 1776668694506.4524,
+    "ts": "2026-04-20T07:04:54.506Z",
+    "level": "info",
+    "message": "[Sales Invoice] 10/26 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776668668277.0508,
+    "ts": "2026-04-20T07:04:28.277Z",
+    "level": "info",
+    "message": "Pre-syncing 12 customers before Sales Invoice batch",
+    "meta": {}
+  },
+  {
+    "id": 1776668668062.3552,
+    "ts": "2026-04-20T07:04:28.062Z",
+    "level": "info",
+    "message": "Pre-syncing 8 suppliers before Purchase Invoice batch",
+    "meta": {}
+  },
+  {
+    "id": 1776668668056.6729,
+    "ts": "2026-04-20T07:04:28.056Z",
+    "level": "info",
+    "message": "Placeholder item already exists: Purchase Item",
+    "meta": {}
+  },
+  {
+    "id": 1776668668027.6682,
+    "ts": "2026-04-20T07:04:28.027Z",
+    "level": "info",
+    "message": "Placeholder item already exists: Sales Item",
+    "meta": {}
+  },
+  {
+    "id": 1776668667740.2334,
+    "ts": "2026-04-20T07:04:27.740Z",
+    "level": "info",
+    "message": "Invoice breakdown - sales: 26, purchase: 17",
+    "meta": {}
+  },
+  {
+    "id": 1776668667735.339,
+    "ts": "2026-04-20T07:04:27.735Z",
+    "level": "info",
+    "message": "Using default Territory: India",
+    "meta": {}
+  },
+  {
+    "id": 1776668667731.9448,
+    "ts": "2026-04-20T07:04:27.731Z",
+    "level": "info",
+    "message": "Using Supplier Group: Services",
+    "meta": {}
+  },
+  {
+    "id": 1776668667705.081,
+    "ts": "2026-04-20T07:04:27.705Z",
+    "level": "info",
+    "message": "Using Customer Group: Commercial",
+    "meta": {}
+  },
+  {
+    "id": 1776668667676.8452,
+    "ts": "2026-04-20T07:04:27.676Z",
+    "level": "info",
+    "message": "HSN/SAC field set as non-mandatory via Property Setter",
+    "meta": {}
+  },
+  {
+    "id": 1776668667606.951,
+    "ts": "2026-04-20T07:04:27.606Z",
+    "level": "info",
+    "message": "Syncing invoices to ERPNext for Test Company (abbr: TC)",
+    "meta": {}
+  },
+  {
+    "id": 1776668667508.8755,
+    "ts": "2026-04-20T07:04:27.508Z",
+    "level": "info",
+    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3543000000",
+    "meta": {}
+  },
+  {
+    "id": 1776668667376.8171,
+    "ts": "2026-04-20T07:04:27.376Z",
+    "level": "info",
+    "message": "Using ERPNext company: \"Test Company\" (from Sync UI)",
+    "meta": {}
+  },
+  {
+    "id": 1776668667368.5845,
+    "ts": "2026-04-20T07:04:27.368Z",
+    "level": "success",
+    "message": "Fetched 129 vouchers (2025-01-01 → 2026-04-30)",
+    "meta": {
+      "company": "Tally"
+    }
+  },
+  {
+    "id": 1776668666902.9314,
+    "ts": "2026-04-20T07:04:26.902Z",
+    "level": "info",
+    "message": "Fetching all vouchers (JS date filter: 2025-01-01 → 2026-04-30)",
+    "meta": {
+      "company": "Tally"
+    }
+  },
+  {
+    "id": 1776668666893.7942,
+    "ts": "2026-04-20T07:04:26.893Z",
+    "level": "info",
+    "message": "Fetching vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": "2025-01-01",
+      "toDate": "2026-04-30"
+    }
+  },
+  {
+    "id": 1776668666883.0247,
+    "ts": "2026-04-20T07:04:26.883Z",
+    "level": "info",
+    "message": "Full sync: fetching Tally data sequentially...",
+    "meta": {}
+  },
+  {
+    "id": 1776668666868.4011,
+    "ts": "2026-04-20T07:04:26.868Z",
+    "level": "info",
+    "message": "Full sync job full-1776668666868-90u6q started for: Tally",
+    "meta": {
+      "syncLedgers": false,
+      "syncStock": false,
+      "syncVouchers": false,
+      "syncGodowns": false,
+      "syncCostCentres": false,
+      "syncOpeningBalances": false,
+      "syncInvoices": true,
+      "syncTaxes": false,
+      "syncChartOfAccounts": false
+    }
+  },
+  {
+    "id": 1776668659777.8352,
+    "ts": "2026-04-20T07:04:19.777Z",
+    "level": "info",
+    "message": "Run POST /api/middleware/check to validate all Tally data",
+    "meta": {}
+  },
+  {
+    "id": 1776668659774.9214,
+    "ts": "2026-04-20T07:04:19.774Z",
+    "level": "info",
+    "message": "Tally endpoint: http://localhost:9000",
+    "meta": {}
+  },
+  {
+    "id": 1776668659767.613,
+    "ts": "2026-04-20T07:04:19.767Z",
+    "level": "info",
+    "message": "Tally Middleware server running on http://localhost:4000",
+    "meta": {}
+  },
+  {
+    "id": 1776668579762.353,
+    "ts": "2026-04-20T07:02:59.762Z",
+    "level": "info",
+    "message": "Full sync job full-1776668467445-tlzku done",
+    "meta": {}
+  },
+  {
+    "id": 1776668579760.7231,
+    "ts": "2026-04-20T07:02:59.760Z",
+    "level": "info",
+    "message": "Full sync complete: warning",
+    "meta": {
+      "company": "Test Company"
+    }
+  },
+  {
+    "id": 1776668579757.4553,
+    "ts": "2026-04-20T07:02:59.757Z",
+    "level": "success",
+    "message": "Invoice sync done - sales: +24/2 failed | purchase: +17/0 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776668579753.926,
+    "ts": "2026-04-20T07:02:59.753Z",
+    "level": "info",
+    "message": "Submit Purchase Invoice: 0 submitted, 17 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776668579541.6982,
+    "ts": "2026-04-20T07:02:59.541Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 18: Error: PINV-26-00051 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:16:09.985406, 2026-04-20 12:32:59.571486). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668579235.4443,
+    "ts": "2026-04-20T07:02:59.235Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 17: Error: PINV-26-00050 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:16:08.293734, 2026-04-20 12:32:59.245058). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668578823.432,
+    "ts": "2026-04-20T07:02:58.823Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 16: Error: PINV-26-00049 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:16:06.593238, 2026-04-20 12:32:58.871574). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668578517.1238,
+    "ts": "2026-04-20T07:02:58.517Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 15: Error: PINV-26-00048 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:16:04.962973, 2026-04-20 12:32:58.513024). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668578163.6304,
+    "ts": "2026-04-20T07:02:58.163Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 14: Error: PINV-26-00047 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:16:03.320665, 2026-04-20 12:32:58.239277). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668577902.973,
+    "ts": "2026-04-20T07:02:57.902Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 13: Error: PINV-26-00046 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:16:01.538546, 2026-04-20 12:32:57.925895). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668577595.306,
+    "ts": "2026-04-20T07:02:57.595Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 12: Error: PINV-26-00045 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:15:59.870714, 2026-04-20 12:32:57.637084). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668577290.591,
+    "ts": "2026-04-20T07:02:57.290Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 11: Error: PINV-26-00044 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:15:53.186457, 2026-04-20 12:32:57.363037). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668576982.4512,
+    "ts": "2026-04-20T07:02:56.982Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 10: Error: PINV-26-00043 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:15:51.544179, 2026-04-20 12:32:56.983800). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668576573.9502,
+    "ts": "2026-04-20T07:02:56.573Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 9: Error: PINV-26-00042 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:15:49.868356, 2026-04-20 12:32:56.574829). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668576162.7888,
+    "ts": "2026-04-20T07:02:56.162Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 8: Error: PINV-26-00041 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:15:48.073584, 2026-04-20 12:32:56.159441). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668575815.888,
+    "ts": "2026-04-20T07:02:55.815Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 7: Error: PINV-26-00040 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:15:46.439636, 2026-04-20 12:32:55.877558). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668575472.8513,
+    "ts": "2026-04-20T07:02:55.472Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 6: Error: PINV-26-00039 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:15:44.687177, 2026-04-20 12:32:55.485510). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668574216.03,
+    "ts": "2026-04-20T07:02:54.216Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 5: Error: PINV-26-00038 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:15:42.848254, 2026-04-20 12:32:54.254540). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668573807.2827,
+    "ts": "2026-04-20T07:02:53.807Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 3: Error: PINV-26-00037 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:15:41.165908, 2026-04-20 12:32:53.807981). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668573397.7744,
+    "ts": "2026-04-20T07:02:53.397Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 2: Error: PINV-26-00036 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:15:39.168293, 2026-04-20 12:32:53.413449). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668572988.4734,
+    "ts": "2026-04-20T07:02:52.988Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 1: Error: PINV-26-00035 (Purchase Invoice) has been modified after you have opened it (2026-04-20 12:15:37.356805, 2026-04-20 12:32:53.036579). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668572901.248,
+    "ts": "2026-04-20T07:02:52.901Z",
+    "level": "info",
+    "message": "Submit Sales Invoice: 0 submitted, 24 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776668572682.0078,
+    "ts": "2026-04-20T07:02:52.682Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 26: Error: SINV-26-00072 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:15:35.708559, 2026-04-20 12:32:52.683018). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668572260.2607,
+    "ts": "2026-04-20T07:02:52.260Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 25: Error: SINV-26-00071 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:15:34.038471, 2026-04-20 12:32:52.334956). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668571951.519,
+    "ts": "2026-04-20T07:02:51.951Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 24: Error: SINV-26-00070 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:15:32.407701, 2026-04-20 12:32:51.967791). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668571555.6042,
+    "ts": "2026-04-20T07:02:51.555Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 23: Error: SINV-26-00069 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:15:30.762689, 2026-04-20 12:32:51.584288). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668571247.6157,
+    "ts": "2026-04-20T07:02:51.247Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 22: Error: SINV-26-00068 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:15:29.043207, 2026-04-20 12:32:51.248443). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668570839.397,
+    "ts": "2026-04-20T07:02:50.839Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 21: Error: SINV-26-00067 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:15:26.041918, 2026-04-20 12:32:50.843247). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668570427.087,
+    "ts": "2026-04-20T07:02:50.427Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 20: Error: SINV-26-00066 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:15:19.094991, 2026-04-20 12:32:50.462625). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668570017.2786,
+    "ts": "2026-04-20T07:02:50.017Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 19: Error: SINV-26-00065 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:15:17.440321, 2026-04-20 12:32:50.055860). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668569710.0713,
+    "ts": "2026-04-20T07:02:49.710Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 18: Error: SINV-26-00064 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:15:15.812182, 2026-04-20 12:32:49.709985). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668569372.1272,
+    "ts": "2026-04-20T07:02:49.372Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 17: Error: SINV-26-00063 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:15:14.036117, 2026-04-20 12:32:49.409638). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668568994.7358,
+    "ts": "2026-04-20T07:02:48.994Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 16: Error: SINV-26-00062 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:15:12.376999, 2026-04-20 12:32:49.000794). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668568584.343,
+    "ts": "2026-04-20T07:02:48.584Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 15: Error: SINV-26-00061 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:15:10.681792, 2026-04-20 12:32:48.616900). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668568264.9614,
+    "ts": "2026-04-20T07:02:48.264Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 14: Error: SINV-26-00060 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:15:09.054448, 2026-04-20 12:32:48.331042). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668567969.817,
+    "ts": "2026-04-20T07:02:47.969Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 11: Error: SINV-26-00059 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:15:04.085947, 2026-04-20 12:32:48.008025). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668567663.5242,
+    "ts": "2026-04-20T07:02:47.663Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 10: Error: SINV-26-00058 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:14:57.432171, 2026-04-20 12:32:47.699146). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668567355.373,
+    "ts": "2026-04-20T07:02:47.355Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 9: Error: SINV-26-00057 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:14:55.795437, 2026-04-20 12:32:47.399892). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668567048.3413,
+    "ts": "2026-04-20T07:02:47.048Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 8: Error: SINV-26-00056 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:14:54.092253, 2026-04-20 12:32:47.074566). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668566742.6533,
+    "ts": "2026-04-20T07:02:46.742Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 7: Error: SINV-26-00055 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:14:52.478294, 2026-04-20 12:32:46.742666). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668566306.3765,
+    "ts": "2026-04-20T07:02:46.306Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 6: Error: SINV-26-00054 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:14:50.869982, 2026-04-20 12:32:46.366291). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668566024.1335,
+    "ts": "2026-04-20T07:02:46.024Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 5: Error: SINV-26-00053 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:14:49.200494, 2026-04-20 12:32:46.041988). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668565717.0596,
+    "ts": "2026-04-20T07:02:45.717Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 4: Error: SINV-26-00052 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:14:47.433470, 2026-04-20 12:32:45.768881). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668565393.8997,
+    "ts": "2026-04-20T07:02:45.393Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 3: Error: SINV-26-00051 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:14:45.726018, 2026-04-20 12:32:45.466256). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668565104.2764,
+    "ts": "2026-04-20T07:02:45.104Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 2: Error: SINV-26-00050 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:14:43.884506, 2026-04-20 12:32:45.134747). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668564795.884,
+    "ts": "2026-04-20T07:02:44.795Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 1: Error: SINV-26-00049 (Sales Invoice) has been modified after you have opened it (2026-04-20 12:14:42.080204, 2026-04-20 12:32:44.808954). Please refresh to get the latest document.",
+    "meta": {}
+  },
+  {
+    "id": 1776668548079.8704,
+    "ts": "2026-04-20T07:02:28.079Z",
+    "level": "info",
+    "message": "[Purchase Invoice] 10/17 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776668516331.5908,
+    "ts": "2026-04-20T07:01:56.331Z",
+    "level": "info",
+    "message": "[Sales Invoice] 20/26 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776668503253.3953,
+    "ts": "2026-04-20T07:01:43.253Z",
+    "level": "warn",
+    "message": "ERPNext sync error [Sales Invoice]: Could not find Customer: Guest",
+    "meta": {}
+  },
+  {
+    "id": 1776668501615.724,
+    "ts": "2026-04-20T07:01:41.615Z",
+    "level": "warn",
+    "message": "ERPNext sync error [Sales Invoice]: Could not find Customer: Guest",
+    "meta": {}
+  },
+  {
+    "id": 1776668494720.966,
+    "ts": "2026-04-20T07:01:34.720Z",
+    "level": "info",
+    "message": "[Sales Invoice] 10/26 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776668469053.4932,
+    "ts": "2026-04-20T07:01:09.053Z",
+    "level": "info",
+    "message": "Pre-syncing 12 customers before Sales Invoice batch",
+    "meta": {}
+  },
+  {
+    "id": 1776668468574.7139,
+    "ts": "2026-04-20T07:01:08.574Z",
+    "level": "info",
+    "message": "Pre-syncing 8 suppliers before Purchase Invoice batch",
+    "meta": {}
+  },
+  {
+    "id": 1776668468569.0205,
+    "ts": "2026-04-20T07:01:08.569Z",
+    "level": "info",
+    "message": "Placeholder item already exists: Purchase Item",
+    "meta": {}
+  },
+  {
+    "id": 1776668468544.5652,
+    "ts": "2026-04-20T07:01:08.544Z",
+    "level": "info",
+    "message": "Placeholder item already exists: Sales Item",
+    "meta": {}
+  },
+  {
+    "id": 1776668468241.7314,
+    "ts": "2026-04-20T07:01:08.241Z",
+    "level": "info",
+    "message": "Invoice breakdown - sales: 26, purchase: 17",
+    "meta": {}
+  },
+  {
+    "id": 1776668468238.1294,
+    "ts": "2026-04-20T07:01:08.238Z",
+    "level": "info",
+    "message": "Using default Territory: India",
+    "meta": {}
+  },
+  {
+    "id": 1776668468233.7783,
+    "ts": "2026-04-20T07:01:08.233Z",
+    "level": "info",
+    "message": "Using Supplier Group: Services",
+    "meta": {}
+  },
+  {
+    "id": 1776668468165.2253,
+    "ts": "2026-04-20T07:01:08.165Z",
+    "level": "info",
+    "message": "Using Customer Group: Commercial",
+    "meta": {}
+  },
+  {
+    "id": 1776668468131.653,
+    "ts": "2026-04-20T07:01:08.131Z",
+    "level": "info",
+    "message": "HSN/SAC field set as non-mandatory via Property Setter",
+    "meta": {}
+  },
+  {
+    "id": 1776668468037.7114,
+    "ts": "2026-04-20T07:01:08.037Z",
+    "level": "info",
+    "message": "Syncing invoices to ERPNext for Test Company (abbr: TC)",
+    "meta": {}
+  },
+  {
+    "id": 1776668467992.279,
+    "ts": "2026-04-20T07:01:07.992Z",
+    "level": "info",
+    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3548000000",
+    "meta": {}
+  },
+  {
+    "id": 1776668467909.6506,
+    "ts": "2026-04-20T07:01:07.909Z",
+    "level": "info",
+    "message": "Using ERPNext company: \"Test Company\" (from Sync UI)",
+    "meta": {}
+  },
+  {
+    "id": 1776668467901.052,
+    "ts": "2026-04-20T07:01:07.901Z",
+    "level": "success",
+    "message": "Fetched 129 vouchers (2025-01-01 → 2026-04-30)",
+    "meta": {
+      "company": "Tally"
+    }
+  },
+  {
+    "id": 1776668467475.9478,
+    "ts": "2026-04-20T07:01:07.475Z",
+    "level": "info",
+    "message": "Fetching all vouchers (JS date filter: 2025-01-01 → 2026-04-30)",
+    "meta": {
+      "company": "Tally"
+    }
+  },
+  {
+    "id": 1776668467464.5881,
+    "ts": "2026-04-20T07:01:07.464Z",
+    "level": "info",
+    "message": "Fetching vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": "2025-01-01",
+      "toDate": "2026-04-30"
+    }
+  },
+  {
+    "id": 1776668467458.0405,
+    "ts": "2026-04-20T07:01:07.458Z",
+    "level": "info",
+    "message": "Full sync: fetching Tally data sequentially...",
+    "meta": {}
+  },
+  {
+    "id": 1776668467445.5657,
+    "ts": "2026-04-20T07:01:07.445Z",
+    "level": "info",
+    "message": "Full sync job full-1776668467445-tlzku started for: Tally",
+    "meta": {
+      "syncLedgers": false,
+      "syncStock": false,
+      "syncVouchers": false,
+      "syncGodowns": false,
+      "syncCostCentres": false,
+      "syncOpeningBalances": false,
+      "syncInvoices": true,
+      "syncTaxes": false,
+      "syncChartOfAccounts": false
+    }
+  },
+  {
+    "id": 1776668463832.0427,
+    "ts": "2026-04-20T07:01:03.832Z",
+    "level": "info",
+    "message": "Run POST /api/middleware/check to validate all Tally data",
+    "meta": {}
+  },
+  {
+    "id": 1776668463829.5154,
+    "ts": "2026-04-20T07:01:03.829Z",
+    "level": "info",
+    "message": "Tally endpoint: http://localhost:9000",
+    "meta": {}
+  },
+  {
+    "id": 1776668463823.3777,
+    "ts": "2026-04-20T07:01:03.823Z",
+    "level": "info",
+    "message": "Tally Middleware server running on http://localhost:4000",
+    "meta": {}
+  },
+  {
+    "id": 1776668151603.9966,
+    "ts": "2026-04-20T06:55:51.603Z",
+    "level": "info",
+    "message": "Full sync job full-1776668038354-iff1e done",
+    "meta": {}
+  },
+  {
+    "id": 1776668151601.8792,
+    "ts": "2026-04-20T06:55:51.601Z",
+    "level": "info",
+    "message": "Full sync complete: warning",
+    "meta": {
+      "company": "Test Company"
+    }
+  },
+  {
+    "id": 1776668151598.4207,
+    "ts": "2026-04-20T06:55:51.598Z",
+    "level": "success",
+    "message": "Invoice sync done - sales: +24/2 failed | purchase: +17/0 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776668151595.67,
+    "ts": "2026-04-20T06:55:51.595Z",
+    "level": "info",
+    "message": "Submit Purchase Invoice: 0 submitted, 17 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776668151382.6648,
+    "ts": "2026-04-20T06:55:51.382Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 18: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668151147.0532,
+    "ts": "2026-04-20T06:55:51.147Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 17: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668150910.723,
+    "ts": "2026-04-20T06:55:50.910Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 16: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668150677.1294,
+    "ts": "2026-04-20T06:55:50.677Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 15: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668150447.4524,
+    "ts": "2026-04-20T06:55:50.447Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 14: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668150209.6284,
+    "ts": "2026-04-20T06:55:50.209Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 13: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668149979.6487,
+    "ts": "2026-04-20T06:55:49.979Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 12: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668149726.9167,
+    "ts": "2026-04-20T06:55:49.726Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 11: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668149484.6123,
+    "ts": "2026-04-20T06:55:49.484Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 10: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668149258.491,
+    "ts": "2026-04-20T06:55:49.258Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 9: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668148905.545,
+    "ts": "2026-04-20T06:55:48.905Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 8: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668148660.589,
+    "ts": "2026-04-20T06:55:48.660Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 7: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668148428.928,
+    "ts": "2026-04-20T06:55:48.428Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 6: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668148199.064,
+    "ts": "2026-04-20T06:55:48.199Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 5: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668147958.1494,
+    "ts": "2026-04-20T06:55:47.958Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 3: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668147718.637,
+    "ts": "2026-04-20T06:55:47.718Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 2: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668147495.8997,
+    "ts": "2026-04-20T06:55:47.495Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 1: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668147417.265,
+    "ts": "2026-04-20T06:55:47.417Z",
+    "level": "info",
+    "message": "Submit Sales Invoice: 0 submitted, 26 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776668147206.4897,
+    "ts": "2026-04-20T06:55:47.206Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 26: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668146958.8748,
+    "ts": "2026-04-20T06:55:46.958Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 25: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668146718.5989,
+    "ts": "2026-04-20T06:55:46.718Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 24: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668146489.0022,
+    "ts": "2026-04-20T06:55:46.489Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 23: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668146250.0542,
+    "ts": "2026-04-20T06:55:46.250Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 22: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668146016.5088,
+    "ts": "2026-04-20T06:55:46.016Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 21: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668145776.84,
+    "ts": "2026-04-20T06:55:45.776Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 20: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668145488.0562,
+    "ts": "2026-04-20T06:55:45.488Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 19: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668145263.559,
+    "ts": "2026-04-20T06:55:45.263Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 18: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668145017.997,
+    "ts": "2026-04-20T06:55:45.017Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 17: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668144753.5652,
+    "ts": "2026-04-20T06:55:44.753Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 16: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668144446.2603,
+    "ts": "2026-04-20T06:55:44.446Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 15: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668144176.419,
+    "ts": "2026-04-20T06:55:44.176Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 14: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668143932.488,
+    "ts": "2026-04-20T06:55:43.932Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 13: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668143523.176,
+    "ts": "2026-04-20T06:55:43.523Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 12: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668143217.5498,
+    "ts": "2026-04-20T06:55:43.217Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 11: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668142935.9988,
+    "ts": "2026-04-20T06:55:42.935Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 10: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668142704.2544,
+    "ts": "2026-04-20T06:55:42.704Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 9: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668142376.8323,
+    "ts": "2026-04-20T06:55:42.376Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 8: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668142131.3696,
+    "ts": "2026-04-20T06:55:42.131Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 7: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668141872.2444,
+    "ts": "2026-04-20T06:55:41.872Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 6: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668141637.6184,
+    "ts": "2026-04-20T06:55:41.637Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 5: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668141402.795,
+    "ts": "2026-04-20T06:55:41.402Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 4: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668141170.9243,
+    "ts": "2026-04-20T06:55:41.170Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 3: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668140937.387,
+    "ts": "2026-04-20T06:55:40.937Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 2: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668140703.4324,
+    "ts": "2026-04-20T06:55:40.703Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 1: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776668124048.35,
+    "ts": "2026-04-20T06:55:24.048Z",
+    "level": "info",
+    "message": "[Purchase Invoice] 10/17 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776668091172.405,
+    "ts": "2026-04-20T06:54:51.172Z",
+    "level": "info",
+    "message": "[Sales Invoice] 20/26 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776668077577.9563,
+    "ts": "2026-04-20T06:54:37.577Z",
+    "level": "warn",
+    "message": "ERPNext sync error [Sales Invoice]: Could not find Customer: Guest",
+    "meta": {}
+  },
+  {
+    "id": 1776668075940.9182,
+    "ts": "2026-04-20T06:54:35.940Z",
+    "level": "warn",
+    "message": "ERPNext sync error [Sales Invoice]: Could not find Customer: Guest",
+    "meta": {}
+  },
+  {
+    "id": 1776668069046.2126,
+    "ts": "2026-04-20T06:54:29.046Z",
+    "level": "info",
+    "message": "[Sales Invoice] 10/26 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776668039690.7727,
+    "ts": "2026-04-20T06:53:59.690Z",
+    "level": "info",
+    "message": "Pre-syncing 12 customers before Sales Invoice batch",
+    "meta": {}
+  },
+  {
+    "id": 1776668039315.544,
+    "ts": "2026-04-20T06:53:59.315Z",
+    "level": "info",
+    "message": "Pre-syncing 8 suppliers before Purchase Invoice batch",
+    "meta": {}
+  },
+  {
+    "id": 1776668039311.4058,
+    "ts": "2026-04-20T06:53:59.311Z",
+    "level": "info",
+    "message": "Placeholder item already exists: Purchase Item",
+    "meta": {}
+  },
+  {
+    "id": 1776668039283.2964,
+    "ts": "2026-04-20T06:53:59.283Z",
+    "level": "info",
+    "message": "Placeholder item already exists: Sales Item",
+    "meta": {}
+  },
+  {
+    "id": 1776668039084.387,
+    "ts": "2026-04-20T06:53:59.084Z",
+    "level": "info",
+    "message": "Invoice breakdown - sales: 26, purchase: 17",
+    "meta": {}
+  },
+  {
+    "id": 1776668039080.52,
+    "ts": "2026-04-20T06:53:59.080Z",
+    "level": "info",
+    "message": "Using default Territory: India",
+    "meta": {}
+  },
+  {
+    "id": 1776668039075.1265,
+    "ts": "2026-04-20T06:53:59.075Z",
+    "level": "info",
+    "message": "Using Supplier Group: Services",
+    "meta": {}
+  },
+  {
+    "id": 1776668038998.3918,
+    "ts": "2026-04-20T06:53:58.998Z",
+    "level": "info",
+    "message": "Using Customer Group: Commercial",
+    "meta": {}
+  },
+  {
+    "id": 1776668038973.9827,
+    "ts": "2026-04-20T06:53:58.973Z",
+    "level": "info",
+    "message": "HSN/SAC field set as non-mandatory via Property Setter",
+    "meta": {}
+  },
+  {
+    "id": 1776668038891.8823,
+    "ts": "2026-04-20T06:53:58.891Z",
+    "level": "info",
+    "message": "Syncing invoices to ERPNext for Test Company (abbr: TC)",
+    "meta": {}
+  },
+  {
+    "id": 1776668038861.5664,
+    "ts": "2026-04-20T06:53:58.861Z",
+    "level": "info",
+    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3552000000",
+    "meta": {}
+  },
+  {
+    "id": 1776668038747.5413,
+    "ts": "2026-04-20T06:53:58.747Z",
+    "level": "info",
+    "message": "Using ERPNext company: \"Test Company\" (from Sync UI)",
+    "meta": {}
+  },
+  {
+    "id": 1776668038742.4065,
+    "ts": "2026-04-20T06:53:58.742Z",
+    "level": "success",
+    "message": "Fetched 129 vouchers (2025-01-01 → 2026-04-30)",
+    "meta": {
+      "company": "Tally"
+    }
+  },
+  {
+    "id": 1776668038373.4194,
+    "ts": "2026-04-20T06:53:58.373Z",
+    "level": "info",
+    "message": "Fetching all vouchers (JS date filter: 2025-01-01 → 2026-04-30)",
+    "meta": {
+      "company": "Tally"
+    }
+  },
+  {
+    "id": 1776668038366.7612,
+    "ts": "2026-04-20T06:53:58.366Z",
+    "level": "info",
+    "message": "Fetching vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": "2025-01-01",
+      "toDate": "2026-04-30"
+    }
+  },
+  {
+    "id": 1776668038362.2021,
+    "ts": "2026-04-20T06:53:58.362Z",
+    "level": "info",
+    "message": "Full sync: fetching Tally data sequentially...",
+    "meta": {}
+  },
+  {
+    "id": 1776668038354.1897,
+    "ts": "2026-04-20T06:53:58.354Z",
+    "level": "info",
+    "message": "Full sync job full-1776668038354-iff1e started for: Tally",
+    "meta": {
+      "syncLedgers": false,
+      "syncStock": false,
+      "syncVouchers": false,
+      "syncGodowns": false,
+      "syncCostCentres": false,
+      "syncOpeningBalances": false,
+      "syncInvoices": true,
+      "syncTaxes": false,
+      "syncChartOfAccounts": false
+    }
+  },
+  {
+    "id": 1776668023252.8625,
+    "ts": "2026-04-20T06:53:43.252Z",
+    "level": "info",
+    "message": "Run POST /api/middleware/check to validate all Tally data",
+    "meta": {}
+  },
+  {
+    "id": 1776668023250.0125,
+    "ts": "2026-04-20T06:53:43.250Z",
+    "level": "info",
+    "message": "Tally endpoint: http://localhost:9000",
+    "meta": {}
+  },
+  {
+    "id": 1776668023246.3943,
+    "ts": "2026-04-20T06:53:43.246Z",
+    "level": "info",
+    "message": "Tally Middleware server running on http://localhost:4000",
+    "meta": {}
+  },
+  {
+    "id": 1776667598473.8855,
+    "ts": "2026-04-20T06:46:38.473Z",
+    "level": "info",
+    "message": "Full sync job full-1776667479774-fwiw9 done",
+    "meta": {}
+  },
+  {
+    "id": 1776667598470.2122,
+    "ts": "2026-04-20T06:46:38.470Z",
+    "level": "info",
+    "message": "Full sync complete: warning",
+    "meta": {
+      "company": "Test Company"
+    }
+  },
+  {
+    "id": 1776667598466.416,
+    "ts": "2026-04-20T06:46:38.466Z",
+    "level": "success",
+    "message": "Invoice sync done - sales: +24/2 failed | purchase: +17/0 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776667598461.8506,
+    "ts": "2026-04-20T06:46:38.461Z",
+    "level": "info",
+    "message": "Submit Purchase Invoice: 0 submitted, 17 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776667598245.4666,
+    "ts": "2026-04-20T06:46:38.245Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 18: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667597947.0789,
+    "ts": "2026-04-20T06:46:37.947Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 17: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667597707.2104,
+    "ts": "2026-04-20T06:46:37.707Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 16: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667597427.9014,
+    "ts": "2026-04-20T06:46:37.427Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 15: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667597195.467,
+    "ts": "2026-04-20T06:46:37.195Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 14: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667596962.7097,
+    "ts": "2026-04-20T06:46:36.962Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 13: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667596729.6738,
+    "ts": "2026-04-20T06:46:36.729Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 12: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667596492.9055,
+    "ts": "2026-04-20T06:46:36.492Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 11: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667596232.3323,
+    "ts": "2026-04-20T06:46:36.232Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 10: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667595996.5696,
+    "ts": "2026-04-20T06:46:35.996Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 9: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667595763.78,
+    "ts": "2026-04-20T06:46:35.763Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 8: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667595528.0774,
+    "ts": "2026-04-20T06:46:35.528Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 7: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667595287.1091,
+    "ts": "2026-04-20T06:46:35.287Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 6: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667595031.551,
+    "ts": "2026-04-20T06:46:35.031Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 5: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667594797.0322,
+    "ts": "2026-04-20T06:46:34.797Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 3: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667594559.1091,
+    "ts": "2026-04-20T06:46:34.559Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 2: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667594284.1387,
+    "ts": "2026-04-20T06:46:34.284Z",
+    "level": "warn",
+    "message": "Could not submit Purchase Invoice for voucher 1: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667594262.1865,
+    "ts": "2026-04-20T06:46:34.262Z",
+    "level": "info",
+    "message": "Submit Sales Invoice: 0 submitted, 26 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776667594047.1702,
+    "ts": "2026-04-20T06:46:34.047Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 26: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667593740.1558,
+    "ts": "2026-04-20T06:46:33.740Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 25: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667593434.399,
+    "ts": "2026-04-20T06:46:33.434Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 24: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667593125.5305,
+    "ts": "2026-04-20T06:46:33.125Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 23: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667592818.7861,
+    "ts": "2026-04-20T06:46:32.818Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 22: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667592483.4915,
+    "ts": "2026-04-20T06:46:32.483Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 21: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667591614.737,
+    "ts": "2026-04-20T06:46:31.614Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 20: socket hang up",
+    "meta": {}
+  },
+  {
+    "id": 1776667591385.4875,
+    "ts": "2026-04-20T06:46:31.385Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 19: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667591078.1096,
+    "ts": "2026-04-20T06:46:31.078Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 18: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667590720.1816,
+    "ts": "2026-04-20T06:46:30.720Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 17: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667590463.0356,
+    "ts": "2026-04-20T06:46:30.463Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 16: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667590157.56,
+    "ts": "2026-04-20T06:46:30.157Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 15: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667589809.1633,
+    "ts": "2026-04-20T06:46:29.809Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 14: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667589573.8774,
+    "ts": "2026-04-20T06:46:29.573Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 13: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667589336.2217,
+    "ts": "2026-04-20T06:46:29.336Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 12: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667589030.416,
+    "ts": "2026-04-20T06:46:29.030Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 11: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667588718.206,
+    "ts": "2026-04-20T06:46:28.718Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 10: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667588463.977,
+    "ts": "2026-04-20T06:46:28.463Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 9: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667588224.699,
+    "ts": "2026-04-20T06:46:28.224Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 8: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667587904.6035,
+    "ts": "2026-04-20T06:46:27.904Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 7: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667586776.3027,
+    "ts": "2026-04-20T06:46:26.776Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 6: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667584733.927,
+    "ts": "2026-04-20T06:46:24.733Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 5: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667581554.867,
+    "ts": "2026-04-20T06:46:21.554Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 4: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667578482.153,
+    "ts": "2026-04-20T06:46:18.482Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 3: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667574896.3518,
+    "ts": "2026-04-20T06:46:14.896Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 2: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667572646.6965,
+    "ts": "2026-04-20T06:46:12.646Z",
+    "level": "warn",
+    "message": "Could not submit Sales Invoice for voucher 1: Field not permitted in query: title",
+    "meta": {}
+  },
+  {
+    "id": 1776667554696.4216,
+    "ts": "2026-04-20T06:45:54.696Z",
+    "level": "info",
+    "message": "[Purchase Invoice] 10/17 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776667520600.7966,
+    "ts": "2026-04-20T06:45:20.600Z",
+    "level": "info",
+    "message": "[Sales Invoice] 20/26 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776667507416.379,
+    "ts": "2026-04-20T06:45:07.416Z",
+    "level": "warn",
+    "message": "ERPNext sync error [Sales Invoice]: Could not find Customer: Guest",
+    "meta": {}
+  },
+  {
+    "id": 1776667505778.9878,
+    "ts": "2026-04-20T06:45:05.778Z",
+    "level": "warn",
+    "message": "ERPNext sync error [Sales Invoice]: Could not find Customer: Guest",
+    "meta": {}
+  },
+  {
+    "id": 1776667498915.88,
+    "ts": "2026-04-20T06:44:58.915Z",
+    "level": "info",
+    "message": "[Sales Invoice] 10/26 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776667481307.8464,
+    "ts": "2026-04-20T06:44:41.307Z",
+    "level": "info",
+    "message": "Pre-syncing 12 customers before Sales Invoice batch",
+    "meta": {}
+  },
+  {
+    "id": 1776667480901.9697,
+    "ts": "2026-04-20T06:44:40.901Z",
+    "level": "info",
+    "message": "Pre-syncing 8 suppliers before Purchase Invoice batch",
+    "meta": {}
+  },
+  {
+    "id": 1776667480897.4634,
+    "ts": "2026-04-20T06:44:40.897Z",
+    "level": "info",
+    "message": "Placeholder item already exists: Purchase Item",
+    "meta": {}
+  },
+  {
+    "id": 1776667480796.1814,
+    "ts": "2026-04-20T06:44:40.796Z",
+    "level": "info",
+    "message": "Placeholder item already exists: Sales Item",
+    "meta": {}
+  },
+  {
+    "id": 1776667480567.9375,
+    "ts": "2026-04-20T06:44:40.567Z",
+    "level": "info",
+    "message": "Invoice breakdown - sales: 26, purchase: 17",
+    "meta": {}
+  },
+  {
+    "id": 1776667480558.334,
+    "ts": "2026-04-20T06:44:40.558Z",
+    "level": "info",
+    "message": "Using default Territory: India",
+    "meta": {}
+  },
+  {
+    "id": 1776667480548.5664,
+    "ts": "2026-04-20T06:44:40.548Z",
+    "level": "info",
+    "message": "Using Supplier Group: Services",
+    "meta": {}
+  },
+  {
+    "id": 1776667480515.1538,
+    "ts": "2026-04-20T06:44:40.515Z",
+    "level": "info",
+    "message": "Using Customer Group: Commercial",
+    "meta": {}
+  },
+  {
+    "id": 1776667480486.638,
+    "ts": "2026-04-20T06:44:40.486Z",
+    "level": "info",
+    "message": "HSN/SAC field set as non-mandatory via Property Setter",
+    "meta": {}
+  },
+  {
+    "id": 1776667480378.7031,
+    "ts": "2026-04-20T06:44:40.378Z",
+    "level": "info",
+    "message": "Syncing invoices to ERPNext for Test Company (abbr: TC)",
+    "meta": {}
+  },
+  {
+    "id": 1776667480346.905,
+    "ts": "2026-04-20T06:44:40.346Z",
+    "level": "info",
+    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3556000000",
+    "meta": {}
+  },
+  {
+    "id": 1776667480223.2488,
+    "ts": "2026-04-20T06:44:40.223Z",
+    "level": "info",
+    "message": "Using ERPNext company: \"Test Company\" (from Sync UI)",
+    "meta": {}
+  },
+  {
+    "id": 1776667480216.0127,
+    "ts": "2026-04-20T06:44:40.216Z",
+    "level": "success",
+    "message": "Fetched 129 vouchers (2025-01-01 → 2026-04-30)",
+    "meta": {
+      "company": "Tally"
+    }
+  },
+  {
+    "id": 1776667479797.3584,
+    "ts": "2026-04-20T06:44:39.797Z",
+    "level": "info",
+    "message": "Fetching all vouchers (JS date filter: 2025-01-01 → 2026-04-30)",
+    "meta": {
+      "company": "Tally"
+    }
+  },
+  {
+    "id": 1776667479790.3772,
+    "ts": "2026-04-20T06:44:39.790Z",
+    "level": "info",
+    "message": "Fetching vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": "2025-01-01",
+      "toDate": "2026-04-30"
+    }
+  },
+  {
+    "id": 1776667479784.9697,
+    "ts": "2026-04-20T06:44:39.784Z",
+    "level": "info",
+    "message": "Full sync: fetching Tally data sequentially...",
+    "meta": {}
+  },
+  {
+    "id": 1776667479774.1985,
+    "ts": "2026-04-20T06:44:39.774Z",
+    "level": "info",
+    "message": "Full sync job full-1776667479774-fwiw9 started for: Tally",
+    "meta": {
+      "syncLedgers": false,
+      "syncStock": false,
+      "syncVouchers": false,
+      "syncGodowns": false,
+      "syncCostCentres": false,
+      "syncOpeningBalances": false,
+      "syncInvoices": true,
+      "syncTaxes": false,
+      "syncChartOfAccounts": false
+    }
+  },
+  {
+    "id": 1776667472731.73,
+    "ts": "2026-04-20T06:44:32.731Z",
+    "level": "info",
+    "message": "Run POST /api/middleware/check to validate all Tally data",
+    "meta": {}
+  },
+  {
+    "id": 1776667472729.1467,
+    "ts": "2026-04-20T06:44:32.729Z",
+    "level": "info",
+    "message": "Tally endpoint: http://localhost:9000",
+    "meta": {}
+  },
+  {
+    "id": 1776667472725.6821,
+    "ts": "2026-04-20T06:44:32.725Z",
+    "level": "info",
+    "message": "Tally Middleware server running on http://localhost:4000",
+    "meta": {}
+  },
+  {
+    "id": 1776665753584.1584,
+    "ts": "2026-04-20T06:15:53.584Z",
+    "level": "info",
+    "message": "Full sync job full-1776665647285-o87pz done",
+    "meta": {}
+  },
+  {
+    "id": 1776665753579.6873,
+    "ts": "2026-04-20T06:15:53.579Z",
+    "level": "info",
+    "message": "Full sync complete: warning",
+    "meta": {
+      "company": "Test Company"
+    }
+  },
+  {
+    "id": 1776665753575.4136,
+    "ts": "2026-04-20T06:15:53.575Z",
+    "level": "success",
+    "message": "Invoice sync done - sales: +24/2 failed | purchase: +17/0 failed",
+    "meta": {}
+  },
+  {
+    "id": 1776665722983.6726,
+    "ts": "2026-04-20T06:15:22.983Z",
+    "level": "info",
+    "message": "[Purchase Invoice] 10/17 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776665690827.9844,
+    "ts": "2026-04-20T06:14:50.827Z",
+    "level": "info",
+    "message": "[Sales Invoice] 20/26 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776665677742.9312,
+    "ts": "2026-04-20T06:14:37.742Z",
+    "level": "warn",
+    "message": "ERPNext sync error [Sales Invoice]: Could not find Customer: Guest",
+    "meta": {}
+  },
+  {
+    "id": 1776665676138.448,
+    "ts": "2026-04-20T06:14:36.138Z",
+    "level": "warn",
+    "message": "ERPNext sync error [Sales Invoice]: Could not find Customer: Guest",
+    "meta": {}
+  },
+  {
+    "id": 1776665669425.1775,
+    "ts": "2026-04-20T06:14:29.425Z",
+    "level": "info",
+    "message": "[Sales Invoice] 10/26 synced - pausing 5000ms",
+    "meta": {}
+  },
+  {
+    "id": 1776665651880.5076,
+    "ts": "2026-04-20T06:14:11.880Z",
+    "level": "info",
+    "message": "Pre-syncing 12 customers before Sales Invoice batch",
+    "meta": {}
+  },
+  {
+    "id": 1776665651634.981,
+    "ts": "2026-04-20T06:14:11.634Z",
+    "level": "info",
+    "message": "Pre-syncing 8 suppliers before Purchase Invoice batch",
+    "meta": {}
+  },
+  {
+    "id": 1776665651631.106,
+    "ts": "2026-04-20T06:14:11.631Z",
+    "level": "info",
+    "message": "Placeholder item already exists: Purchase Item",
+    "meta": {}
+  },
+  {
+    "id": 1776665651529.8718,
+    "ts": "2026-04-20T06:14:11.529Z",
+    "level": "info",
+    "message": "Placeholder item already exists: Sales Item",
+    "meta": {}
+  },
+  {
+    "id": 1776665651230.971,
+    "ts": "2026-04-20T06:14:11.230Z",
+    "level": "info",
+    "message": "Invoice breakdown - sales: 26, purchase: 17",
+    "meta": {}
+  },
+  {
+    "id": 1776665651226.4314,
+    "ts": "2026-04-20T06:14:11.226Z",
+    "level": "info",
+    "message": "Using default Territory: India",
+    "meta": {}
+  },
+  {
+    "id": 1776665651222.3162,
+    "ts": "2026-04-20T06:14:11.222Z",
+    "level": "info",
+    "message": "Using Supplier Group: Services",
+    "meta": {}
+  },
+  {
+    "id": 1776665651017.7556,
+    "ts": "2026-04-20T06:14:11.017Z",
+    "level": "info",
+    "message": "Using Customer Group: Commercial",
+    "meta": {}
+  },
+  {
+    "id": 1776665650811.8745,
+    "ts": "2026-04-20T06:14:10.811Z",
+    "level": "info",
+    "message": "HSN/SAC field set as non-mandatory via Property Setter",
+    "meta": {}
+  },
+  {
+    "id": 1776665650199.7312,
+    "ts": "2026-04-20T06:14:10.199Z",
+    "level": "info",
+    "message": "Syncing invoices to ERPNext for Test Company (abbr: TC)",
+    "meta": {}
+  },
+  {
+    "id": 1776665649687.5247,
+    "ts": "2026-04-20T06:14:09.687Z",
+    "level": "info",
+    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3562000000",
+    "meta": {}
+  },
+  {
+    "id": 1776665647728.9006,
+    "ts": "2026-04-20T06:14:07.728Z",
+    "level": "info",
+    "message": "Using ERPNext company: \"Test Company\" (from Sync UI)",
+    "meta": {}
+  },
+  {
+    "id": 1776665647722.9126,
+    "ts": "2026-04-20T06:14:07.722Z",
+    "level": "success",
+    "message": "Fetched 129 vouchers (2025-01-01 → 2026-04-30)",
+    "meta": {
+      "company": "Tally"
+    }
+  },
+  {
+    "id": 1776665647308.659,
+    "ts": "2026-04-20T06:14:07.308Z",
+    "level": "info",
+    "message": "Fetching all vouchers (JS date filter: 2025-01-01 → 2026-04-30)",
+    "meta": {
+      "company": "Tally"
+    }
+  },
+  {
+    "id": 1776665647300.2603,
+    "ts": "2026-04-20T06:14:07.300Z",
+    "level": "info",
+    "message": "Fetching vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": "2025-01-01",
+      "toDate": "2026-04-30"
+    }
+  },
+  {
+    "id": 1776665647294.0625,
+    "ts": "2026-04-20T06:14:07.294Z",
+    "level": "info",
+    "message": "Full sync: fetching Tally data sequentially...",
+    "meta": {}
+  },
+  {
+    "id": 1776665647285.1318,
+    "ts": "2026-04-20T06:14:07.285Z",
+    "level": "info",
+    "message": "Full sync job full-1776665647285-o87pz started for: Tally",
+    "meta": {
+      "syncLedgers": false,
+      "syncStock": false,
+      "syncVouchers": false,
+      "syncGodowns": false,
+      "syncCostCentres": false,
+      "syncOpeningBalances": false,
+      "syncInvoices": true,
+      "syncTaxes": false,
+      "syncChartOfAccounts": false
+    }
+  },
+  {
+    "id": 1776665616796.4504,
+    "ts": "2026-04-20T06:13:36.796Z",
+    "level": "info",
+    "message": "Run POST /api/middleware/check to validate all Tally data",
+    "meta": {}
+  },
+  {
+    "id": 1776665616793.9211,
+    "ts": "2026-04-20T06:13:36.793Z",
+    "level": "info",
+    "message": "Tally endpoint: http://localhost:9000",
+    "meta": {}
+  },
+  {
+    "id": 1776665616788.7136,
+    "ts": "2026-04-20T06:13:36.788Z",
+    "level": "info",
+    "message": "Tally Middleware server running on http://localhost:4000",
+    "meta": {}
+  },
+  {
+    "id": 1776665604489.8914,
+    "ts": "2026-04-20T06:13:24.489Z",
+    "level": "info",
+    "message": "Run POST /api/middleware/check to validate all Tally data",
+    "meta": {}
+  },
+  {
+    "id": 1776665604486.8948,
+    "ts": "2026-04-20T06:13:24.486Z",
+    "level": "info",
+    "message": "Tally endpoint: http://localhost:9000",
+    "meta": {}
+  },
+  {
+    "id": 1776665604478.6665,
+    "ts": "2026-04-20T06:13:24.478Z",
+    "level": "info",
+    "message": "Tally Middleware server running on http://localhost:4000",
+    "meta": {}
+  },
+  {
     "id": 1776664165286.776,
     "ts": "2026-04-20T05:49:25.286Z",
     "level": "info",
@@ -5109,2796 +7622,5 @@
     "meta": {
       "company": "tallytoerpnext"
     }
-  },
-  {
-    "id": 1776512591994.9653,
-    "ts": "2026-04-18T11:43:11.994Z",
-    "level": "info",
-    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3544000000",
-    "meta": {}
-  },
-  {
-    "id": 1776512591872.4487,
-    "ts": "2026-04-18T11:43:11.872Z",
-    "level": "info",
-    "message": "Using ERPNext company: \"tallytoerpnext\" (from Sync UI)",
-    "meta": {}
-  },
-  {
-    "id": 1776512591867.089,
-    "ts": "2026-04-18T11:43:11.867Z",
-    "level": "success",
-    "message": "Fetched 0 vouchers total (chunked)",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591864.872,
-    "ts": "2026-04-18T11:43:11.864Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591808.8005,
-    "ts": "2026-04-18T11:43:11.808Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-04-26 to 2026-04-30",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591804.6455,
-    "ts": "2026-04-18T11:43:11.804Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591749.733,
-    "ts": "2026-04-18T11:43:11.749Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-04-11 to 2026-04-25",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591746.4495,
-    "ts": "2026-04-18T11:43:11.746Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591676.449,
-    "ts": "2026-04-18T11:43:11.676Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-03-27 to 2026-04-10",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591672.9758,
-    "ts": "2026-04-18T11:43:11.672Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591615.4875,
-    "ts": "2026-04-18T11:43:11.615Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-03-12 to 2026-03-26",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591612.336,
-    "ts": "2026-04-18T11:43:11.612Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591554.6213,
-    "ts": "2026-04-18T11:43:11.554Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-02-25 to 2026-03-11",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591550.448,
-    "ts": "2026-04-18T11:43:11.550Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591494.4321,
-    "ts": "2026-04-18T11:43:11.494Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-02-10 to 2026-02-24",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591490.6577,
-    "ts": "2026-04-18T11:43:11.490Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591427.5518,
-    "ts": "2026-04-18T11:43:11.427Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-01-26 to 2026-02-09",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591423.2815,
-    "ts": "2026-04-18T11:43:11.423Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591370.2466,
-    "ts": "2026-04-18T11:43:11.370Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-01-11 to 2026-01-25",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591368.4644,
-    "ts": "2026-04-18T11:43:11.368Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591313.2515,
-    "ts": "2026-04-18T11:43:11.313Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-12-27 to 2026-01-10",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591310.1887,
-    "ts": "2026-04-18T11:43:11.310Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591256.3994,
-    "ts": "2026-04-18T11:43:11.256Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-12-12 to 2025-12-26",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591252.838,
-    "ts": "2026-04-18T11:43:11.252Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591199.502,
-    "ts": "2026-04-18T11:43:11.199Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-11-27 to 2025-12-11",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591196.9844,
-    "ts": "2026-04-18T11:43:11.196Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591144.987,
-    "ts": "2026-04-18T11:43:11.144Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-11-12 to 2025-11-26",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591141.049,
-    "ts": "2026-04-18T11:43:11.141Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591087.811,
-    "ts": "2026-04-18T11:43:11.087Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-10-28 to 2025-11-11",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591084.7542,
-    "ts": "2026-04-18T11:43:11.084Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591030.9626,
-    "ts": "2026-04-18T11:43:11.030Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-10-13 to 2025-10-27",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512591027.2717,
-    "ts": "2026-04-18T11:43:11.027Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590959.8252,
-    "ts": "2026-04-18T11:43:10.959Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-09-28 to 2025-10-12",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590954.0894,
-    "ts": "2026-04-18T11:43:10.954Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590899.515,
-    "ts": "2026-04-18T11:43:10.899Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-09-13 to 2025-09-27",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590895.3003,
-    "ts": "2026-04-18T11:43:10.895Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590841.6162,
-    "ts": "2026-04-18T11:43:10.841Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-08-29 to 2025-09-12",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590838.7705,
-    "ts": "2026-04-18T11:43:10.838Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590781.2534,
-    "ts": "2026-04-18T11:43:10.781Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-08-14 to 2025-08-28",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590778.5864,
-    "ts": "2026-04-18T11:43:10.778Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590726.2974,
-    "ts": "2026-04-18T11:43:10.726Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-07-30 to 2025-08-13",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590723.3032,
-    "ts": "2026-04-18T11:43:10.723Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590670.8066,
-    "ts": "2026-04-18T11:43:10.670Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-07-15 to 2025-07-29",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590666.999,
-    "ts": "2026-04-18T11:43:10.666Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590611.47,
-    "ts": "2026-04-18T11:43:10.611Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-06-30 to 2025-07-14",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590609.141,
-    "ts": "2026-04-18T11:43:10.609Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590555.298,
-    "ts": "2026-04-18T11:43:10.555Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-06-15 to 2025-06-29",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590552.7861,
-    "ts": "2026-04-18T11:43:10.552Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590499.0007,
-    "ts": "2026-04-18T11:43:10.499Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-05-31 to 2025-06-14",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590496.4617,
-    "ts": "2026-04-18T11:43:10.496Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590442.6348,
-    "ts": "2026-04-18T11:43:10.442Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-05-16 to 2025-05-30",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590439.0215,
-    "ts": "2026-04-18T11:43:10.439Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590382.592,
-    "ts": "2026-04-18T11:43:10.382Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-05-01 to 2025-05-15",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590378.1584,
-    "ts": "2026-04-18T11:43:10.378Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590322.5771,
-    "ts": "2026-04-18T11:43:10.322Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-04-16 to 2025-04-30",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590317.4907,
-    "ts": "2026-04-18T11:43:10.317Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590264.6128,
-    "ts": "2026-04-18T11:43:10.264Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-04-01 to 2025-04-15",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590260.3733,
-    "ts": "2026-04-18T11:43:10.260Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590205.8274,
-    "ts": "2026-04-18T11:43:10.205Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-03-17 to 2025-03-31",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590201.9448,
-    "ts": "2026-04-18T11:43:10.201Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590144.4507,
-    "ts": "2026-04-18T11:43:10.144Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-03-02 to 2025-03-16",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590141.2393,
-    "ts": "2026-04-18T11:43:10.141Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590083.422,
-    "ts": "2026-04-18T11:43:10.083Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-02-15 to 2025-03-01",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590080.4026,
-    "ts": "2026-04-18T11:43:10.080Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590021.225,
-    "ts": "2026-04-18T11:43:10.021Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-01-31 to 2025-02-14",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512590017.8218,
-    "ts": "2026-04-18T11:43:10.017Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512589946.877,
-    "ts": "2026-04-18T11:43:09.946Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-01-16 to 2025-01-30",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512589941.826,
-    "ts": "2026-04-18T11:43:09.941Z",
-    "level": "info",
-    "message": "  0 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512589826.5083,
-    "ts": "2026-04-18T11:43:09.826Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-01-01 to 2025-01-15",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512589819.8362,
-    "ts": "2026-04-18T11:43:09.819Z",
-    "level": "info",
-    "message": "Date range spans 484 days — splitting into 15-day chunks",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776512589813.1401,
-    "ts": "2026-04-18T11:43:09.813Z",
-    "level": "info",
-    "message": "Fetching vouchers from Tally",
-    "meta": {
-      "company": "Tally",
-      "fromDate": "2025-01-01",
-      "toDate": "2026-04-30"
-    }
-  },
-  {
-    "id": 1776512589806.3403,
-    "ts": "2026-04-18T11:43:09.806Z",
-    "level": "info",
-    "message": "Full sync: fetching Tally data sequentially...",
-    "meta": {}
-  },
-  {
-    "id": 1776512589789.1426,
-    "ts": "2026-04-18T11:43:09.789Z",
-    "level": "info",
-    "message": "Full sync job full-1776512589789-1jhyt started for: Tally",
-    "meta": {
-      "syncLedgers": false,
-      "syncStock": false,
-      "syncVouchers": true,
-      "syncGodowns": false,
-      "syncCostCentres": false,
-      "syncOpeningBalances": false,
-      "syncInvoices": false,
-      "syncTaxes": false,
-      "syncChartOfAccounts": false
-    }
-  },
-  {
-    "id": 1776512570676.5144,
-    "ts": "2026-04-18T11:42:50.676Z",
-    "level": "info",
-    "message": "Run POST /api/middleware/check to validate all Tally data",
-    "meta": {}
-  },
-  {
-    "id": 1776512570674.0034,
-    "ts": "2026-04-18T11:42:50.674Z",
-    "level": "info",
-    "message": "Tally endpoint: http://localhost:9000",
-    "meta": {}
-  },
-  {
-    "id": 1776512570670.3452,
-    "ts": "2026-04-18T11:42:50.670Z",
-    "level": "info",
-    "message": "Tally Middleware server running on http://localhost:4000",
-    "meta": {}
-  },
-  {
-    "id": 1776512552173.5312,
-    "ts": "2026-04-18T11:42:32.173Z",
-    "level": "info",
-    "message": "Run POST /api/middleware/check to validate all Tally data",
-    "meta": {}
-  },
-  {
-    "id": 1776512552171.9453,
-    "ts": "2026-04-18T11:42:32.171Z",
-    "level": "info",
-    "message": "Tally endpoint: http://localhost:9000",
-    "meta": {}
-  },
-  {
-    "id": 1776512552166.5056,
-    "ts": "2026-04-18T11:42:32.166Z",
-    "level": "info",
-    "message": "Tally Middleware server running on http://localhost:4000",
-    "meta": {}
-  },
-  {
-    "id": 1776512550414.4888,
-    "ts": "2026-04-18T11:42:30.414Z",
-    "level": "info",
-    "message": "[Journal Entry] 330/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512529105.401,
-    "ts": "2026-04-18T11:42:09.105Z",
-    "level": "info",
-    "message": "[Journal Entry] 320/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512508151.7378,
-    "ts": "2026-04-18T11:41:48.151Z",
-    "level": "info",
-    "message": "[Journal Entry] 310/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512486639,
-    "ts": "2026-04-18T11:41:26.638Z",
-    "level": "info",
-    "message": "[Journal Entry] 300/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512465135.4895,
-    "ts": "2026-04-18T11:41:05.135Z",
-    "level": "info",
-    "message": "[Journal Entry] 290/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512443745.076,
-    "ts": "2026-04-18T11:40:43.745Z",
-    "level": "info",
-    "message": "[Journal Entry] 280/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512421576.3901,
-    "ts": "2026-04-18T11:40:21.576Z",
-    "level": "info",
-    "message": "[Journal Entry] 270/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512400177.3972,
-    "ts": "2026-04-18T11:40:00.177Z",
-    "level": "info",
-    "message": "[Journal Entry] 260/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512378831.4153,
-    "ts": "2026-04-18T11:39:38.831Z",
-    "level": "info",
-    "message": "[Journal Entry] 250/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512357827.3384,
-    "ts": "2026-04-18T11:39:17.827Z",
-    "level": "info",
-    "message": "[Journal Entry] 240/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512336534.7568,
-    "ts": "2026-04-18T11:38:56.534Z",
-    "level": "info",
-    "message": "[Journal Entry] 230/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512314829.423,
-    "ts": "2026-04-18T11:38:34.829Z",
-    "level": "info",
-    "message": "[Journal Entry] 220/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512293623.6025,
-    "ts": "2026-04-18T11:38:13.623Z",
-    "level": "info",
-    "message": "[Journal Entry] 210/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512272218.4805,
-    "ts": "2026-04-18T11:37:52.218Z",
-    "level": "info",
-    "message": "[Journal Entry] 200/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512250522.5605,
-    "ts": "2026-04-18T11:37:30.522Z",
-    "level": "info",
-    "message": "[Journal Entry] 190/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512229361.9097,
-    "ts": "2026-04-18T11:37:09.361Z",
-    "level": "info",
-    "message": "[Journal Entry] 180/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512202437.5168,
-    "ts": "2026-04-18T11:36:42.437Z",
-    "level": "info",
-    "message": "[Journal Entry] 170/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512181246.937,
-    "ts": "2026-04-18T11:36:21.246Z",
-    "level": "info",
-    "message": "[Journal Entry] 160/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512153010.7166,
-    "ts": "2026-04-18T11:35:53.010Z",
-    "level": "info",
-    "message": "[Journal Entry] 150/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512136899.9897,
-    "ts": "2026-04-18T11:35:36.899Z",
-    "level": "warn",
-    "message": "[Journal Entry:undefined] attempt 1/5 failed (network) — read ECONNRESET — retrying in 8000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512123534.114,
-    "ts": "2026-04-18T11:35:23.534Z",
-    "level": "info",
-    "message": "[Journal Entry] 140/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512097343.7617,
-    "ts": "2026-04-18T11:34:57.343Z",
-    "level": "info",
-    "message": "[Journal Entry] 130/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512076029.7617,
-    "ts": "2026-04-18T11:34:36.029Z",
-    "level": "info",
-    "message": "[Journal Entry] 120/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512054455.0332,
-    "ts": "2026-04-18T11:34:14.455Z",
-    "level": "info",
-    "message": "[Journal Entry] 110/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512033004.6475,
-    "ts": "2026-04-18T11:33:53.004Z",
-    "level": "info",
-    "message": "[Journal Entry] 100/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776512011608.1975,
-    "ts": "2026-04-18T11:33:31.608Z",
-    "level": "info",
-    "message": "[Journal Entry] 90/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776511983669.6758,
-    "ts": "2026-04-18T11:33:03.669Z",
-    "level": "info",
-    "message": "[Journal Entry] 80/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776511962057.1858,
-    "ts": "2026-04-18T11:32:42.057Z",
-    "level": "info",
-    "message": "[Journal Entry] 70/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776511940657.39,
-    "ts": "2026-04-18T11:32:20.657Z",
-    "level": "info",
-    "message": "[Journal Entry] 60/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776511912799.7659,
-    "ts": "2026-04-18T11:31:52.799Z",
-    "level": "info",
-    "message": "[Journal Entry] 50/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776511891494.533,
-    "ts": "2026-04-18T11:31:31.494Z",
-    "level": "info",
-    "message": "[Journal Entry] 40/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776511861803.2817,
-    "ts": "2026-04-18T11:31:01.803Z",
-    "level": "info",
-    "message": "[Journal Entry] 30/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776511839885.1401,
-    "ts": "2026-04-18T11:30:39.885Z",
-    "level": "info",
-    "message": "[Journal Entry] 20/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776511818387.2659,
-    "ts": "2026-04-18T11:30:18.387Z",
-    "level": "info",
-    "message": "[Journal Entry] 10/2805 synced - pausing 5000ms",
-    "meta": {}
-  },
-  {
-    "id": 1776511810220.0674,
-    "ts": "2026-04-18T11:30:10.220Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Journal Entry]: Row 1: Party Type and Party is required for Receivable / Payable account Amay - T",
-    "meta": {}
-  },
-  {
-    "id": 1776511808469.4624,
-    "ts": "2026-04-18T11:30:08.469Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Journal Entry]: Row 1: Party Type and Party is required for Receivable / Payable account Omkar Dahifale - T",
-    "meta": {}
-  },
-  {
-    "id": 1776511806797.2424,
-    "ts": "2026-04-18T11:30:06.797Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Journal Entry]: Row 1: Party Type and Party is required for Receivable / Payable account Shivam Khaw - T",
-    "meta": {}
-  },
-  {
-    "id": 1776511805207.5288,
-    "ts": "2026-04-18T11:30:05.207Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Journal Entry]: Row 1: Party Type and Party is required for Receivable / Payable account Spyderman - T",
-    "meta": {}
-  },
-  {
-    "id": 1776511801974.3486,
-    "ts": "2026-04-18T11:30:01.974Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Journal Entry]: Row 1: Party Type and Party is required for Receivable / Payable account Ram - T",
-    "meta": {}
-  },
-  {
-    "id": 1776511801899.024,
-    "ts": "2026-04-18T11:30:01.899Z",
-    "level": "info",
-    "message": "Syncing 2805/2805 vouchers",
-    "meta": {}
-  },
-  {
-    "id": 1776511801891.589,
-    "ts": "2026-04-18T11:30:01.891Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Supplier1 - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511801720.7314,
-    "ts": "2026-04-18T11:30:01.720Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Rajnivas Enterprises - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511801530.4858,
-    "ts": "2026-04-18T11:30:01.530Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"ABCDTraders - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511801390.5352,
-    "ts": "2026-04-18T11:30:01.390Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"SudhirMorchale - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511801237.025,
-    "ts": "2026-04-18T11:30:01.237Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Amey - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511801112.0125,
-    "ts": "2026-04-18T11:30:01.112Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Sudhir - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511800955.8071,
-    "ts": "2026-04-18T11:30:00.955Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"ShivamRamKhaw - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511800820.2373,
-    "ts": "2026-04-18T11:30:00.820Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Test500 - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511800661.147,
-    "ts": "2026-04-18T11:30:00.661Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"JOJO - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511800528.331,
-    "ts": "2026-04-18T11:30:00.528Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Banana - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511800375.9138,
-    "ts": "2026-04-18T11:30:00.375Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Test Customer - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511800140.123,
-    "ts": "2026-04-18T11:30:00.140Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Ram500 - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511799996.4734,
-    "ts": "2026-04-18T11:29:59.996Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Scam - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511799862.6592,
-    "ts": "2026-04-18T11:29:59.862Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Sales 24 - T\" (type: Income Account, parent: Direct Income - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511799713.9058,
-    "ts": "2026-04-18T11:29:59.713Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"ABC Traders - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511799586.8345,
-    "ts": "2026-04-18T11:29:59.586Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Burger - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511799446.2263,
-    "ts": "2026-04-18T11:29:59.446Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Aniket - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511799293.5852,
-    "ts": "2026-04-18T11:29:59.293Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Amay - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511799146.1682,
-    "ts": "2026-04-18T11:29:59.146Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Omkar Dahifale - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511798999.2322,
-    "ts": "2026-04-18T11:29:58.999Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Shivam Khaw - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511798851.5547,
-    "ts": "2026-04-18T11:29:58.851Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Please - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511798712.02,
-    "ts": "2026-04-18T11:29:58.712Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Manish - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511798556.905,
-    "ts": "2026-04-18T11:29:58.556Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Spyderman - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511798401.454,
-    "ts": "2026-04-18T11:29:58.401Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Cash322 - T\" (type: Cash, parent: Cash In Hand - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511798111.1877,
-    "ts": "2026-04-18T11:29:58.111Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Ram - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {}
-  },
-  {
-    "id": 1776511797830.2712,
-    "ts": "2026-04-18T11:29:57.830Z",
-    "level": "info",
-    "message": "Resolving accounts with company abbreviation: T",
-    "meta": {}
-  },
-  {
-    "id": 1776511797733.349,
-    "ts": "2026-04-18T11:29:57.733Z",
-    "level": "info",
-    "message": "Syncing 4257 vouchers to ERPNext",
-    "meta": {}
-  },
-  {
-    "id": 1776511797730.0276,
-    "ts": "2026-04-18T11:29:57.730Z",
-    "level": "info",
-    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3557000000",
-    "meta": {}
-  },
-  {
-    "id": 1776511797663.874,
-    "ts": "2026-04-18T11:29:57.663Z",
-    "level": "success",
-    "message": "Fetched 4257 vouchers total (chunked)",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511797659.8164,
-    "ts": "2026-04-18T11:29:57.659Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511797498.369,
-    "ts": "2026-04-18T11:29:57.498Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-04-26 to 2026-04-30",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511797496.452,
-    "ts": "2026-04-18T11:29:57.496Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511797330.3813,
-    "ts": "2026-04-18T11:29:57.330Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-04-11 to 2026-04-25",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511797328.9888,
-    "ts": "2026-04-18T11:29:57.328Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511797146.5728,
-    "ts": "2026-04-18T11:29:57.146Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-03-27 to 2026-04-10",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511797144.3264,
-    "ts": "2026-04-18T11:29:57.144Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511797006.0151,
-    "ts": "2026-04-18T11:29:57.006Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-03-12 to 2026-03-26",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511797004.3364,
-    "ts": "2026-04-18T11:29:57.004Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511796856.0874,
-    "ts": "2026-04-18T11:29:56.856Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-02-25 to 2026-03-11",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511796854.5146,
-    "ts": "2026-04-18T11:29:56.854Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511796695.0603,
-    "ts": "2026-04-18T11:29:56.695Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-02-10 to 2026-02-24",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511796693.4336,
-    "ts": "2026-04-18T11:29:56.693Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511796526.522,
-    "ts": "2026-04-18T11:29:56.526Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-01-26 to 2026-02-09",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511796524.0615,
-    "ts": "2026-04-18T11:29:56.524Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511796388.9114,
-    "ts": "2026-04-18T11:29:56.388Z",
-    "level": "info",
-    "message": "  Fetching chunk 2026-01-11 to 2026-01-25",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511796386.6218,
-    "ts": "2026-04-18T11:29:56.386Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511796239.0735,
-    "ts": "2026-04-18T11:29:56.239Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-12-27 to 2026-01-10",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511796236.1252,
-    "ts": "2026-04-18T11:29:56.236Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511796077.444,
-    "ts": "2026-04-18T11:29:56.077Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-12-12 to 2025-12-26",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511796075.6165,
-    "ts": "2026-04-18T11:29:56.075Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511795933.8904,
-    "ts": "2026-04-18T11:29:55.933Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-11-27 to 2025-12-11",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511795931.0603,
-    "ts": "2026-04-18T11:29:55.931Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511795795.4727,
-    "ts": "2026-04-18T11:29:55.795Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-11-12 to 2025-11-26",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511795793.6511,
-    "ts": "2026-04-18T11:29:55.793Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511795659.5203,
-    "ts": "2026-04-18T11:29:55.659Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-10-28 to 2025-11-11",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511795655.542,
-    "ts": "2026-04-18T11:29:55.655Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511795501.905,
-    "ts": "2026-04-18T11:29:55.501Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-10-13 to 2025-10-27",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511795499.981,
-    "ts": "2026-04-18T11:29:55.499Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511795361.0361,
-    "ts": "2026-04-18T11:29:55.362Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-09-28 to 2025-10-12",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511795359.758,
-    "ts": "2026-04-18T11:29:55.359Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511795227.81,
-    "ts": "2026-04-18T11:29:55.227Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-09-13 to 2025-09-27",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511795225.0532,
-    "ts": "2026-04-18T11:29:55.225Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511795083.3315,
-    "ts": "2026-04-18T11:29:55.083Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-08-29 to 2025-09-12",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511795081.4612,
-    "ts": "2026-04-18T11:29:55.081Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511794933.3335,
-    "ts": "2026-04-18T11:29:54.933Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-08-14 to 2025-08-28",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511794931.048,
-    "ts": "2026-04-18T11:29:54.931Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511794788.4595,
-    "ts": "2026-04-18T11:29:54.788Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-07-30 to 2025-08-13",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511794786.2505,
-    "ts": "2026-04-18T11:29:54.786Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511794626.8828,
-    "ts": "2026-04-18T11:29:54.626Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-07-15 to 2025-07-29",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511794624.4365,
-    "ts": "2026-04-18T11:29:54.624Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511794466.7446,
-    "ts": "2026-04-18T11:29:54.466Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-06-30 to 2025-07-14",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511794462.446,
-    "ts": "2026-04-18T11:29:54.462Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511794289.2346,
-    "ts": "2026-04-18T11:29:54.289Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-06-15 to 2025-06-29",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511794285.1943,
-    "ts": "2026-04-18T11:29:54.285Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511794100.1846,
-    "ts": "2026-04-18T11:29:54.100Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-05-31 to 2025-06-14",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511794097.8152,
-    "ts": "2026-04-18T11:29:54.097Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511793918.5212,
-    "ts": "2026-04-18T11:29:53.918Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-05-16 to 2025-05-30",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511793915.688,
-    "ts": "2026-04-18T11:29:53.915Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511793738.8784,
-    "ts": "2026-04-18T11:29:53.738Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-05-01 to 2025-05-15",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511793734.9043,
-    "ts": "2026-04-18T11:29:53.734Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511793522.7668,
-    "ts": "2026-04-18T11:29:53.522Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-04-16 to 2025-04-30",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511793517.018,
-    "ts": "2026-04-18T11:29:53.517Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511793346.3582,
-    "ts": "2026-04-18T11:29:53.346Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-04-01 to 2025-04-15",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511793343.5894,
-    "ts": "2026-04-18T11:29:53.343Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511793166.834,
-    "ts": "2026-04-18T11:29:53.166Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-03-17 to 2025-03-31",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511793162.1587,
-    "ts": "2026-04-18T11:29:53.162Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511792990.583,
-    "ts": "2026-04-18T11:29:52.990Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-03-02 to 2025-03-16",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511792986.0671,
-    "ts": "2026-04-18T11:29:52.986Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511792812.6565,
-    "ts": "2026-04-18T11:29:52.812Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-02-15 to 2025-03-01",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511792808.219,
-    "ts": "2026-04-18T11:29:52.808Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511792624.428,
-    "ts": "2026-04-18T11:29:52.624Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-01-31 to 2025-02-14",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511792620.3948,
-    "ts": "2026-04-18T11:29:52.620Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511792430.624,
-    "ts": "2026-04-18T11:29:52.430Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-01-16 to 2025-01-30",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511792426.868,
-    "ts": "2026-04-18T11:29:52.426Z",
-    "level": "info",
-    "message": "  129 vouchers in chunk",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511792031.4688,
-    "ts": "2026-04-18T11:29:52.031Z",
-    "level": "info",
-    "message": "  Fetching chunk 2025-01-01 to 2025-01-15",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511792026.0344,
-    "ts": "2026-04-18T11:29:52.026Z",
-    "level": "info",
-    "message": "Date range spans 484 days — splitting into 15-day chunks",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511792022.8447,
-    "ts": "2026-04-18T11:29:52.022Z",
-    "level": "info",
-    "message": "Fetching vouchers from Tally",
-    "meta": {
-      "company": "Tally",
-      "fromDate": "2025-01-01",
-      "toDate": "2026-04-30"
-    }
-  },
-  {
-    "id": 1776511792018.3594,
-    "ts": "2026-04-18T11:29:52.018Z",
-    "level": "info",
-    "message": "Full sync: fetching Tally data sequentially...",
-    "meta": {}
-  },
-  {
-    "id": 1776511792013.5046,
-    "ts": "2026-04-18T11:29:52.013Z",
-    "level": "info",
-    "message": "Full sync job full-1776511792013-hyyvf started for: Tally",
-    "meta": {
-      "syncLedgers": false,
-      "syncStock": false,
-      "syncVouchers": true,
-      "syncGodowns": false,
-      "syncCostCentres": false,
-      "syncOpeningBalances": false,
-      "syncInvoices": false,
-      "syncTaxes": false,
-      "syncChartOfAccounts": false
-    }
-  },
-  {
-    "id": 1776511754249.606,
-    "ts": "2026-04-18T11:29:14.249Z",
-    "level": "info",
-    "message": "Full sync job full-1776511738901-oy582 done",
-    "meta": {}
-  },
-  {
-    "id": 1776511754246.2805,
-    "ts": "2026-04-18T11:29:14.246Z",
-    "level": "info",
-    "message": "Full sync complete: ok",
-    "meta": {
-      "company": "tallytoerpnext"
-    }
-  },
-  {
-    "id": 1776511754242.0347,
-    "ts": "2026-04-18T11:29:14.242Z",
-    "level": "success",
-    "message": "Stock sync done - created: 0, updated: 9, failed: 0",
-    "meta": {}
-  },
-  {
-    "id": 1776511739021.536,
-    "ts": "2026-04-18T11:28:59.021Z",
-    "level": "info",
-    "message": "Pre-creating 2 Item Groups, 2 UoMs, 0 HSN codes",
-    "meta": {}
-  },
-  {
-    "id": 1776511739017.8718,
-    "ts": "2026-04-18T11:28:59.017Z",
-    "level": "info",
-    "message": "Syncing 9 stock items to ERPNext",
-    "meta": {}
-  },
-  {
-    "id": 1776511739013.7625,
-    "ts": "2026-04-18T11:28:59.013Z",
-    "level": "info",
-    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3558000000",
-    "meta": {}
-  },
-  {
-    "id": 1776511738947.84,
-    "ts": "2026-04-18T11:28:58.947Z",
-    "level": "success",
-    "message": "Fetched 9 stock items (0 with HSN/SAC, 0 with GST rate)",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511738910.4597,
-    "ts": "2026-04-18T11:28:58.910Z",
-    "level": "info",
-    "message": "Fetching stock items from Tally",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511738906.3328,
-    "ts": "2026-04-18T11:28:58.906Z",
-    "level": "info",
-    "message": "Full sync: fetching Tally data sequentially...",
-    "meta": {}
-  },
-  {
-    "id": 1776511738901.3125,
-    "ts": "2026-04-18T11:28:58.901Z",
-    "level": "info",
-    "message": "Full sync job full-1776511738901-oy582 started for: Tally",
-    "meta": {
-      "syncLedgers": false,
-      "syncStock": true,
-      "syncVouchers": false,
-      "syncGodowns": false,
-      "syncCostCentres": false,
-      "syncOpeningBalances": false,
-      "syncInvoices": false,
-      "syncTaxes": false,
-      "syncChartOfAccounts": false
-    }
-  },
-  {
-    "id": 1776511704832.616,
-    "ts": "2026-04-18T11:28:24.832Z",
-    "level": "info",
-    "message": "Full sync job full-1776511688761-u320a done",
-    "meta": {}
-  },
-  {
-    "id": 1776511704830.235,
-    "ts": "2026-04-18T11:28:24.830Z",
-    "level": "info",
-    "message": "Full sync complete: warning",
-    "meta": {
-      "company": "tallytoerpnext"
-    }
-  },
-  {
-    "id": 1776511704828.4626,
-    "ts": "2026-04-18T11:28:24.828Z",
-    "level": "success",
-    "message": "Stock sync done - created: 0, updated: 0, failed: 9",
-    "meta": {}
-  },
-  {
-    "id": 1776511696555.9277,
-    "ts": "2026-04-18T11:28:16.555Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776511694814.3943,
-    "ts": "2026-04-18T11:28:14.814Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776511693076.5593,
-    "ts": "2026-04-18T11:28:13.076Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776511691333.5305,
-    "ts": "2026-04-18T11:28:11.333Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776511689594.5735,
-    "ts": "2026-04-18T11:28:09.594Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776511688870.1384,
-    "ts": "2026-04-18T11:28:08.870Z",
-    "level": "info",
-    "message": "Pre-creating 2 Item Groups, 2 UoMs, 0 HSN codes",
-    "meta": {}
-  },
-  {
-    "id": 1776511688866.7468,
-    "ts": "2026-04-18T11:28:08.866Z",
-    "level": "info",
-    "message": "Syncing 9 stock items to ERPNext",
-    "meta": {}
-  },
-  {
-    "id": 1776511688862.6482,
-    "ts": "2026-04-18T11:28:08.862Z",
-    "level": "info",
-    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3561000000",
-    "meta": {}
-  },
-  {
-    "id": 1776511688796.308,
-    "ts": "2026-04-18T11:28:08.796Z",
-    "level": "success",
-    "message": "Fetched 9 stock items (0 with HSN/SAC, 0 with GST rate)",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511688769.4875,
-    "ts": "2026-04-18T11:28:08.769Z",
-    "level": "info",
-    "message": "Fetching stock items from Tally",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511688765.1711,
-    "ts": "2026-04-18T11:28:08.765Z",
-    "level": "info",
-    "message": "Full sync: fetching Tally data sequentially...",
-    "meta": {}
-  },
-  {
-    "id": 1776511688761.4668,
-    "ts": "2026-04-18T11:28:08.761Z",
-    "level": "info",
-    "message": "Full sync job full-1776511688761-u320a started for: Tally",
-    "meta": {
-      "syncLedgers": false,
-      "syncStock": true,
-      "syncVouchers": false,
-      "syncGodowns": false,
-      "syncCostCentres": false,
-      "syncOpeningBalances": false,
-      "syncInvoices": false,
-      "syncTaxes": false,
-      "syncChartOfAccounts": false
-    }
-  },
-  {
-    "id": 1776511537810.9253,
-    "ts": "2026-04-18T11:25:37.810Z",
-    "level": "info",
-    "message": "Full sync job full-1776511520680-dbobl done",
-    "meta": {}
-  },
-  {
-    "id": 1776511537807.5193,
-    "ts": "2026-04-18T11:25:37.807Z",
-    "level": "info",
-    "message": "Full sync complete: warning",
-    "meta": {
-      "company": "tallytoerpnext"
-    }
-  },
-  {
-    "id": 1776511537804.362,
-    "ts": "2026-04-18T11:25:37.804Z",
-    "level": "success",
-    "message": "Stock sync done - created: 0, updated: 0, failed: 9",
-    "meta": {}
-  },
-  {
-    "id": 1776511528720.3784,
-    "ts": "2026-04-18T11:25:28.720Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776511526836.8691,
-    "ts": "2026-04-18T11:25:26.836Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776511524936.238,
-    "ts": "2026-04-18T11:25:24.936Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776511523283.2507,
-    "ts": "2026-04-18T11:25:23.283Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776511521655.1555,
-    "ts": "2026-04-18T11:25:21.655Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776511520853.64,
-    "ts": "2026-04-18T11:25:20.853Z",
-    "level": "info",
-    "message": "Pre-creating 2 Item Groups, 2 UoMs, 0 HSN codes",
-    "meta": {}
-  },
-  {
-    "id": 1776511520850.0066,
-    "ts": "2026-04-18T11:25:20.850Z",
-    "level": "info",
-    "message": "Syncing 9 stock items to ERPNext",
-    "meta": {}
-  },
-  {
-    "id": 1776511520845.7163,
-    "ts": "2026-04-18T11:25:20.845Z",
-    "level": "info",
-    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3562000000",
-    "meta": {}
-  },
-  {
-    "id": 1776511520768.9973,
-    "ts": "2026-04-18T11:25:20.768Z",
-    "level": "info",
-    "message": "Using ERPNext company: \"tallytoerpnext\" (from Sync UI)",
-    "meta": {}
-  },
-  {
-    "id": 1776511520764.5095,
-    "ts": "2026-04-18T11:25:20.764Z",
-    "level": "success",
-    "message": "Fetched 9 stock items (0 with HSN/SAC, 0 with GST rate)",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511520690.4495,
-    "ts": "2026-04-18T11:25:20.690Z",
-    "level": "info",
-    "message": "Fetching stock items from Tally",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776511520687.1475,
-    "ts": "2026-04-18T11:25:20.687Z",
-    "level": "info",
-    "message": "Full sync: fetching Tally data sequentially...",
-    "meta": {}
-  },
-  {
-    "id": 1776511520680.2683,
-    "ts": "2026-04-18T11:25:20.680Z",
-    "level": "info",
-    "message": "Full sync job full-1776511520680-dbobl started for: Tally",
-    "meta": {
-      "syncLedgers": false,
-      "syncStock": true,
-      "syncVouchers": false,
-      "syncGodowns": false,
-      "syncCostCentres": false,
-      "syncOpeningBalances": false,
-      "syncInvoices": false,
-      "syncTaxes": false,
-      "syncChartOfAccounts": false
-    }
-  },
-  {
-    "id": 1776511512317.996,
-    "ts": "2026-04-18T11:25:12.317Z",
-    "level": "info",
-    "message": "Run POST /api/middleware/check to validate all Tally data",
-    "meta": {}
-  },
-  {
-    "id": 1776511512315.895,
-    "ts": "2026-04-18T11:25:12.315Z",
-    "level": "info",
-    "message": "Tally endpoint: http://localhost:9000",
-    "meta": {}
-  },
-  {
-    "id": 1776511512311.0288,
-    "ts": "2026-04-18T11:25:12.311Z",
-    "level": "info",
-    "message": "Tally Middleware server running on http://localhost:4000",
-    "meta": {}
-  },
-  {
-    "id": 1776511510634.831,
-    "ts": "2026-04-18T11:25:10.634Z",
-    "level": "info",
-    "message": "Run POST /api/middleware/check to validate all Tally data",
-    "meta": {}
-  },
-  {
-    "id": 1776511510632.1858,
-    "ts": "2026-04-18T11:25:10.632Z",
-    "level": "info",
-    "message": "Tally endpoint: http://localhost:9000",
-    "meta": {}
-  },
-  {
-    "id": 1776511510628.6755,
-    "ts": "2026-04-18T11:25:10.628Z",
-    "level": "info",
-    "message": "Tally Middleware server running on http://localhost:4000",
-    "meta": {}
-  },
-  {
-    "id": 1776511011981.2527,
-    "ts": "2026-04-18T11:16:51.981Z",
-    "level": "info",
-    "message": "Full sync job full-1776510987795-q7z0s done",
-    "meta": {}
-  },
-  {
-    "id": 1776511011976.022,
-    "ts": "2026-04-18T11:16:51.976Z",
-    "level": "info",
-    "message": "Full sync complete: ok",
-    "meta": {
-      "company": "tallytoerpnext"
-    }
-  },
-  {
-    "id": 1776511011971.573,
-    "ts": "2026-04-18T11:16:51.971Z",
-    "level": "success",
-    "message": "Stock sync done - created: 1, updated: 8, failed: 0",
-    "meta": {}
-  },
-  {
-    "id": 1776510987995.5732,
-    "ts": "2026-04-18T11:16:27.995Z",
-    "level": "info",
-    "message": "Pre-creating 2 Item Groups, 2 UoMs, 1 HSN codes (incl. fallback 99999999)",
-    "meta": {}
-  },
-  {
-    "id": 1776510987992.838,
-    "ts": "2026-04-18T11:16:27.992Z",
-    "level": "info",
-    "message": "Syncing 9 stock items to ERPNext",
-    "meta": {}
-  },
-  {
-    "id": 1776510987987.7424,
-    "ts": "2026-04-18T11:16:27.987Z",
-    "level": "info",
-    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3563000000",
-    "meta": {}
-  },
-  {
-    "id": 1776510987887.9246,
-    "ts": "2026-04-18T11:16:27.887Z",
-    "level": "info",
-    "message": "Using ERPNext company: \"tallytoerpnext\" (from Sync UI)",
-    "meta": {}
-  },
-  {
-    "id": 1776510987882.8193,
-    "ts": "2026-04-18T11:16:27.882Z",
-    "level": "success",
-    "message": "Fetched 9 stock items (0 with HSN/SAC, 0 with GST rate)",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776510987808.447,
-    "ts": "2026-04-18T11:16:27.808Z",
-    "level": "info",
-    "message": "Fetching stock items from Tally",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776510987803.7937,
-    "ts": "2026-04-18T11:16:27.803Z",
-    "level": "info",
-    "message": "Full sync: fetching Tally data sequentially...",
-    "meta": {}
-  },
-  {
-    "id": 1776510987796.2275,
-    "ts": "2026-04-18T11:16:27.796Z",
-    "level": "info",
-    "message": "Full sync job full-1776510987795-q7z0s started for: Tally",
-    "meta": {
-      "syncLedgers": false,
-      "syncStock": true,
-      "syncVouchers": false,
-      "syncGodowns": false,
-      "syncCostCentres": false,
-      "syncOpeningBalances": false,
-      "syncInvoices": false,
-      "syncTaxes": false,
-      "syncChartOfAccounts": false
-    }
-  },
-  {
-    "id": 1776510982344.1775,
-    "ts": "2026-04-18T11:16:22.344Z",
-    "level": "info",
-    "message": "Run POST /api/middleware/check to validate all Tally data",
-    "meta": {}
-  },
-  {
-    "id": 1776510982342.2627,
-    "ts": "2026-04-18T11:16:22.342Z",
-    "level": "info",
-    "message": "Tally endpoint: http://localhost:9000",
-    "meta": {}
-  },
-  {
-    "id": 1776510982338.141,
-    "ts": "2026-04-18T11:16:22.338Z",
-    "level": "info",
-    "message": "Tally Middleware server running on http://localhost:4000",
-    "meta": {}
-  },
-  {
-    "id": 1776510967955.8647,
-    "ts": "2026-04-18T11:16:07.955Z",
-    "level": "info",
-    "message": "Run POST /api/middleware/check to validate all Tally data",
-    "meta": {}
-  },
-  {
-    "id": 1776510967953.333,
-    "ts": "2026-04-18T11:16:07.953Z",
-    "level": "info",
-    "message": "Tally endpoint: http://localhost:9000",
-    "meta": {}
-  },
-  {
-    "id": 1776510967949.3093,
-    "ts": "2026-04-18T11:16:07.949Z",
-    "level": "info",
-    "message": "Tally Middleware server running on http://localhost:4000",
-    "meta": {}
-  },
-  {
-    "id": 1776510761182.9434,
-    "ts": "2026-04-18T11:12:41.182Z",
-    "level": "info",
-    "message": "Full sync job full-1776510745269-x864y done",
-    "meta": {}
-  },
-  {
-    "id": 1776510761178.7058,
-    "ts": "2026-04-18T11:12:41.178Z",
-    "level": "info",
-    "message": "Full sync complete: warning",
-    "meta": {
-      "company": "tallytoerpnext"
-    }
-  },
-  {
-    "id": 1776510761174.6968,
-    "ts": "2026-04-18T11:12:41.174Z",
-    "level": "success",
-    "message": "Stock sync done - created: 8, updated: 0, failed: 1",
-    "meta": {}
-  },
-  {
-    "id": 1776510759661.014,
-    "ts": "2026-04-18T11:12:39.661Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: <strong>Stock Entry Detail</strong> Row #1: Value cannot be negative for <strong>Basic Rate (as per Stock UOM)</strong>",
-    "meta": {}
-  },
-  {
-    "id": 1776510745461.4463,
-    "ts": "2026-04-18T11:12:25.461Z",
-    "level": "info",
-    "message": "Pre-creating 2 Item Groups, 2 UoMs, 1 HSN codes (incl. fallback 99999999)",
-    "meta": {}
-  },
-  {
-    "id": 1776510745457.0942,
-    "ts": "2026-04-18T11:12:25.457Z",
-    "level": "info",
-    "message": "Syncing 9 stock items to ERPNext",
-    "meta": {}
-  },
-  {
-    "id": 1776510745452.4175,
-    "ts": "2026-04-18T11:12:25.452Z",
-    "level": "info",
-    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3564000000",
-    "meta": {}
-  },
-  {
-    "id": 1776510745368.6606,
-    "ts": "2026-04-18T11:12:25.368Z",
-    "level": "info",
-    "message": "Using ERPNext company: \"tallytoerpnext\" (from Sync UI)",
-    "meta": {}
-  },
-  {
-    "id": 1776510745363.5474,
-    "ts": "2026-04-18T11:12:25.363Z",
-    "level": "success",
-    "message": "Fetched 9 stock items (0 with HSN/SAC, 0 with GST rate)",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776510745282.7317,
-    "ts": "2026-04-18T11:12:25.282Z",
-    "level": "info",
-    "message": "Fetching stock items from Tally",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776510745276.1614,
-    "ts": "2026-04-18T11:12:25.276Z",
-    "level": "info",
-    "message": "Full sync: fetching Tally data sequentially...",
-    "meta": {}
-  },
-  {
-    "id": 1776510745269.8105,
-    "ts": "2026-04-18T11:12:25.269Z",
-    "level": "info",
-    "message": "Full sync job full-1776510745269-x864y started for: Tally",
-    "meta": {
-      "syncLedgers": false,
-      "syncStock": true,
-      "syncVouchers": false,
-      "syncGodowns": false,
-      "syncCostCentres": false,
-      "syncOpeningBalances": false,
-      "syncInvoices": false,
-      "syncTaxes": false,
-      "syncChartOfAccounts": false
-    }
-  },
-  {
-    "id": 1776510729017.6633,
-    "ts": "2026-04-18T11:12:09.017Z",
-    "level": "info",
-    "message": "Run POST /api/middleware/check to validate all Tally data",
-    "meta": {}
-  },
-  {
-    "id": 1776510729015.182,
-    "ts": "2026-04-18T11:12:09.015Z",
-    "level": "info",
-    "message": "Tally endpoint: http://localhost:9000",
-    "meta": {}
-  },
-  {
-    "id": 1776510729011.3684,
-    "ts": "2026-04-18T11:12:09.011Z",
-    "level": "info",
-    "message": "Tally Middleware server running on http://localhost:4000",
-    "meta": {}
-  },
-  {
-    "id": 1776510314265.5042,
-    "ts": "2026-04-18T11:05:14.265Z",
-    "level": "success",
-    "message": "Stock sync done - created: 0, updated: 0, failed: 9",
-    "meta": {}
-  },
-  {
-    "id": 1776510306415.8708,
-    "ts": "2026-04-18T11:05:06.415Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776510304768.7803,
-    "ts": "2026-04-18T11:05:04.768Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776510302897.5193,
-    "ts": "2026-04-18T11:05:02.897Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776510301277.0935,
-    "ts": "2026-04-18T11:05:01.277Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776510299703.398,
-    "ts": "2026-04-18T11:04:59.703Z",
-    "level": "warn",
-    "message": "ERPNext sync error [Item]: HSN/SAC Code is required. Please enter a valid HSN/SAC code.",
-    "meta": {}
-  },
-  {
-    "id": 1776510298984.7874,
-    "ts": "2026-04-18T11:04:58.984Z",
-    "level": "info",
-    "message": "Created Item Group: General",
-    "meta": {}
-  },
-  {
-    "id": 1776510298584.7773,
-    "ts": "2026-04-18T11:04:58.584Z",
-    "level": "info",
-    "message": "Pre-creating 2 Item Groups, 2 UoMs, 0 HSN codes",
-    "meta": {}
-  },
-  {
-    "id": 1776510298579.0996,
-    "ts": "2026-04-18T11:04:58.579Z",
-    "level": "info",
-    "message": "Syncing 9 stock items to ERPNext",
-    "meta": {}
-  },
-  {
-    "id": 1776510298574.4004,
-    "ts": "2026-04-18T11:04:58.574Z",
-    "level": "success",
-    "message": "Fetched 9 stock items (0 with HSN/SAC, 0 with GST rate)",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776510298535.922,
-    "ts": "2026-04-18T11:04:58.535Z",
-    "level": "info",
-    "message": "Fetching stock items from Tally",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776510298530.0125,
-    "ts": "2026-04-18T11:04:58.530Z",
-    "level": "info",
-    "message": "Stock sync job stock-1776510298530-gt81c started for: Tally",
-    "meta": {}
-  },
-  {
-    "id": 1776510236188.3936,
-    "ts": "2026-04-18T11:03:56.188Z",
-    "level": "info",
-    "message": "Full sync job full-1776510234372-p7ojs done",
-    "meta": {}
-  },
-  {
-    "id": 1776510236184.4875,
-    "ts": "2026-04-18T11:03:56.184Z",
-    "level": "info",
-    "message": "Full sync complete: ok",
-    "meta": {
-      "company": "tallytoerpnext"
-    }
-  },
-  {
-    "id": 1776510236180.1545,
-    "ts": "2026-04-18T11:03:56.180Z",
-    "level": "success",
-    "message": "Cost centres sync done - created: 1, updated: 0, failed: 0",
-    "meta": {}
-  },
-  {
-    "id": 1776510234492.1099,
-    "ts": "2026-04-18T11:03:54.492Z",
-    "level": "info",
-    "message": "Syncing 1 cost centres to ERPNext for tallytoerpnext (abbr: T)",
-    "meta": {}
-  },
-  {
-    "id": 1776510234487.1013,
-    "ts": "2026-04-18T11:03:54.487Z",
-    "level": "info",
-    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3565000000",
-    "meta": {}
-  },
-  {
-    "id": 1776510234396.934,
-    "ts": "2026-04-18T11:03:54.396Z",
-    "level": "success",
-    "message": "Fetched 1 cost centres",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776510234382.2815,
-    "ts": "2026-04-18T11:03:54.382Z",
-    "level": "info",
-    "message": "Fetching cost centres from Tally",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776510234376.3958,
-    "ts": "2026-04-18T11:03:54.376Z",
-    "level": "info",
-    "message": "Full sync: fetching Tally data sequentially...",
-    "meta": {}
-  },
-  {
-    "id": 1776510234372.585,
-    "ts": "2026-04-18T11:03:54.372Z",
-    "level": "info",
-    "message": "Full sync job full-1776510234372-p7ojs started for: Tally",
-    "meta": {
-      "syncLedgers": false,
-      "syncStock": false,
-      "syncVouchers": false,
-      "syncGodowns": false,
-      "syncCostCentres": true,
-      "syncOpeningBalances": false,
-      "syncInvoices": false,
-      "syncTaxes": false,
-      "syncChartOfAccounts": false
-    }
-  },
-  {
-    "id": 1776510152434.009,
-    "ts": "2026-04-18T11:02:32.434Z",
-    "level": "info",
-    "message": "Full sync job full-1776510150578-oj2gq done",
-    "meta": {}
-  },
-  {
-    "id": 1776510152430.631,
-    "ts": "2026-04-18T11:02:32.430Z",
-    "level": "info",
-    "message": "Full sync complete: ok",
-    "meta": {
-      "company": "tallytoerpnext"
-    }
-  },
-  {
-    "id": 1776510152425.7842,
-    "ts": "2026-04-18T11:02:32.425Z",
-    "level": "success",
-    "message": "Godown sync done - created: 0, updated: 1, failed: 0",
-    "meta": {}
-  },
-  {
-    "id": 1776510150819.636,
-    "ts": "2026-04-18T11:02:30.819Z",
-    "level": "info",
-    "message": "[Warehouse] rawParent='primary' parentWarehouse='All Warehouses - T'",
-    "meta": {}
-  },
-  {
-    "id": 1776510150814.1333,
-    "ts": "2026-04-18T11:02:30.814Z",
-    "level": "info",
-    "message": "Using root warehouse: All Warehouses - T",
-    "meta": {}
-  },
-  {
-    "id": 1776510150811.5781,
-    "ts": "2026-04-18T11:02:30.811Z",
-    "level": "info",
-    "message": "Root warehouse resolved: All Warehouses - T",
-    "meta": {}
-  },
-  {
-    "id": 1776510150674.6824,
-    "ts": "2026-04-18T11:02:30.674Z",
-    "level": "info",
-    "message": "Syncing 1 godowns to ERPNext for tallytoerpnext (abbr: T)",
-    "meta": {}
-  },
-  {
-    "id": 1776510150670.8025,
-    "ts": "2026-04-18T11:02:30.670Z",
-    "level": "info",
-    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3565000000",
-    "meta": {}
-  },
-  {
-    "id": 1776510150604.4514,
-    "ts": "2026-04-18T11:02:30.604Z",
-    "level": "success",
-    "message": "Fetched 1 godowns",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776510150588.3691,
-    "ts": "2026-04-18T11:02:30.588Z",
-    "level": "info",
-    "message": "Fetching godowns from Tally",
-    "meta": {
-      "company": "Tally"
-    }
-  },
-  {
-    "id": 1776510150583.792,
-    "ts": "2026-04-18T11:02:30.583Z",
-    "level": "info",
-    "message": "Full sync: fetching Tally data sequentially...",
-    "meta": {}
-  },
-  {
-    "id": 1776510150578.1624,
-    "ts": "2026-04-18T11:02:30.578Z",
-    "level": "info",
-    "message": "Full sync job full-1776510150578-oj2gq started for: Tally",
-    "meta": {
-      "syncLedgers": false,
-      "syncStock": false,
-      "syncVouchers": false,
-      "syncGodowns": true,
-      "syncCostCentres": false,
-      "syncOpeningBalances": false,
-      "syncInvoices": false,
-      "syncTaxes": false,
-      "syncChartOfAccounts": false
-    }
-  },
-  {
-    "id": 1776509514123.3037,
-    "ts": "2026-04-18T10:51:54.123Z",
-    "level": "info",
-    "message": "Full sync job full-1776509509138-k1h4o done",
-    "meta": {}
-  },
-  {
-    "id": 1776509514120.2559,
-    "ts": "2026-04-18T10:51:54.120Z",
-    "level": "info",
-    "message": "Full sync complete: ok",
-    "meta": {
-      "company": "tallytoerpnext"
-    }
-  },
-  {
-    "id": 1776509514116.1282,
-    "ts": "2026-04-18T10:51:54.116Z",
-    "level": "info",
-    "message": "Opening balance sync complete - 0 created, 3 updated, 0 failed",
-    "meta": {}
-  },
-  {
-    "id": 1776509514113.808,
-    "ts": "2026-04-18T10:51:54.113Z",
-    "level": "success",
-    "message": "Created & submitted Opening Entry JE [GL]: ACC-JV-2026-00008",
-    "meta": {}
-  },
-  {
-    "id": 1776509512996.9653,
-    "ts": "2026-04-18T10:51:52.996Z",
-    "level": "success",
-    "message": "Created & submitted Opening Entry JE [Creditors]: ACC-JV-2026-00007",
-    "meta": {}
-  },
-  {
-    "id": 1776509511918.6833,
-    "ts": "2026-04-18T10:51:51.918Z",
-    "level": "success",
-    "message": "Created & submitted Opening Entry JE [Debtors]: ACC-JV-2026-00006",
-    "meta": {}
-  },
-  {
-    "id": 1776509511605.875,
-    "ts": "2026-04-18T10:51:51.605Z",
-    "level": "info",
-    "message": "Splitting 14 accounts into 3 Journal Entries (Debtors / Creditors / GL)",
-    "meta": {}
-  },
-  {
-    "id": 1776509511599.1501,
-    "ts": "2026-04-18T10:51:51.599Z",
-    "level": "info",
-    "message": "[OB] Cleaned up 5 old-format Opening Balance JEs",
-    "meta": {}
-  },
-  {
-    "id": 1776509511522.5054,
-    "ts": "2026-04-18T10:51:51.522Z",
-    "level": "info",
-    "message": "[OB] Cancelled old-format submitted JE: ACC-JV-2026-00005 (\"RAJLAXMI - T\")",
-    "meta": {}
   }
 ]

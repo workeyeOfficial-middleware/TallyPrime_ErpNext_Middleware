@@ -716,15 +716,25 @@ async function upsert(client, doctype, filters, doc) {
 
   // For all other doctypes — use list search as before
   try {
+    // For invoice doctypes the searchKey is `remarks` and the value may contain a narration
+    // suffix that could vary. Use `like` so "Tally Voucher No: X%" always finds the doc
+    // regardless of what narration was appended, preventing false "not found" → duplicate creates.
+    const operator = searchKey === "remarks" ? "like" : "=";
+    const filterVal = searchKey === "remarks" ? searchVal.split(" | ")[0] + "%" : searchVal;
     const list = await client.get("/api/resource/" + encodeURIComponent(doctype), {
       params: {
-        filters: JSON.stringify([[doctype, searchKey, "=", searchVal]]),
+        filters: JSON.stringify([[doctype, searchKey, operator, filterVal]]),
         limit:   1,
-        fields:  '["name"]',
+        fields:  '["name","docstatus"]',
       },
     });
     const existing = list.data && list.data.data && list.data.data[0];
     if (existing) {
+      // Skip PUT for submitted docs (docstatus=1) — ERPNext does not allow editing them.
+      // The submit step handles submission; if already submitted we just treat as "updated".
+      if (existing.docstatus === 1) {
+        return { action: "updated", name: existing.name };
+      }
       // Always include doctype + name in PUT body — ERPNext requires them to validate mandatory fields
       await client.put(
         "/api/resource/" + encodeURIComponent(doctype) + "/" + encodeURIComponent(existing.name),
@@ -2372,41 +2382,64 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
   const incomeAccount  = await resolveAccount(client, "Sales",    companyAbbr, companyName) || ("Sales - "    + companyAbbr);
   const expenseAccount = await resolveAccount(client, "Purchase", companyAbbr, companyName) || ("Purchase - " + companyAbbr);
 
-  const salesMapper = (v) => ({
-    filters: { title: "Tally:" + v.voucherNumber },
-    doc: {
-      title:        "Tally:" + v.voucherNumber,
-      customer:     v.partyName || "Guest",
-      posting_date: v.voucherDate,
-      company:      companyName,
-      docstatus:    1,   // submit so invoice is visible and posted in ERPNext
-      items: [{
-        item_name:      v.voucherNumber || "Sales Item",
-        item_code:      "Sales Item",
-        qty:            1,
-        rate:           v.netAmount || 0,
-        income_account: incomeAccount,
-      }],
-    },
-  });
+  const salesMapper = (v) => {
+    // Use real Tally inventory items if available, else fall back to single placeholder row
+    const items = (v.inventoryItems && v.inventoryItems.length > 0)
+      ? v.inventoryItems.map((i) => ({
+          item_code:      i.itemName,
+          item_name:      i.itemName,
+          qty:            i.qty,
+          rate:           i.rate || (i.amount / (i.qty || 1)),
+          amount:         i.amount,
+          income_account: incomeAccount,
+        }))
+      : [{ item_code: "Sales Item", item_name: "Sales Item", qty: 1, rate: v.netAmount || 0, income_account: incomeAccount }];
 
-  const purchaseMapper = (v) => ({
-    filters: { title: "Tally:" + v.voucherNumber },
-    doc: {
-      title:        "Tally:" + v.voucherNumber,
-      supplier:     v.partyName || "Unknown Supplier",
-      posting_date: v.voucherDate,
-      company:      companyName,
-      docstatus:    1,   // submit so invoice is visible and posted in ERPNext
-      items: [{
-        item_name:       v.voucherNumber || "Purchase Item",
-        item_code:       "Purchase Item",
-        qty:             1,
-        rate:            v.netAmount || 0,
-        expense_account: expenseAccount,
-      }],
-    },
-  });
+    const salesRemarks = "Tally Voucher No: " + (v.voucherNumber || "") + (v.narration ? " | " + v.narration : "");
+    return {
+      // `title` is a virtual field — ERPNext rejects it in list-API filters, so upsert
+      // always fell through to CREATE, duplicating invoices on every sync.
+      // Use `remarks` (real DB column, unique per voucher) as the idempotency key instead.
+      filters: { remarks: salesRemarks },
+      doc: {
+        title:        "Tally:" + v.voucherNumber,
+        customer:     v.partyName || "Guest",
+        posting_date: v.voucherDate,
+        company:      companyName,
+        po_no:        v.voucherNumber || "",
+        remarks:      salesRemarks,
+        items,
+      },
+    };
+  };
+
+  const purchaseMapper = (v) => {
+    const items = (v.inventoryItems && v.inventoryItems.length > 0)
+      ? v.inventoryItems.map((i) => ({
+          item_code:       i.itemName,
+          item_name:       i.itemName,
+          qty:             i.qty,
+          rate:            i.rate || (i.amount / (i.qty || 1)),
+          amount:          i.amount,
+          expense_account: expenseAccount,
+        }))
+      : [{ item_code: "Purchase Item", item_name: "Purchase Item", qty: 1, rate: v.netAmount || 0, expense_account: expenseAccount }];
+
+    const purchaseRemarks = "Tally Voucher No: " + (v.voucherNumber || "") + (v.narration ? " | " + v.narration : "");
+    return {
+      filters: { remarks: purchaseRemarks },
+      doc: {
+        title:        "Tally:" + v.voucherNumber,
+        supplier:     v.partyName || "Unknown Supplier",
+        posting_date: v.voucherDate,
+        company:      companyName,
+        bill_no:      v.voucherNumber || "",
+        bill_date:    v.voucherDate,
+        remarks:      purchaseRemarks,
+        items,
+      },
+    };
+  };
 
   for (const code of ["Sales Item", "Purchase Item"]) {
     try {
@@ -2527,7 +2560,45 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
   const salesResults    = await batchSync(client, "Sales Invoice",    salesVouchers,    salesMapper);
   const purchaseResults = await batchSync(client, "Purchase Invoice", purchaseVouchers, purchaseMapper);
 
-  logger.success("Invoice sync done - sales: +" + salesResults.created + "/" + salesResults.failed + " failed | purchase: +" + purchaseResults.created + "/" + purchaseResults.failed + " failed");
+  // Submit all draft invoices using ERPNext's submit endpoint
+  async function submitDraftInvoices(doctype, vouchers) {
+    let submitted = 0, failed = 0;
+    for (const v of vouchers) {
+      try {
+        // Step 1: find the doc name via remarks (real DB column; `title` is virtual
+        // and rejected by ERPNext list API → "Field not permitted in query: title")
+        const remarksPrefix = "Tally Voucher No: " + v.voucherNumber;
+        const list = await client.get("/api/resource/" + encodeURIComponent(doctype), {
+          params: { filters: JSON.stringify([[doctype, "remarks", "like", remarksPrefix + "%"]]), fields: '["name","docstatus"]', limit: 1 }
+        });
+        const stub = list?.data?.data?.[0];
+        if (!stub) continue;
+        if (stub.docstatus === 1) continue; // already submitted
+
+        // Step 2: fetch the FULL document so we have the current `modified` timestamp.
+        // Frappe's optimistic locking checks that the `modified` value we send matches
+        // what's in the DB — sending a doc without it (or with a stale value) causes
+        // "has been modified after you have opened it" on every submit call.
+        const fullRes = await client.get("/api/resource/" + encodeURIComponent(doctype) + "/" + encodeURIComponent(stub.name));
+        const fullDoc = fullRes?.data?.data;
+        if (!fullDoc) continue;
+
+        // Step 3: submit using the complete doc so Frappe's timestamp check passes
+        await client.post("/api/method/frappe.client.submit", { doc: fullDoc });
+        submitted++;
+      } catch (e) {
+        failed++;
+        logger.warn("Could not submit " + doctype + " for voucher " + v.voucherNumber + ": " + parseErpError(e));
+      }
+      await sleep(200);
+    }
+    logger.info("Submit " + doctype + ": " + submitted + " submitted, " + failed + " failed");
+  }
+
+  await submitDraftInvoices("Sales Invoice",    salesVouchers);
+  await submitDraftInvoices("Purchase Invoice", purchaseVouchers);
+
+  logger.success("Invoice sync done - sales: +" + salesResults.created + " new/" + salesResults.updated + " updated/" + salesResults.failed + " failed | purchase: +" + purchaseResults.created + " new/" + purchaseResults.updated + " updated/" + purchaseResults.failed + " failed");
   return { sales: salesResults, purchase: purchaseResults };
 }
 
