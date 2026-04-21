@@ -124,7 +124,7 @@ export function clearCaches() {
   _customerGroup = null;
   _supplierGroup = null;
   _territory     = null;
-  logger.info("ERPNext client caches cleared for new sync run [erpnextClient v6]");
+  logger.info("ERPNext client caches cleared for new sync run [erpnextClient v8]");
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -916,8 +916,13 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
     // FIX: Validate PAN format before sending — ERPNext rejects invalid PANs
     // (format: 5 letters + 4 digits + 1 letter, e.g. ABCDE1234F)
     const customerPan = (l.pan || "").trim().toUpperCase();
-    if (/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(customerPan)) doc.pan = customerPan;
-    else if (customerPan) logger.warn("Invalid PAN skipped for customer \"" + l.name + "\": " + customerPan);
+    if (/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(customerPan)) {
+      doc.pan = customerPan;
+    } else if (customerPan) {
+      // Invalid PAN format — create customer without PAN rather than skipping
+      logger.info("Invalid PAN ignored for customer \"" + l.name + "\" (will sync without PAN): " + customerPan);
+      // doc.pan intentionally omitted — ERPNext accepts null/missing PAN
+    }
     // Contact info (primary)
     if (l.email)  doc.email_id        = l.email.trim();
     if (l.phone)  doc.mobile_no       = l.phone.trim();
@@ -940,8 +945,13 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
     if (l.gstin)  doc.tax_id          = l.gstin.trim();
     // FIX: Validate PAN format before sending — ERPNext rejects invalid PANs
     const supplierPan = (l.pan || "").trim().toUpperCase();
-    if (/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(supplierPan)) doc.pan = supplierPan;
-    else if (supplierPan) logger.warn("Invalid PAN skipped for supplier \"" + l.name + "\": " + supplierPan);
+    if (/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(supplierPan)) {
+      doc.pan = supplierPan;
+    } else if (supplierPan) {
+      // Invalid PAN format — create supplier without PAN rather than skipping
+      logger.info("Invalid PAN ignored for supplier \"" + l.name + "\" (will sync without PAN): " + supplierPan);
+      // doc.pan intentionally omitted
+    }
     // Contact info (primary)
     if (l.email)  doc.email_id        = l.email.trim();
     if (l.phone)  doc.mobile_no       = l.phone.trim();
@@ -2907,12 +2917,24 @@ export async function runFullSync(companyName, tallyData, options, creds = {}) {
   async function runStep(key, fn) {
     try {
       const res = await fn();
-      result.steps[key] = Object.assign({}, res, { status: (res.failed === 0 && !res.error) ? "ok" : "warn" });
-      // Skipped items are normal (e.g. root COA groups already managed by ERPNext).
-      // Don't escalate to "warn" just because skipped > 0.
-      if (result.steps[key].status === "warn" && res.failed === 0 && res.skipped > 0 && !res.error) {
-        result.steps[key].status = "ok";
+      // Normalise "failed" count across all return shapes so runStep always
+      // has a reliable number to check — avoids false "warn" when res.failed
+      // is undefined (e.g. ledgers return { customers, suppliers }, not { failed }).
+      function countFailed(r) {
+        if (!r || typeof r !== "object") return 0;
+        if (typeof r.failed === "number") return r.failed;
+        // Ledger shape: { customers: { failed }, suppliers: { failed } }
+        if (r.customers || r.suppliers) {
+          return ((r.customers && r.customers.failed) || 0) + ((r.suppliers && r.suppliers.failed) || 0);
+        }
+        // Invoice shape: { sales: { failed }, purchase: { failed } }
+        if (r.sales || r.purchase) {
+          return ((r.sales && r.sales.failed) || 0) + ((r.purchase && r.purchase.failed) || 0);
+        }
+        return 0;
       }
+      const totalFailed = countFailed(res);
+      result.steps[key] = Object.assign({}, res, { status: (totalFailed === 0 && !res.error) ? "ok" : "warn" });
     } catch (e) {
       if (e._cancelled) {
         // User clicked Stop — mark remaining steps as cancelled and exit gracefully
