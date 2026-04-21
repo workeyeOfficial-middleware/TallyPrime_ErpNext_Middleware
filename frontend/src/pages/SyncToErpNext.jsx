@@ -345,6 +345,7 @@ export function SyncToErpNext({companies}){
             <button onClick={()=>{const all=JSON.parse(localStorage.getItem("erp_company_map")||"{}");all[company]=erpCompany;localStorage.setItem("erp_company_map",JSON.stringify(all));}} disabled={!erpCompany} style={{padding:"9px 16px",borderRadius:10,border:"none",background:erpCompany?C.accentD:C.surface,color:erpCompany?"#fff":C.dim,fontFamily:C.title,fontSize:11,fontWeight:700,cursor:erpCompany?"pointer":"not-allowed",flexShrink:0,transition:"all .15s"}}>Save</button>
           </div>
           {erpCompany&&<p style={{fontFamily:C.mono,fontSize:10,color:C.green,margin:"5px 0 0"}}>✓ Will sync to: <strong>{erpCompany}</strong></p>}
+          {erpCompany&&<p style={{fontFamily:C.mono,fontSize:9,color:C.muted,margin:"3px 0 0"}}>⚠ Company name is case-sensitive. If sync fails with "company not found", check the exact name in ERPNext → Settings → Company.</p>}
         </div>
         <div style={{display:"flex",alignItems:"center",gap:10}}>
           <button onClick={async()=>{setPinging(true);setErpPing(null);try{const creds=credsOverride();if(creds.erpnextUrl){const res=await fetch(`${BASE_URL}/erpnext/ping`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(creds)});let _d;try{_d=await res.json();}catch(_){_d={connected:false,error:"Backend returned non-JSON (status "+res.status+")"};} setErpPing(_d);}else{setErpPing(await tallyAPI.erpnextPing());}}catch(e){const m=e.message||"Unknown";setErpPing({connected:false,error:m.includes("fetch")?`Cannot reach backend at ${BASE_URL} — is the server running on port 4000?`:m});}finally{setPinging(false);}}} disabled={pinging}
@@ -394,6 +395,20 @@ export function SyncToErpNext({companies}){
         <div style={{background:C.accentL,border:`1.5px solid ${C.accentB}`,borderRadius:10,padding:"10px 14px",marginBottom:18,display:"flex",gap:10,alignItems:"flex-start"}}>
           <span style={{fontSize:15,flexShrink:0}}>💡</span>
           <p style={{fontFamily:C.mono,fontSize:10,color:C.accentD,margin:0,lineHeight:1.65}}><strong>Recommended order:</strong> 🗂 Chart of Accounts → 👥 Ledgers → ⚡ Smart Ledgers → 🧾 Vouchers<br/>Always sync ledgers before vouchers to avoid "Account not found" errors.</p>
+        </div>
+        {/* Select All / Deselect All */}
+        <div style={{display:"flex",gap:8,marginBottom:12,alignItems:"center"}}>
+          <span style={{fontFamily:C.mono,fontSize:10,color:C.muted,flex:1}}>
+            {Object.values(syncOpts).filter(Boolean).length}/{SYNC_OPTIONS.length} selected
+          </span>
+          <button
+            onClick={()=>setSyncOpts(Object.fromEntries(SYNC_OPTIONS.map(o=>[o.key,true])))}
+            style={{padding:"5px 13px",borderRadius:7,border:`1.5px solid ${C.accentB}`,background:C.accentL,color:C.accentD,fontFamily:C.mono,fontSize:10,fontWeight:600,cursor:"pointer",transition:"all .15s"}}
+          >☑ Select All</button>
+          <button
+            onClick={()=>setSyncOpts(Object.fromEntries(SYNC_OPTIONS.map(o=>[o.key,false])))}
+            style={{padding:"5px 13px",borderRadius:7,border:`1.5px solid ${C.border}`,background:C.surface,color:C.muted,fontFamily:C.mono,fontSize:10,fontWeight:600,cursor:"pointer",transition:"all .15s"}}
+          >☐ Deselect All</button>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:22}}>
           {SYNC_OPTIONS.map(opt=>(

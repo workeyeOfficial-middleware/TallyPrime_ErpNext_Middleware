@@ -108,8 +108,24 @@ const _knownItemGroups   = new Set();
 const _knownUoMs         = new Set();
 const _knownHsn          = new Set();
 const _accountCache      = new Map();
+const _accountTypeMap    = new Map(); // "AccountName - XX" → "Receivable"|"Payable"|... MUST be before resolveAccount
 const _companyAbbrCache  = new Map();
 const _companyNameCache  = new Map(); // tallyName -> erpnextName
+
+// Call this at the start of each full sync to avoid stale cache across runs
+export function clearCaches() {
+  _knownItemGroups.clear();
+  _knownUoMs.clear();
+  _knownHsn.clear();
+  _accountCache.clear();
+  _accountTypeMap.clear();
+  _companyAbbrCache.clear();
+  _companyNameCache.clear();
+  _customerGroup = null;
+  _supplierGroup = null;
+  _territory     = null;
+  logger.info("ERPNext client caches cleared for new sync run");
+}
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -139,42 +155,36 @@ function resolveTerritory(state) {
 
 // Ensure an ERPNext Address record exists for a party
 async function ensureAddress(client, partyName, partyType, ledger) {
-  // Only create an Address doc when we have actual address data (not just email/phone — those go on Contact)
-  const hasAddressData = ledger.address || ledger.state || ledger.pincode;
-  if (!hasAddressData) return;
+  if (!ledger.address && !ledger.state && !ledger.pincode) return; // nothing to sync
 
-  // ERPNext requires city — use state, then pincode, then party name as fallback
-  const city = ledger.state || ledger.pincode || partyName;
+  // ERPNext India requires `state` for Indian addresses — skip if missing
+  if (!ledger.state) {
+    logger.warn("Address sync skipped for " + partyName + ": State is a required field for Indian Address");
+    return;
+  }
 
+  const addressName = partyName + "-" + partyType;
   const doc = {
     doctype:        "Address",
     address_title:  partyName,
     address_type:   "Billing",
-    address_line1:  ledger.address || "-",  // ERPNext requires non-empty address_line1
-    city,
-    state:          ledger.state  || "",
+    address_line1:  ledger.address || "",
+    city:           ledger.state || "",
+    state:          ledger.state || "",
     country:        "India",
     pincode:        ledger.pincode || "",
     links: [{ link_doctype: partyType, link_name: partyName }],
   };
-  if (ledger.email) doc.email_id = ledger.email;
-  if (ledger.phone) doc.phone    = ledger.phone;
+  if (ledger.email) doc.email_id   = ledger.email;
+  if (ledger.phone) doc.phone      = ledger.phone;
 
   try {
-    const res = await client.get("/api/resource/Address", {
-      params: {
-        filters: JSON.stringify([["Dynamic Link", "link_name", "=", partyName], ["Dynamic Link", "link_doctype", "=", partyType]]),
-        fields:  '["name"]',
-        limit:   1,
-      }
-    }).catch(() => null);
-    const existing = res?.data?.data?.[0];
-    if (existing) {
-      await client.put("/api/resource/Address/" + encodeURIComponent(existing.name), Object.assign({}, doc, { name: existing.name }));
+    const existing = await client.get("/api/resource/Address/" + encodeURIComponent(addressName)).catch(() => null);
+    if (existing && existing.data && existing.data.data) {
+      await client.put("/api/resource/Address/" + encodeURIComponent(addressName), Object.assign({}, doc, { name: addressName }));
     } else {
-      await client.post("/api/resource/Address", doc);
+      await client.post("/api/resource/Address", Object.assign({}, doc, { name: addressName }));
     }
-    logger.info("Address synced for " + partyName + ": city=" + city + " pincode=" + (ledger.pincode||"") + " state=" + (ledger.state||""));
   } catch (err) {
     logger.warn("Address sync skipped for " + partyName + ": " + parseErpError(err));
   }
@@ -183,7 +193,8 @@ async function ensureAddress(client, partyName, partyType, ledger) {
 // Ensure ERPNext Contact record for a party
 async function ensureContact(client, partyName, partyType, ledger) {
   if (!ledger.phone && !ledger.email) return;
-  const nameParts = partyName.split(" ");
+  const contactName = partyName + "-" + partyType;
+  const nameParts   = partyName.split(" ");
   const doc = {
     doctype:    "Contact",
     first_name: nameParts[0] || partyName,
@@ -193,32 +204,11 @@ async function ensureContact(client, partyName, partyType, ledger) {
     email_ids: ledger.email ? [{ email_id: ledger.email, is_primary: 1 }] : [],
   };
   try {
-    // Search by party link — avoids duplicate creation when ERPNext auto-renames the doc
-    const res = await client.get("/api/resource/Contact", {
-      params: {
-        filters: JSON.stringify([["Dynamic Link", "link_name", "=", partyName], ["Dynamic Link", "link_doctype", "=", partyType]]),
-        fields:  '["name"]',
-        limit:   1,
-      }
-    }).catch(() => null);
-    const existing = res?.data?.data?.[0];
-    if (existing) {
-      // Update existing — but DELETE extras if there are duplicates
-      const allRes = await client.get("/api/resource/Contact", {
-        params: {
-          filters: JSON.stringify([["Dynamic Link", "link_name", "=", partyName], ["Dynamic Link", "link_doctype", "=", partyType]]),
-          fields:  '["name"]',
-          limit:   50,
-        }
-      }).catch(() => null);
-      const all = allRes?.data?.data || [];
-      // Keep the first one, delete the rest
-      for (const dup of all.slice(1)) {
-        await client.delete("/api/resource/Contact/" + encodeURIComponent(dup.name)).catch(() => {});
-      }
-      await client.put("/api/resource/Contact/" + encodeURIComponent(existing.name), Object.assign({}, doc, { name: existing.name }));
+    const existing = await client.get("/api/resource/Contact/" + encodeURIComponent(contactName)).catch(() => null);
+    if (existing && existing.data && existing.data.data) {
+      await client.put("/api/resource/Contact/" + encodeURIComponent(contactName), Object.assign({}, doc, { name: contactName }));
     } else {
-      await client.post("/api/resource/Contact", doc);
+      await client.post("/api/resource/Contact", Object.assign({}, doc, { name: contactName }));
     }
   } catch (err) {
     logger.warn("Contact sync skipped for " + partyName + ": " + parseErpError(err));
@@ -742,15 +732,28 @@ async function upsert(client, doctype, filters, doc) {
 
   // For all other doctypes — use list search as before
   try {
+    // For invoice doctypes the searchKey is `remarks` and the value may contain a narration
+    // suffix that could vary. Use `like` so "Tally Voucher No: X%" always finds the doc
+    // regardless of what narration was appended, preventing false "not found" → duplicate creates.
+    // FIX: Also apply `like` matching for `user_remark` (Journal Entry idempotency key)
+    // so we don't create duplicate JEs when the same voucher is synced twice.
+    const isLikeField = searchKey === "remarks" || searchKey === "user_remark";
+    const operator  = isLikeField ? "like" : "=";
+    const filterVal = isLikeField ? searchVal.split(" | ")[0] + "%" : searchVal;
     const list = await client.get("/api/resource/" + encodeURIComponent(doctype), {
       params: {
-        filters: JSON.stringify([[doctype, searchKey, "=", searchVal]]),
+        filters: JSON.stringify([[doctype, searchKey, operator, filterVal]]),
         limit:   1,
-        fields:  '["name"]',
+        fields:  '["name","docstatus"]',
       },
     });
     const existing = list.data && list.data.data && list.data.data[0];
     if (existing) {
+      // Skip PUT for submitted docs (docstatus=1) — ERPNext does not allow editing them.
+      // The submit step handles submission; if already submitted we just treat as "updated".
+      if (existing.docstatus === 1) {
+        return { action: "updated", name: existing.name };
+      }
       // Always include doctype + name in PUT body — ERPNext requires them to validate mandatory fields
       await client.put(
         "/api/resource/" + encodeURIComponent(doctype) + "/" + encodeURIComponent(existing.name),
@@ -903,11 +906,10 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
     const isBusiness = hasGstin ||
       DEBTOR_KEYS.some((k) => (l.parentGroup || "").toLowerCase().includes(k));
     const doc = {
-      customer_name:    l.name,
-      customer_type:    isBusiness ? "Company" : "Individual",
-      customer_group:   _customerGroup,
-      territory:        resolveTerritory(l.state),
-      default_currency: "INR",
+      customer_name:  l.name,
+      customer_type:  isBusiness ? "Company" : "Individual",
+      customer_group: _customerGroup,
+      territory:      resolveTerritory(l.state),
     };
     // Statutory
     if (l.gstin)  doc.tax_id          = l.gstin.trim();
@@ -922,8 +924,6 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
     // Bank
     if (l.bankAccount) doc.bank_account_no = l.bankAccount.trim();
     if (l.ifsc)        doc.bank_ifsc_code  = l.ifsc.trim();
-    // Tally alias / mailing name
-    if (l.mailingName && l.mailingName !== l.name) doc.customer_name_in_other_language = l.mailingName.trim();
     return { filters: { customer_name: l.name }, doc, _ledger: l };
   };
 
@@ -931,11 +931,10 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
     l.name = (l.name || "").trim(); // trim Tally trailing newlines
     const hasGstin = !!(l.gstin && l.gstin.trim().length > 5);
     const doc = {
-      supplier_name:    l.name,
-      supplier_type:    hasGstin ? "Company" : "Individual",
-      supplier_group:   _supplierGroup,
-      country:          "India",
-      default_currency: "INR",
+      supplier_name:  l.name,
+      supplier_type:  hasGstin ? "Company" : "Individual",
+      supplier_group: _supplierGroup,
+      country:        "India",
     };
     // Statutory
     if (l.gstin)  doc.tax_id          = l.gstin.trim();
@@ -949,8 +948,6 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
     // Bank
     if (l.bankAccount) doc.bank_account_no = l.bankAccount.trim();
     if (l.ifsc)        doc.bank_ifsc_code  = l.ifsc.trim();
-    // Tally alias / mailing name
-    if (l.mailingName && l.mailingName !== l.name) doc.supplier_name_in_other_language = l.mailingName.trim();
     return { filters: { supplier_name: l.name }, doc, _ledger: l };
   };
 
@@ -965,11 +962,6 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
     ...supplierResults.errors.map((e) => String(e.item || "")),
   ]);
 
-  // Log what data Tally has for each party — helps diagnose missing address/contact
-  for (const l of [...customers, ...suppliers]) {
-    logger.info("[party data] " + l.name + " → addr=\"" + (l.address||"") + "\" state=\"" + (l.state||"") + "\" pin=\"" + (l.pincode||"") + "\" phone=\"" + (l.phone||"") + "\" email=\"" + (l.email||"") + "\" gstin=\"" + (l.gstin||"") + "\"");
-  }
-
   // Sync addresses and contacts for all parties that have that data in Tally
   const partiesWithAddr = [
     ...customers.map((l) => ({ l, type: "Customer" })),
@@ -983,7 +975,6 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
     logger.info("Syncing addresses/contacts for " + partiesWithAddr.length + " parties from Tally");
     for (const { l, type } of partiesWithAddr) {
       try {
-        logger.info("[addr debug] " + l.name + " → address=\"" + (l.address||"") + "\" state=\"" + (l.state||"") + "\" pincode=\"" + (l.pincode||"") + "\" phone=\"" + (l.phone||"") + "\" email=\"" + (l.email||"") + "\"");
         await ensureAddress(client, l.name, type, l);
         await ensureContact(client, l.name, type, l);
         await sleep(300);
@@ -1003,24 +994,45 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
 // (ERPNext India GST enforces mandatory at Property Setter level, not Custom Field)
 async function ensureHsnNotMandatory(client) {
   try {
-    // Try Property Setter first — this is how ERPNext India GST sets mandatory
+    // Method 1: Update existing Property Setter
     const psName = "Item-gst_hsn_code-reqd";
     try {
       await client.put("/api/resource/Property Setter/" + encodeURIComponent(psName), { value: "0" });
-      logger.info("HSN/SAC field set as non-mandatory via Property Setter");
-      return;
-    } catch (_) { /* doesn't exist yet — create it */ }
+      logger.info("HSN/SAC field set as non-mandatory via Property Setter (PUT)");
+    } catch (_) {
+      // Property Setter doesn't exist yet — create it
+      try {
+        await client.post("/api/resource/Property Setter", {
+          doctype:          "Property Setter",
+          doctype_or_field: "DocField",
+          doc_type:         "Item",
+          field_name:       "gst_hsn_code",
+          property:         "reqd",
+          property_type:    "Check",
+          value:            "0",
+        });
+        logger.info("HSN/SAC field set as non-mandatory via Property Setter (POST)");
+      } catch (_2) {}
+    }
 
-    await client.post("/api/resource/Property Setter", {
-      doctype:        "Property Setter",
-      doctype_or_field: "DocField",
-      doc_type:       "Item",
-      field_name:     "gst_hsn_code",
-      property:       "reqd",
-      property_type:  "Check",
-      value:          "0",
-    });
-    logger.info("HSN/SAC field set as non-mandatory via Property Setter");
+    // Method 2: Also try patching any Custom Field for gst_hsn_code that has reqd=1
+    // Some ERPNext India installations enforce HSN via a Custom Field instead of Property Setter.
+    try {
+      const cfRes = await client.get("/api/resource/Custom Field", {
+        params: {
+          filters: JSON.stringify([["Custom Field","dt","=","Item"],["Custom Field","fieldname","=","gst_hsn_code"]]),
+          fields: '["name","reqd"]', limit: 5,
+        },
+      });
+      const cfs = (cfRes.data && cfRes.data.data) || [];
+      for (const cf of cfs) {
+        if (cf.reqd) {
+          await client.put("/api/resource/Custom Field/" + encodeURIComponent(cf.name), { reqd: 0 });
+          logger.info("HSN/SAC Custom Field set as non-mandatory: " + cf.name);
+        }
+      }
+    } catch (_) {}
+
   } catch (e) {
     logger.warn("Could not patch gst_hsn_code mandatory flag: " + (e?.message || e));
   }
@@ -1285,10 +1297,8 @@ function tallyVoucherTypeToErpNext(tallyType) {
 
 // ── Determine if an ERPNext account is Receivable or Payable ─────────────────
 // ERPNext requires party_type + party on every JE row that uses such an account.
-// We check the account_type field returned by resolveAccount's cache, but since
-// resolveAccount only returns the account name (string), we maintain a small
-// side-map of name → account_type populated at auto-create time.
-const _accountTypeMap = new Map(); // "AccountName - XX" → "Receivable"|"Payable"|...
+// _accountTypeMap is declared near the top of the module (with the other caches)
+// so resolveAccount (which populates it on auto-create) doesn't hit a ReferenceError.
 
 async function resolveAccountWithType(client, ledgerName, companyAbbr, companyName) {
   const name = await resolveAccount(client, ledgerName, companyAbbr, companyName);
@@ -1378,7 +1388,12 @@ export async function syncVouchersToErpNext(vouchers, companyName, creds = {}) {
   // Any such value causes: MySQLdb.DataError: Out of range value for column 'total_debit'
   // Strategy: clamp each row amount to [0, 999_999_999_999], skip rows that are
   // still invalid, and skip the whole voucher if no valid rows remain.
-  const MAX_AMOUNT = 999_999_999_999;
+  // FIX: Lower cap from 999B to 9,99,99,999 (≈ 100 crore INR).
+  // ERPNext's total_amount_in_words field is VARCHAR(140). Amounts like
+  // 999,999,999,999 produce >140-char word strings and ERPNext rejects the JE.
+  // Any Tally voucher with a row exceeding ~100 crore is almost certainly
+  // corrupt data (opening-balance carry-overs, test entries, etc.) — skip it.
+  const MAX_AMOUNT = 999_999_999;  // ~100 crore INR
 
   function safeAmount(n) {
     const v = Number(n);
@@ -1482,23 +1497,31 @@ export async function syncVouchersToErpNext(vouchers, companyName, creds = {}) {
   }
   // ─────────────────────────────────────────────────────────────────────────────
 
-  const jeResults = await batchSync(client, "Journal Entry", sanitized, (v) => ({
-    filters: { cheque_no: "Tally:" + (v.voucherNumber || v.guid) },
-    doc: {
-      doctype:      "Journal Entry",
-      title:        v.voucherType + " - " + (v.voucherNumber || v.guid),
-      // ── FIX: use correct ERPNext voucher_type per Tally type, NOT always "Journal Entry"
-      // Opening balances use "Opening Entry" (handled by syncOpeningBalancesToErpNext separately).
-      // Regular vouchers must use the appropriate type so they appear in the right ERPNext reports.
-      voucher_type: tallyVoucherTypeToErpNext(v.voucherType),
-      posting_date: v.voucherDate,
-      company:      companyName,
-      cheque_no:    "Tally:" + (v.voucherNumber || v.guid),
-      cheque_date:  v.voucherDate,
-      user_remark:  "Tally:" + (v.voucherNumber || v.guid),
-      accounts:     v.resolvedAccounts,
-    },
-  }));
+  const jeResults = await batchSync(client, "Journal Entry", sanitized, (v) => {
+    // FIX: cheque_no has a 140-char limit in ERPNext. GUIDs (36 chars) + prefix are fine,
+    // but voucher numbers can be long. Truncate to 140 chars to prevent silent truncation
+    // that would cause two different vouchers to get the same cheque_no and collide.
+    // We use user_remark as the canonical idempotency key (no length constraint) and
+    // keep cheque_no as a truncated human-readable reference only.
+    const idKey       = ("Tally:" + (v.voucherNumber || v.guid)).slice(0, 140);
+    const remarkKey   = "Tally:" + (v.voucherNumber || v.guid); // no length limit
+    return {
+      // FIX: Use user_remark as the upsert filter key — it is the full reliable key.
+      // cheque_no was used before but silent truncation caused false "not found" collisions.
+      filters: { user_remark: remarkKey },
+      doc: {
+        doctype:      "Journal Entry",
+        title:        (v.voucherType + " - " + (v.voucherNumber || v.guid)).slice(0, 140),
+        voucher_type: tallyVoucherTypeToErpNext(v.voucherType),
+        posting_date: v.voucherDate,
+        company:      companyName,
+        cheque_no:    idKey,
+        cheque_date:  v.voucherDate,
+        user_remark:  remarkKey,
+        accounts:     v.resolvedAccounts,
+      },
+    };
+  });
 
   logger.success("Voucher sync done - JE created: " + jeResults.created + ", updated: " + jeResults.updated + ", failed: " + jeResults.failed);
   return { journalEntries: jeResults, salesInvoices: { created: 0, updated: 0, failed: salesVouchers.length } };
@@ -1597,43 +1620,56 @@ export async function syncChartOfAccountsToErpNext(groups, companyName, creds = 
   // Covers all standard Tally group names including case variants from the logs
   const TALLY_ROOT_TYPE = {
     // Asset
-    'current assets':            'Asset',
-    'fixed assets':              'Asset',
-    'investments':               'Asset',
-    'loans & advances (asset)':  'Asset',
-    'misc. expenses (asset)':    'Asset',
-    'misc. expenses (asset)':    'Asset',
-    'bank accounts':             'Asset',
-    'cash-in-hand':              'Asset',
-    'deposits (asset)':          'Asset',
-    'stock-in-hand':             'Asset',
-    'sundry debtors':            'Asset',
-    'branch / divisions':        'Asset',
+    'current assets':                   'Asset',
+    'fixed assets':                     'Asset',
+    'investments':                      'Asset',
+    'loans & advances (asset)':         'Asset',
+    'misc. expenses (asset)':           'Asset',
+    'misc. expenses (asset)':           'Asset',
+    'bank accounts':                    'Asset',
+    'cash-in-hand':                     'Asset',
+    'deposits (asset)':                 'Asset',
+    'stock-in-hand':                    'Asset',
+    'sundry debtors':                   'Asset',
+    'branch / divisions':               'Asset',
     // Liability
-    'current liabilities':       'Liability',
-    'loans (liability)':         'Liability',
-    'bank od & od accounts':     'Liability',
-    'bank od a/c':               'Liability',
-    'provisions':                'Liability',
-    'duties & taxes':            'Liability',
-    'sundry creditors':          'Liability',
-    'suspense a/c':              'Liability',
-    'suspense':                  'Liability',
+    'current liabilities':              'Liability',
+    'loans (liability)':                'Liability',
+    'bank od & od accounts':            'Liability',
+    'bank od a/c':                      'Liability',
+    'provisions':                       'Liability',
+    'duties & taxes':                   'Liability',
+    'sundry creditors':                 'Liability',
+    'suspense a/c':                     'Liability',
+    'suspense':                         'Liability',
     // Equity (maps to liabilityRoot on ERPNext India)
-    'capital account':           'Equity',
-    'reserves & surplus':        'Equity',
+    'capital account':                  'Equity',
+    'reserves & surplus':               'Equity',
     // Income
-    'sales accounts':            'Income',
-    'indirect income':           'Income',
-    'indirect incomes':          'Income',
-    'direct incomes':            'Income',
-    'direct income':             'Income',
+    'sales accounts':                   'Income',
+    'indirect income':                  'Income',
+    'indirect incomes':                 'Income',
+    'direct incomes':                   'Income',
+    'direct income':                    'Income',
     // Expense
-    'purchase accounts':         'Expense',
-    'indirect expenses':         'Expense',
-    'direct expenses':           'Expense',
-    'manufacturing expenses':    'Expense',
+    'purchase accounts':                'Expense',
+    'indirect expenses':                'Expense',
+    'direct expenses':                  'Expense',
+    'manufacturing expenses':           'Expense',
   };
+
+  // Build a CONTAINS lookup for partial name matching against TALLY_ROOT_TYPE keys.
+  // This handles case variants like "Direct Expenses" vs "direct expenses" and
+  // Tally groups that partially match a known key (e.g. "Misc. Expenses (ASSET)").
+  function resolveRootType(nameLower) {
+    // Exact match first
+    if (TALLY_ROOT_TYPE[nameLower]) return TALLY_ROOT_TYPE[nameLower];
+    // Partial / substring match
+    for (const [key, type] of Object.entries(TALLY_ROOT_TYPE)) {
+      if (nameLower.includes(key) || key.includes(nameLower)) return type;
+    }
+    return null;
+  }
 
   const ROOT_BY_TYPE = {
     'Asset':     assetRoot,
@@ -1663,8 +1699,10 @@ export async function syncChartOfAccountsToErpNext(groups, companyName, creds = 
     }
 
     // Root-level Tally group: resolve to real ERPNext root via type mapping
+    // Use resolveRootType() which does partial/substring matching so case variants
+    // like "Misc. Expenses (ASSET)", "Direct Expenses", "Branch / Divisions" all match.
     const nameLower = group.name.trim().toLowerCase();
-    const rootType  = TALLY_ROOT_TYPE[nameLower];
+    const rootType  = resolveRootType(nameLower);
     if (rootType && ROOT_BY_TYPE[rootType]) return ROOT_BY_TYPE[rootType];
 
     // Partial match: any ERPNext group account whose name contains this group name
@@ -2063,40 +2101,30 @@ export async function syncOpeningBalancesToErpNext(ledgers, companyName, creds =
     const pg     = (l.parentGroup || "").toLowerCase();
 
     if (glAcct) {
-      const acctType = (glAcct.account_type || "").toLowerCase();
-
-      // If ERPNext created this account as Receivable/Payable (e.g. from ledger sync),
-      // it requires a party — post as Customer/Supplier even if Tally group says GL
-      if (acctType === "receivable" && receivableAcct) {
-        logger.warn("  " + l.name + " — ERPNext account_type=receivable, posting as Customer OB");
-        accounts.push({
-          account:                    receivableAcct.name,
-          party_type:                 "Customer",
-          party:                      l.name,
-          debit_in_account_currency:  bal < 0 ? Math.abs(bal) : 0,
-          credit_in_account_currency: bal > 0 ? Math.abs(bal) : 0,
-          is_advance:                 "No",
-        });
-      } else if (acctType === "payable" && payableAcct) {
-        logger.warn("  " + l.name + " — ERPNext account_type=payable, posting as Supplier OB");
-        accounts.push({
-          account:                    payableAcct.name,
-          party_type:                 "Supplier",
-          party:                      l.name,
-          debit_in_account_currency:  bal < 0 ? Math.abs(bal) : 0,
-          credit_in_account_currency: bal > 0 ? Math.abs(bal) : 0,
-          is_advance:                 "No",
-        });
+      // Direct GL account found in ERPNext (bank, cash, stock etc.)
+      // FIX: If the account_type is Receivable or Payable, ERPNext requires
+      // party_type + party on every JE row — even for Opening Entry.
+      // This happens when a ledger like "RAJLAXMI" sits under Bank Accounts in
+      // Tally but its ERPNext account was auto-created as Receivable/Payable.
+      const row = {
+        account:                    glAcct.name,
+        // Tally sign convention: negative = debit (asset/debtor), positive = credit (liability/creditor)
+        debit_in_account_currency:  bal < 0 ? Math.abs(bal) : 0,
+        credit_in_account_currency: bal > 0 ? Math.abs(bal) : 0,
+        is_advance:                 "No",
+      };
+      if (glAcct.account_type === "Receivable") {
+        row.party_type = "Customer";
+        row.party      = l.name.trim();
+        logger.info("  " + l.name + " -> GL (Receivable — adding party): " + glAcct.name);
+      } else if (glAcct.account_type === "Payable") {
+        row.party_type = "Supplier";
+        row.party      = l.name.trim();
+        logger.info("  " + l.name + " -> GL (Payable — adding party): " + glAcct.name);
       } else {
-        // Plain GL account — post directly
-        accounts.push({
-          account:                    glAcct.name,
-          debit_in_account_currency:  bal < 0 ? Math.abs(bal) : 0,
-          credit_in_account_currency: bal > 0 ? Math.abs(bal) : 0,
-          is_advance:                 "No",
-        });
         logger.info("  " + l.name + " -> GL: " + glAcct.name);
       }
+      accounts.push(row);
 
     } else if (isDebtor(l) && receivableAcct) {
       // Customer -> Receivable control account + party
@@ -2399,15 +2427,66 @@ export async function syncCostCentresToErpNext(costCentres, companyName, creds =
   const companyAbbr = await getCompanyAbbr(client, companyName);
   logger.info("Syncing " + costCentres.length + " cost centres to ERPNext for " + companyName + " (abbr: " + companyAbbr + ")");
 
-  const results = await batchSync(client, "Cost Center", costCentres, (cc) => {
+  // FIX: Pre-fetch all existing Cost Centers so we can validate parent references
+  // before posting. Previously we blindly appended " - ABBR" to every parent name
+  // which caused failures when the parent didn't exist with that suffix.
+  const _existingCostCenters = new Set();
+  try {
+    let pg = 0;
+    while (true) {
+      const res = await client.get("/api/resource/Cost Center", {
+        params: { fields: '["name","cost_center_name"]', limit: 500, limit_start: pg * 500,
+                  filters: JSON.stringify([["Cost Center", "company", "=", companyName]]) },
+      });
+      const rows = (res.data && res.data.data) || [];
+      rows.forEach((r) => {
+        if (r.name)             _existingCostCenters.add(r.name.trim().toLowerCase());
+        if (r.cost_center_name) _existingCostCenters.add(r.cost_center_name.trim().toLowerCase());
+      });
+      if (rows.length < 500) break;
+      pg++;
+    }
+    logger.info("Cost Centre sync: fetched " + _existingCostCenters.size + " existing cost centers");
+  } catch (e) {
+    logger.warn("Cost Centre sync: could not pre-fetch existing cost centers — " + e.message);
+  }
+
+  // Sort so parents are always created before children
+  const sorted = costCentres.slice().sort((a, b) => {
+    const aIsRoot = !a.parent || a.parent.trim().toLowerCase() === "primary";
+    const bIsRoot = !b.parent || b.parent.trim().toLowerCase() === "primary";
+    if (aIsRoot && !bIsRoot) return -1;
+    if (!aIsRoot && bIsRoot) return 1;
+    return (a.parent || "").localeCompare(b.parent || "");
+  });
+
+  const results = await batchSync(client, "Cost Center", sorted, (cc) => {
     const doc = {
       cost_center_name: cc.name,
       company:          companyName,
       is_group:         0,
     };
-    if (cc.parent && cc.parent !== "Primary") {
-      doc.parent_cost_center = cc.parent + " - " + companyAbbr;
+
+    // FIX: Only set parent_cost_center if the parent actually exists in ERPNext
+    // (with or without the company abbreviation suffix). Fall back to the root
+    // "Main - ABBR" cost center if not found, to avoid hard failures.
+    if (cc.parent && cc.parent.trim().toLowerCase() !== "primary") {
+      const withSuffix = (cc.parent.trim() + " - " + companyAbbr).toLowerCase();
+      const plain      = cc.parent.trim().toLowerCase();
+      if (_existingCostCenters.has(withSuffix)) {
+        doc.parent_cost_center = cc.parent.trim() + " - " + companyAbbr;
+      } else if (_existingCostCenters.has(plain)) {
+        doc.parent_cost_center = cc.parent.trim();
+      } else {
+        // Parent not in ERPNext yet — it may be created earlier in this batch.
+        // Use the suffixed name anyway; ERPNext will accept it if the parent
+        // was just created in this run and the mapper runs in sorted order.
+        doc.parent_cost_center = cc.parent.trim() + " - " + companyAbbr;
+      }
     }
+    // Add to known set so subsequent children in this batch can resolve this as parent
+    _existingCostCenters.add((cc.name + " - " + companyAbbr).toLowerCase());
+
     return { filters: { cost_center_name: cc.name }, doc };
   });
 
@@ -2448,16 +2527,19 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
         }))
       : [{ item_code: "Sales Item", item_name: "Sales Item", qty: 1, rate: v.netAmount || 0, income_account: incomeAccount }];
 
+    const salesRemarks = "Tally Voucher No: " + (v.voucherNumber || "") + (v.narration ? " | " + v.narration : "");
     return {
-      filters: { title: "Tally:" + v.voucherNumber },
+      // `title` is a virtual field — ERPNext rejects it in list-API filters, so upsert
+      // always fell through to CREATE, duplicating invoices on every sync.
+      // Use `remarks` (real DB column, unique per voucher) as the idempotency key instead.
+      filters: { remarks: salesRemarks },
       doc: {
-        title:              "Tally:" + v.voucherNumber,
-        customer:           v.partyName || "Guest",
-        posting_date:       v.voucherDate,
-        company:            companyName,
-        // Map Tally voucher number → ERPNext fields so it's visible on the invoice
-        po_no:              v.voucherNumber || "",   // shows as "Customer's Purchase Order" ref
-        remarks:            "Tally Voucher No: " + (v.voucherNumber || "") + (v.narration ? " | " + v.narration : ""),
+        title:        "Tally:" + v.voucherNumber,
+        customer:     v.partyName || "Guest",
+        posting_date: v.voucherDate,
+        company:      companyName,
+        po_no:        v.voucherNumber || "",
+        remarks:      salesRemarks,
         items,
       },
     };
@@ -2475,17 +2557,17 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
         }))
       : [{ item_code: "Purchase Item", item_name: "Purchase Item", qty: 1, rate: v.netAmount || 0, expense_account: expenseAccount }];
 
+    const purchaseRemarks = "Tally Voucher No: " + (v.voucherNumber || "") + (v.narration ? " | " + v.narration : "");
     return {
-      filters: { title: "Tally:" + v.voucherNumber },
+      filters: { remarks: purchaseRemarks },
       doc: {
-        title:                "Tally:" + v.voucherNumber,
-        supplier:             v.partyName || "Unknown Supplier",
-        posting_date:         v.voucherDate,
-        company:              companyName,
-        // Map Tally voucher number → ERPNext supplier invoice number field
-        bill_no:              v.voucherNumber || "",
-        bill_date:            v.voucherDate,
-        remarks:              "Tally Voucher No: " + (v.voucherNumber || "") + (v.narration ? " | " + v.narration : ""),
+        title:        "Tally:" + v.voucherNumber,
+        supplier:     v.partyName || "Unknown Supplier",
+        posting_date: v.voucherDate,
+        company:      companyName,
+        bill_no:      v.voucherNumber || "",
+        bill_date:    v.voucherDate,
+        remarks:      purchaseRemarks,
         items,
       },
     };
@@ -2615,17 +2697,26 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
     let submitted = 0, failed = 0;
     for (const v of vouchers) {
       try {
-        const title = "Tally:" + v.voucherNumber;
+        // Step 1: find the doc name via remarks (real DB column; `title` is virtual
+        // and rejected by ERPNext list API → "Field not permitted in query: title")
+        const remarksPrefix = "Tally Voucher No: " + v.voucherNumber;
         const list = await client.get("/api/resource/" + encodeURIComponent(doctype), {
-          params: { filters: JSON.stringify([[doctype, "title", "=", title]]), fields: '["name","docstatus"]', limit: 1 }
+          params: { filters: JSON.stringify([[doctype, "remarks", "like", remarksPrefix + "%"]]), fields: '["name","docstatus"]', limit: 1 }
         });
-        const doc = list?.data?.data?.[0];
-        if (!doc) continue;
-        if (doc.docstatus === 1) continue; // already submitted
-        // Use ERPNext's submit API — much more reliable than PUT docstatus
-        await client.post("/api/method/frappe.client.submit", {
-          doc: { doctype, name: doc.name, docstatus: 1 }
-        });
+        const stub = list?.data?.data?.[0];
+        if (!stub) continue;
+        if (stub.docstatus === 1) continue; // already submitted
+
+        // Step 2: fetch the FULL document so we have the current `modified` timestamp.
+        // Frappe's optimistic locking checks that the `modified` value we send matches
+        // what's in the DB — sending a doc without it (or with a stale value) causes
+        // "has been modified after you have opened it" on every submit call.
+        const fullRes = await client.get("/api/resource/" + encodeURIComponent(doctype) + "/" + encodeURIComponent(stub.name));
+        const fullDoc = fullRes?.data?.data;
+        if (!fullDoc) continue;
+
+        // Step 3: submit using the complete doc so Frappe's timestamp check passes
+        await client.post("/api/method/frappe.client.submit", { doc: fullDoc });
         submitted++;
       } catch (e) {
         failed++;
@@ -2639,7 +2730,7 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
   await submitDraftInvoices("Sales Invoice",    salesVouchers);
   await submitDraftInvoices("Purchase Invoice", purchaseVouchers);
 
-  logger.success("Invoice sync done - sales: +" + salesResults.created + "/" + salesResults.failed + " failed | purchase: +" + purchaseResults.created + "/" + purchaseResults.failed + " failed");
+  logger.success("Invoice sync done - sales: +" + salesResults.created + " new/" + salesResults.updated + " updated/" + salesResults.failed + " failed | purchase: +" + purchaseResults.created + " new/" + purchaseResults.updated + " updated/" + purchaseResults.failed + " failed");
   return { sales: salesResults, purchase: purchaseResults };
 }
 
@@ -2688,10 +2779,36 @@ export async function runFullSync(companyName, tallyData, options, creds = {}) {
 
   // Reset any previous cancellation request so a fresh sync runs uninterrupted
   resetCancel();
+  // Clear stale caches from previous sync runs — prevents wrong data from being reused
+  clearCaches();
 
   // Resolve Tally company name to ERPNext company name dynamically
   const client = createErpClient(creds);
   companyName  = await resolveErpNextCompany(client, companyName, creds);
+
+  // ── CRITICAL: Validate ERPNext company exists BEFORE doing anything ──────
+  // If the user mistyped the company name (e.g. "Teat Company" instead of
+  // "Test Company"), every single sync step will fail with "Could not find
+  // Company: Teat Company". Catch this immediately and return a clear error
+  // instead of spamming 28 COA failures + wasting 3 minutes.
+  try {
+    await client.get("/api/resource/Company/" + encodeURIComponent(companyName));
+  } catch (e) {
+    const status = e.response && e.response.status;
+    if (status === 404) {
+      const msg = `ERPNext company "${companyName}" not found. Please check the company name in Step 1 — it must match exactly (case-sensitive) with the company name in ERPNext.`;
+      logger.error(msg);
+      return {
+        startedAt:  new Date().toISOString(),
+        company:    companyName,
+        status:     "failed",
+        steps:      {},
+        errors:     [msg],
+        finishedAt: new Date().toISOString(),
+      };
+    }
+    // Non-404 errors (network, auth) — let them fall through to the ping check below
+  }
 
   const result = {
     startedAt:  new Date().toISOString(),
@@ -2762,6 +2879,10 @@ export async function runFullSync(companyName, tallyData, options, creds = {}) {
 
     if (options.syncInvoices         && tallyData.vouchers  && tallyData.vouchers.length  > 0)
       await runStep("invoices",        () => syncInvoicesToErpNext(tallyData.vouchers, companyName, creds));
+
+    // FIX: syncTaxes step was silently missing — syncTaxes:true was accepted but never executed
+    if (options.syncTaxes            && tallyData.stockItems && tallyData.stockItems.length > 0)
+      await runStep("taxes",           () => syncTaxesToErpNext(tallyData.stockItems, companyName, creds));
   } catch (e) {
     if (e._cancelled) {
       // Already marked inside runStep — just return the partial result

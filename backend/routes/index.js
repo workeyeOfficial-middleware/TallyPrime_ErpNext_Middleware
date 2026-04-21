@@ -35,7 +35,7 @@ import {
   smartSyncLedgersToErpNext,
   runFullSync,
   resolveErpNextCompanyPublic,
-} from "../tally/erpnextClient.js";
+} from "../tally/Erpnextclient.js";
 import { logger } from "../logs/logger.js";
 import { config } from "../config/config.js";
 
