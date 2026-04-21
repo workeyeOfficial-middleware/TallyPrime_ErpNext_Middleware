@@ -48,9 +48,23 @@ function escapeXml(str) {
 function val(v) {
   if (v === undefined || v === null) return null;
   if (Array.isArray(v)) return val(v[0]);
-  if (typeof v === "object" && v._) return v._;
-  if (typeof v === "string" || typeof v === "number") return String(v);
+  if (typeof v === "object" && v._) return cleanVal(v._);
+  if (typeof v === "string" || typeof v === "number") return cleanVal(String(v));
   return null;
+}
+// Strip Tally control characters (EOT and other non-printable chars) that
+// survive xml2js parsing and break string comparisons (e.g. parent=" Primary").
+function cleanVal(s) {
+  if (!s) return s;
+  // Filter chars using charCodeAt — avoids regex Unicode escape encoding issues.
+  // Removes: ASCII control chars (0-31, 127), zero-width spaces (8203-8205), BOM (65279).
+  let out = "";
+  for (let i = 0; i < s.length; i++) {
+    const c = s.charCodeAt(i);
+    if (c <= 31 || c === 127 || c === 8203 || c === 8204 || c === 8205 || c === 65279) continue;
+    out += s[i];
+  }
+  return out.trim();
 }
 
 function extractAddress(addr) {
@@ -866,8 +880,6 @@ async function fetchTallyVouchersChunk(companyName, fromDate, toDate) {
   } finally {
     tallyUnlock();
   }
-
-  logger.info(`Voucher raw response (first 1000): ${String(raw).slice(0, 1000)}`, { company: companyName });
 
   const parsed = await parseXml(raw, false);
 

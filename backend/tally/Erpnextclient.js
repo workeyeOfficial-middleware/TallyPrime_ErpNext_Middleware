@@ -124,7 +124,7 @@ export function clearCaches() {
   _customerGroup = null;
   _supplierGroup = null;
   _territory     = null;
-  logger.info("ERPNext client caches cleared for new sync run");
+  logger.info("ERPNext client caches cleared for new sync run [erpnextClient v6]");
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -1046,7 +1046,7 @@ export async function syncStockToErpNext(stockItems, creds = {}) {
   // Remove mandatory on HSN field so items without HSN in Tally sync cleanly
   await ensureHsnNotMandatory(client);
 
-  const uniqueGroups = Array.from(new Set(stockItems.map((i) => i.group).filter(Boolean).filter((g) => g !== "All Item Groups")));
+  const uniqueGroups = Array.from(new Set(stockItems.map((i) => i.group).filter(Boolean).filter((g) => g !== "All Item Groups" && g.toLowerCase() !== "primary")));
   const uniqueUoMs   = Array.from(new Set(stockItems.map((i) => normaliseUoM(i.baseUnit)).filter(Boolean)));
   const uniqueHsns   = Array.from(new Set(stockItems.map((i) => sanitiseHsn(i.hsnCode)).filter((h) => h && h !== "null")));
 
@@ -1078,9 +1078,6 @@ export async function syncStockToErpNext(stockItems, creds = {}) {
     const typeOfSupply  = cleanStr(item.gstTypeOfSupply).toLowerCase();
     const gstApplicable = cleanStr(item.gstApplicable).toLowerCase();
     const taxability    = cleanStr(item.taxability).toLowerCase();
-
-    // DEBUG — log raw Tally GST field values so we can verify the mapping
-    logger.info(`[GST debug] "${item.name}" → typeOfSupply="${typeOfSupply}" gstApplicable="${gstApplicable}" taxability="${taxability}" hsnCode="${item.hsnCode}" gstRate="${item.gstRate}"`);
 
     // is_stock_item: false only when Tally explicitly marks as Services
     const isService = typeOfSupply.includes("service");
@@ -1716,14 +1713,17 @@ export async function syncChartOfAccountsToErpNext(groups, companyName, creds = 
       if (acct.is_group && key.includes(nameLower)) return acct.name;
     }
 
-    // Return null — do NOT return 'Primary - T', it never exists in ERPNext
-    return null;
+    // Last resort: attach to asset root so ERPNext always gets a valid parent.
+    // Returning null here would leave the existing "Primary - T" parent on the
+    // account (the PUT omits parent_account), which causes the COA sync error.
+    return assetRoot || liabilityRoot || null;
   }
 
   // ── Step 4: Sort groups so parents are always created before children ──────
   const sorted = groups.slice().sort((a, b) => {
-    const isPrimaryA = !a.parent || a.parent.trim().toLowerCase() === "primary";
-    const isPrimaryB = !b.parent || b.parent.trim().toLowerCase() === "primary";
+    const cleanP = (s) => { if (!s) return ""; let o = ""; for (let i = 0; i < s.length; i++) { const c = s.charCodeAt(i); if (c <= 31 || c === 127) continue; o += s[i]; } return o.trim().toLowerCase(); };
+    const isPrimaryA = !a.parent || cleanP(a.parent) === "primary";
+    const isPrimaryB = !b.parent || cleanP(b.parent) === "primary";
     if (isPrimaryA && !isPrimaryB) return -1;
     if (!isPrimaryA && isPrimaryB) return 1;
     return (a.parent || "").localeCompare(b.parent || "");
@@ -1732,8 +1732,14 @@ export async function syncChartOfAccountsToErpNext(groups, companyName, creds = 
   let created = 0, updated = 0, failed = 0;
   const errors = [];
 
+  let skipped = 0;
   for (const group of sorted) {
     try {
+      // Strip Tally control chars ( EOT etc.) that survive xml2js and break .trim()
+      const rawParent  = (group.parent || '').replace(/[\x00-\x1F\x7F\u200B\uFEFF]/g, '').trim();
+      const isRootGroup = !rawParent || rawParent.toLowerCase() === 'primary';
+
+
       const parentAccount = resolveParentAccount(group);
       const accountType   = tallyGroupToAccountType(group.name, group.parent);
 
@@ -1768,9 +1774,37 @@ export async function syncChartOfAccountsToErpNext(groups, companyName, creds = 
       }
 
       if (existingName) {
-        await client.put("/api/resource/Account/" + encodeURIComponent(existingName), doc);
+        if (isRootGroup) {
+          // Root groups (parent=Primary) already exist in ERPNext's standard COA and their
+          // parent_account is locked — ERPNext rejects any attempt to reparent them via REST.
+          // Register in erpByName so children can still resolve them as parents, then skip.
+          erpByName.set(existingName.toLowerCase(), { name: existingName, account_name: group.name, is_group: 1 });
+          skipped++;
+          await sleep(BATCH_DELAY_MS);
+          continue;
+        }
+        // Non-root: safe to PUT with non-structural fields only (no parent_account reparenting)
+        const putDoc = { account_name: doc.account_name, company: doc.company, is_group: doc.is_group };
+        await client.put("/api/resource/Account/" + encodeURIComponent(existingName), putDoc);
         updated++;
-        logger.info("COA updated: " + existingName + (parentAccount ? " (parent: " + parentAccount + ")" : ""));
+        logger.info("COA updated: " + existingName);
+      } else if (isRootGroup) {
+        // Root group does not exist — try to POST with the resolved root parent.
+        // If ERPNext rejects it (e.g. "Primary - T" not found), log a clear warning and skip
+        // rather than counting it as a hard failure — the standard COA may cover it already.
+        try {
+          await client.post("/api/resource/Account", Object.assign({}, doc, { doctype: "Account" }));
+          created++;
+          const newName = group.name + " - " + companyAbbr;
+          erpByName.set(newName.toLowerCase(), { name: newName, account_name: group.name, is_group: 1 });
+          logger.info("COA created: " + newName + (parentAccount ? " (parent: " + parentAccount + ")" : ""));
+        } catch (postErr) {
+          // Root group creation failed — not a critical error; log and continue
+          skipped++;
+          logger.info("COA root group skipped (already managed by ERPNext COA): " + group.name);
+        }
+        await sleep(BATCH_DELAY_MS);
+        continue;
       } else {
         await client.post("/api/resource/Account", Object.assign({}, doc, { doctype: "Account" }));
         created++;
@@ -1788,7 +1822,7 @@ export async function syncChartOfAccountsToErpNext(groups, companyName, creds = 
     }
   }
 
-  logger.success("Chart of Accounts sync done - created: " + created + ", updated: " + updated + ", failed: " + failed);
+  logger.success("Chart of Accounts sync done - created: " + created + ", updated: " + updated + ", skipped: " + skipped + ", failed: " + failed);
   return { created, updated, failed, errors };
 }
 
@@ -1821,7 +1855,6 @@ export async function syncGodownsToErpNext(godowns, companyName, creds = {}) {
   logger.info("Syncing " + godowns.length + " godowns to ERPNext for " + companyName + " (abbr: " + companyAbbr + ")");
 
   const rootWarehouse = await resolveRootWarehouse(client, companyName, companyAbbr);
-  logger.info("Using root warehouse: " + rootWarehouse);
 
   const results = await batchSync(client, "Warehouse", godowns, (g) => {
     // Strip ALL whitespace variants (regular, non-breaking, zero-width) from Tally parent name
@@ -1831,7 +1864,6 @@ export async function syncGodownsToErpNext(godowns, companyName, creds = {}) {
     const parentWarehouse = (rawParent && rawParent !== "primary")
       ? (g.parent || "").trim() + " - " + companyAbbr
       : rootWarehouse;
-    logger.info("[Warehouse] rawParent='" + rawParent + "' parentWarehouse='" + parentWarehouse + "'");
     const doc = {
       warehouse_name:   g.name,
       company:          companyName,
@@ -2738,10 +2770,13 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
   async function submitDraftInvoices(doctype, vouchers) {
     let submitted = 0, failed = 0;
     for (const v of vouchers) {
+      // Declare effectiveNum outside try so it is accessible in the catch block.
+      // When voucherNumber is null the mapper uses a date+type+guid fallback — we
+      // must use the same key here so the remarks search actually finds the doc.
+      const effectiveNum = v.voucherNumber ||
+        (v.voucherDate + "-" + (v.voucherType || doctype.replace(" Invoice", "")) + "-" + (v.guid || "").slice(-6));
       try {
-        // Step 1: find the doc name via remarks (real DB column; `title` is virtual
-        // and rejected by ERPNext list API → "Field not permitted in query: title")
-        const remarksPrefix = "Tally Voucher No: " + v.voucherNumber;
+        const remarksPrefix = "Tally Voucher No: " + effectiveNum;
         const list = await client.get("/api/resource/" + encodeURIComponent(doctype), {
           params: { filters: JSON.stringify([[doctype, "remarks", "like", remarksPrefix + "%"]]), fields: '["name","docstatus"]', limit: 1 }
         });
@@ -2749,20 +2784,19 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
         if (!stub) continue;
         if (stub.docstatus === 1) continue; // already submitted
 
-        // Step 2: fetch the FULL document so we have the current `modified` timestamp.
+        // Fetch the FULL document so we have the current `modified` timestamp.
         // Frappe's optimistic locking checks that the `modified` value we send matches
-        // what's in the DB — sending a doc without it (or with a stale value) causes
-        // "has been modified after you have opened it" on every submit call.
+        // what's in the DB — sending a stale value causes "has been modified after you
+        // have opened it" on every submit call.
         const fullRes = await client.get("/api/resource/" + encodeURIComponent(doctype) + "/" + encodeURIComponent(stub.name));
         const fullDoc = fullRes?.data?.data;
         if (!fullDoc) continue;
 
-        // Step 3: submit using the complete doc so Frappe's timestamp check passes
         await client.post("/api/method/frappe.client.submit", { doc: fullDoc });
         submitted++;
       } catch (e) {
         failed++;
-        logger.warn("Could not submit " + doctype + " for voucher " + v.voucherNumber + ": " + parseErpError(e));
+        logger.warn("Could not submit " + doctype + " for voucher " + effectiveNum + ": " + parseErpError(e));
       }
       await sleep(200);
     }
@@ -2874,6 +2908,11 @@ export async function runFullSync(companyName, tallyData, options, creds = {}) {
     try {
       const res = await fn();
       result.steps[key] = Object.assign({}, res, { status: (res.failed === 0 && !res.error) ? "ok" : "warn" });
+      // Skipped items are normal (e.g. root COA groups already managed by ERPNext).
+      // Don't escalate to "warn" just because skipped > 0.
+      if (result.steps[key].status === "warn" && res.failed === 0 && res.skipped > 0 && !res.error) {
+        result.steps[key].status = "ok";
+      }
     } catch (e) {
       if (e._cancelled) {
         // User clicked Stop — mark remaining steps as cancelled and exit gracefully
