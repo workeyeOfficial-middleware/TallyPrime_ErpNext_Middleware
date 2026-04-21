@@ -1,5 +1,178 @@
 [
   {
+    "id": 1776765189040.017,
+    "ts": "2026-04-21T09:53:09.040Z",
+    "level": "info",
+    "message": "Full sync job full-1776765170757-jc76w done",
+    "meta": {}
+  },
+  {
+    "id": 1776765188794.3564,
+    "ts": "2026-04-21T09:53:08.794Z",
+    "level": "info",
+    "message": "Using ERPNext company: \"tallytoerpnext\" (from Sync UI)",
+    "meta": {}
+  },
+  {
+    "id": 1776765188792.585,
+    "ts": "2026-04-21T09:53:08.792Z",
+    "level": "info",
+    "message": "ERPNext client caches cleared for new sync run [erpnextClient v8]",
+    "meta": {}
+  },
+  {
+    "id": 1776765188790.3152,
+    "ts": "2026-04-21T09:53:08.790Z",
+    "level": "success",
+    "message": "Fetched 8478 vouchers (filtered: 2025-03-01 → 2026-04-21) from 10672 total",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    }
+  },
+  {
+    "id": 1776765188780.547,
+    "ts": "2026-04-21T09:53:08.780Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 10672",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    }
+  },
+  {
+    "id": 1776765188664.9207,
+    "ts": "2026-04-21T09:53:08.664Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 10672",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    }
+  },
+  {
+    "id": 1776765176500.2344,
+    "ts": "2026-04-21T09:52:56.500Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)",
+      "fromDate": "2025-03-01",
+      "toDate": "2026-04-21"
+    }
+  },
+  {
+    "id": 1776765176498.2632,
+    "ts": "2026-04-21T09:52:56.498Z",
+    "level": "success",
+    "message": "Fetched 115 stock items (74 with HSN/SAC, 0 with GST rate)",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    }
+  },
+  {
+    "id": 1776765176453.202,
+    "ts": "2026-04-21T09:52:56.453Z",
+    "level": "info",
+    "message": "Fetching stock items from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    }
+  },
+  {
+    "id": 1776765176450.9082,
+    "ts": "2026-04-21T09:52:56.450Z",
+    "level": "success",
+    "message": "Fetched 16760 ledgers",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    }
+  },
+  {
+    "id": 1776765170919.6682,
+    "ts": "2026-04-21T09:52:50.919Z",
+    "level": "info",
+    "message": "Fetching ledgers from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    }
+  },
+  {
+    "id": 1776765170916.1218,
+    "ts": "2026-04-21T09:52:50.916Z",
+    "level": "success",
+    "message": "Fetched 2 godowns",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    }
+  },
+  {
+    "id": 1776765170903.826,
+    "ts": "2026-04-21T09:52:50.903Z",
+    "level": "info",
+    "message": "Fetching godowns from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    }
+  },
+  {
+    "id": 1776765170899.6345,
+    "ts": "2026-04-21T09:52:50.899Z",
+    "level": "success",
+    "message": "Fetched 45 cost centres",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    }
+  },
+  {
+    "id": 1776765170876.3254,
+    "ts": "2026-04-21T09:52:50.876Z",
+    "level": "info",
+    "message": "Fetching cost centres from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    }
+  },
+  {
+    "id": 1776765170873.436,
+    "ts": "2026-04-21T09:52:50.873Z",
+    "level": "success",
+    "message": "Fetched 243 groups",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    }
+  },
+  {
+    "id": 1776765170767.94,
+    "ts": "2026-04-21T09:52:50.767Z",
+    "level": "info",
+    "message": "Fetching groups from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    }
+  },
+  {
+    "id": 1776765170763.3684,
+    "ts": "2026-04-21T09:52:50.763Z",
+    "level": "info",
+    "message": "Full sync: fetching Tally data sequentially...",
+    "meta": {}
+  },
+  {
+    "id": 1776765170757.531,
+    "ts": "2026-04-21T09:52:50.757Z",
+    "level": "info",
+    "message": "Full sync job full-1776765170757-jc76w started for: Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)",
+    "meta": {
+      "syncLedgers": true,
+      "syncStock": true,
+      "syncVouchers": true,
+      "syncGodowns": true,
+      "syncCostCentres": true,
+      "syncOpeningBalances": true,
+      "syncInvoices": true,
+      "syncTaxes": false,
+      "syncChartOfAccounts": false
+    }
+  },
+  {
     "id": 1776764368758.9006,
     "ts": "2026-04-21T09:39:28.758Z",
     "level": "info",
@@ -7275,139 +7448,6 @@
     "ts": "2026-04-21T06:58:22.559Z",
     "level": "success",
     "message": "Cost centres sync done - created: 0, updated: 1, failed: 0",
-    "meta": {}
-  },
-  {
-    "id": 1776754700853.1702,
-    "ts": "2026-04-21T06:58:20.853Z",
-    "level": "info",
-    "message": "Cost Centre sync: fetched 8 existing cost centers",
-    "meta": {}
-  },
-  {
-    "id": 1776754700822.3943,
-    "ts": "2026-04-21T06:58:20.822Z",
-    "level": "info",
-    "message": "Syncing 1 cost centres to ERPNext for tallytoerpnext (abbr: T)",
-    "meta": {}
-  },
-  {
-    "id": 1776754700817.866,
-    "ts": "2026-04-21T06:58:20.817Z",
-    "level": "success",
-    "message": "Godown sync done - created: 0, updated: 1, failed: 0",
-    "meta": {}
-  },
-  {
-    "id": 1776754699110.3286,
-    "ts": "2026-04-21T06:58:19.110Z",
-    "level": "info",
-    "message": "Root warehouse resolved: All Warehouses - T",
-    "meta": {}
-  },
-  {
-    "id": 1776754699017.1433,
-    "ts": "2026-04-21T06:58:19.017Z",
-    "level": "info",
-    "message": "Syncing 1 godowns to ERPNext for tallytoerpnext (abbr: T)",
-    "meta": {}
-  },
-  {
-    "id": 1776754699012.4749,
-    "ts": "2026-04-21T06:58:19.012Z",
-    "level": "info",
-    "message": "Opening balance sync complete - 0 created, 3 updated, 0 failed",
-    "meta": {}
-  },
-  {
-    "id": 1776754699008.2314,
-    "ts": "2026-04-21T06:58:19.008Z",
-    "level": "success",
-    "message": "Created & submitted Opening Entry JE [GL]: ACC-JV-2026-00074",
-    "meta": {}
-  },
-  {
-    "id": 1776754697678.118,
-    "ts": "2026-04-21T06:58:17.678Z",
-    "level": "success",
-    "message": "Created & submitted Opening Entry JE [Creditors]: ACC-JV-2026-00073",
-    "meta": {}
-  },
-  {
-    "id": 1776754696447.4521,
-    "ts": "2026-04-21T06:58:16.447Z",
-    "level": "success",
-    "message": "Created & submitted Opening Entry JE [Debtors]: ACC-JV-2026-00072",
-    "meta": {}
-  },
-  {
-    "id": 1776754695939.604,
-    "ts": "2026-04-21T06:58:15.939Z",
-    "level": "info",
-    "message": "Splitting 14 accounts into 3 Journal Entries (Debtors / Creditors / GL)",
-    "meta": {}
-  },
-  {
-    "id": 1776754695936.0708,
-    "ts": "2026-04-21T06:58:15.936Z",
-    "level": "info",
-    "message": "[OB] Cleaned up 5 old-format Opening Balance JEs",
-    "meta": {}
-  },
-  {
-    "id": 1776754694945.7812,
-    "ts": "2026-04-21T06:58:14.945Z",
-    "level": "info",
-    "message": "Resolved 14 / 14 ledgers to JE account rows",
-    "meta": {}
-  },
-  {
-    "id": 1776754694899.943,
-    "ts": "2026-04-21T06:58:14.899Z",
-    "level": "info",
-    "message": "  UpdateLedgerTest -> GL: UpdateLedgerTest - T",
-    "meta": {}
-  },
-  {
-    "id": 1776754694852.3652,
-    "ts": "2026-04-21T06:58:14.852Z",
-    "level": "info",
-    "message": "  TEST-SUPPLIER2 -> Payable: ABC Traders - T (Supplier)",
-    "meta": {}
-  },
-  {
-    "id": 1776754694805.4495,
-    "ts": "2026-04-21T06:58:14.805Z",
-    "level": "info",
-    "message": "  Test Ledger 999 -> GL: Test Ledger 999 - T",
-    "meta": {}
-  },
-  {
-    "id": 1776754694758.9116,
-    "ts": "2026-04-21T06:58:14.758Z",
-    "level": "info",
-    "message": "  Test GST Customer -> Receivable: Debtors - T (Customer)",
-    "meta": {}
-  },
-  {
-    "id": 1776754694712.39,
-    "ts": "2026-04-21T06:58:14.712Z",
-    "level": "info",
-    "message": "  TestCustomer4 -> Receivable: Debtors - T (Customer)",
-    "meta": {}
-  },
-  {
-    "id": 1776754694665.2764,
-    "ts": "2026-04-21T06:58:14.665Z",
-    "level": "info",
-    "message": "  Test600 -> Payable: ABC Traders - T (Supplier)",
-    "meta": {}
-  },
-  {
-    "id": 1776754694619.7524,
-    "ts": "2026-04-21T06:58:14.619Z",
-    "level": "info",
-    "message": "  Test500 -> GL (Payable — adding party): Test500 - T",
     "meta": {}
   }
 ]

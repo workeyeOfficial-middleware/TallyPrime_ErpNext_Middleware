@@ -1,0 +1,478 @@
+[
+  {
+    "id": 1776772886808.3083,
+    "ts": "2026-04-21T12:01:26.808Z",
+    "level": "success",
+    "message": "Fetched 10672 vouchers (filtered: 2025-01-01 → 2026-04-21) from 10672 total",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776772886798.8552,
+    "ts": "2026-04-21T12:01:26.798Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 10672",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776772886673.9768,
+    "ts": "2026-04-21T12:01:26.673Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 10672",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776772869026.7065,
+    "ts": "2026-04-21T12:01:09.026Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)",
+      "fromDate": "2025-01-01",
+      "toDate": "2026-04-21"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776769630205.7808,
+    "ts": "2026-04-21T11:07:10.205Z",
+    "level": "success",
+    "message": "Fetched 10627 vouchers (filtered: 2025-01-01 → 2025-12-21) from 10672 total",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776769630196.967,
+    "ts": "2026-04-21T11:07:10.196Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 10672",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776769630054.1448,
+    "ts": "2026-04-21T11:07:10.054Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 10672",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776769612796.9956,
+    "ts": "2026-04-21T11:06:52.796Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)",
+      "fromDate": "2025-01-01",
+      "toDate": "2025-12-21"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776769612793.4934,
+    "ts": "2026-04-21T11:06:52.793Z",
+    "level": "success",
+    "message": "Fetched 115 stock items (74 with HSN/SAC, 0 with GST rate)",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776769612746.6287,
+    "ts": "2026-04-21T11:06:52.746Z",
+    "level": "info",
+    "message": "Fetching stock items from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776769612744.1855,
+    "ts": "2026-04-21T11:06:52.744Z",
+    "level": "success",
+    "message": "Fetched 16760 ledgers",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776769605656.6604,
+    "ts": "2026-04-21T11:06:45.656Z",
+    "level": "info",
+    "message": "Fetching ledgers from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776769605654.333,
+    "ts": "2026-04-21T11:06:45.654Z",
+    "level": "success",
+    "message": "Fetched 2 godowns",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776769605639.6013,
+    "ts": "2026-04-21T11:06:45.639Z",
+    "level": "info",
+    "message": "Fetching godowns from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776769605636.721,
+    "ts": "2026-04-21T11:06:45.636Z",
+    "level": "success",
+    "message": "Fetched 45 cost centres",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776769605610.1855,
+    "ts": "2026-04-21T11:06:45.610Z",
+    "level": "info",
+    "message": "Fetching cost centres from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776769605607.515,
+    "ts": "2026-04-21T11:06:45.607Z",
+    "level": "success",
+    "message": "Fetched 243 groups",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776769605464.906,
+    "ts": "2026-04-21T11:06:45.464Z",
+    "level": "info",
+    "message": "Fetching groups from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768265420.632,
+    "ts": "2026-04-21T10:44:25.420Z",
+    "level": "success",
+    "message": "Fetched 10672 total vouchers (all dates)",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768265413.0027,
+    "ts": "2026-04-21T10:44:25.413Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 10672",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768265260.7217,
+    "ts": "2026-04-21T10:44:25.260Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 10672",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247752.3625,
+    "ts": "2026-04-21T10:44:07.752Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)",
+      "fromDate": null,
+      "toDate": null
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247750.9963,
+    "ts": "2026-04-21T10:44:07.750Z",
+    "level": "info",
+    "message": "Voucher check: fetching ALL vouchers",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247749.8745,
+    "ts": "2026-04-21T10:44:07.749Z",
+    "level": "success",
+    "message": "Fetched 2 godowns",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247739.2915,
+    "ts": "2026-04-21T10:44:07.739Z",
+    "level": "info",
+    "message": "Fetching godowns from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247737.603,
+    "ts": "2026-04-21T10:44:07.737Z",
+    "level": "success",
+    "message": "Fetched 5 units",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247728.2786,
+    "ts": "2026-04-21T10:44:07.728Z",
+    "level": "info",
+    "message": "Fetching units from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247726.0764,
+    "ts": "2026-04-21T10:44:07.726Z",
+    "level": "success",
+    "message": "Fetched 11 stock categories",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247715.258,
+    "ts": "2026-04-21T10:44:07.715Z",
+    "level": "info",
+    "message": "Fetching stock categories from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247713.9983,
+    "ts": "2026-04-21T10:44:07.713Z",
+    "level": "success",
+    "message": "Fetched 115 stock items (74 with HSN/SAC, 0 with GST rate)",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247645.805,
+    "ts": "2026-04-21T10:44:07.645Z",
+    "level": "info",
+    "message": "Fetching stock items from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247643.1096,
+    "ts": "2026-04-21T10:44:07.643Z",
+    "level": "success",
+    "message": "Fetched 6 stock groups",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247624.436,
+    "ts": "2026-04-21T10:44:07.624Z",
+    "level": "info",
+    "message": "Fetching stock groups from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247621.1558,
+    "ts": "2026-04-21T10:44:07.621Z",
+    "level": "success",
+    "message": "Fetched 0 budgets",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247612.5747,
+    "ts": "2026-04-21T10:44:07.612Z",
+    "level": "info",
+    "message": "Fetching budgets from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247609.2375,
+    "ts": "2026-04-21T10:44:07.609Z",
+    "level": "success",
+    "message": "Fetched 2 currencies",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247595.5015,
+    "ts": "2026-04-21T10:44:07.595Z",
+    "level": "info",
+    "message": "Fetching currencies from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247590.82,
+    "ts": "2026-04-21T10:44:07.590Z",
+    "level": "success",
+    "message": "Fetched 45 cost centres",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247570.7764,
+    "ts": "2026-04-21T10:44:07.570Z",
+    "level": "info",
+    "message": "Fetching cost centres from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247567.787,
+    "ts": "2026-04-21T10:44:07.567Z",
+    "level": "success",
+    "message": "Fetched 1 cost categories",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247555.234,
+    "ts": "2026-04-21T10:44:07.555Z",
+    "level": "info",
+    "message": "Fetching cost categories from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247553.391,
+    "ts": "2026-04-21T10:44:07.553Z",
+    "level": "success",
+    "message": "Fetched 39 voucher types",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247528.31,
+    "ts": "2026-04-21T10:44:07.528Z",
+    "level": "info",
+    "message": "Fetching voucher types from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768247522.0967,
+    "ts": "2026-04-21T10:44:07.522Z",
+    "level": "success",
+    "message": "Fetched 16760 ledgers",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768238159.2285,
+    "ts": "2026-04-21T10:43:58.159Z",
+    "level": "info",
+    "message": "Fetching ledgers from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768238156.612,
+    "ts": "2026-04-21T10:43:58.156Z",
+    "level": "success",
+    "message": "Fetched 243 groups",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1776768237870.0774,
+    "ts": "2026-04-21T10:43:57.870Z",
+    "level": "info",
+    "message": "Fetching groups from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  }
+]

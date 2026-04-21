@@ -86,6 +86,23 @@ function failJob(id, error) {
   if (job) Object.assign(job, { status: "failed", error: error.message || String(error), finishedAt: new Date().toISOString() });
 }
 
+// Track cancelled jobs so background workers can check and bail out early
+const cancelledJobs = new Set();
+
+function cancelJob(id) {
+  const job = jobs.get(id);
+  if (job && job.status === "running") {
+    Object.assign(job, { status: "cancelled", error: "Stopped by user", finishedAt: new Date().toISOString() });
+    cancelledJobs.add(id);
+    // Remove from cancelled set after 10 min (cleanup)
+    setTimeout(() => cancelledJobs.delete(id), 10 * 60 * 1000);
+    return true;
+  }
+  return false;
+}
+
+export { cancelledJobs }; // so sync workers can import and check this
+
 // ── GET /sync/status/:jobId ───────────────────────────────────────────────────
 router.get("/sync/status/:jobId", (req, res) => {
   const job = jobs.get(req.params.jobId);
@@ -98,6 +115,21 @@ router.get("/sync/status/:jobId", (req, res) => {
 router.get("/sync/jobs", (_req, res) => {
   const list = Array.from(jobs.values()).filter((j) => j.status === "running");
   res.json({ ok: true, jobs: list });
+});
+
+// ── POST /sync/cancel/:jobId ──────────────────────────────────────────────────
+// Marks the job as cancelled immediately so the UI gets instant feedback.
+// The background worker checks cancelledJobs on each iteration and bails out.
+router.post("/sync/cancel/:jobId", (req, res) => {
+  const { jobId } = req.params;
+  const job = jobs.get(jobId);
+  if (!job) return res.status(404).json({ ok: false, error: "Job not found" });
+  if (job.status !== "running") {
+    return res.json({ ok: true, message: `Job already in state: ${job.status}` });
+  }
+  cancelJob(jobId);
+  logger.info(`Job ${jobId} cancelled by user`);
+  res.json({ ok: true, message: "Job cancelled", jobId });
 });
 
 // ── GET /health ───────────────────────────────────────────────────────────────
@@ -318,9 +350,19 @@ router.post("/middleware/check", async (req, res) => {
 });
 
 // ── GET /logs ─────────────────────────────────────────────────────────────────
+// ── GET /logs ─────────────────────────────────────────────────────────────────
+// Supports: ?company=X  ?fromDate=YYYY-MM-DD  ?toDate=YYYY-MM-DD  ?level=error  ?limit=200
 router.get("/logs", (req, res) => {
-  const limit = Math.min(parseInt(req.query.limit) || 100, 500);
-  res.json({ logs: logger.getLogs(limit) });
+  const { company, fromDate, toDate, level } = req.query;
+  const limit = Math.min(parseInt(req.query.limit) || 200, 1000);
+  const logs = logger.getLogs({ company: company || null, fromDate, toDate, level, limit });
+  res.json({ logs });
+});
+
+// ── GET /logs/companies ───────────────────────────────────────────────────────
+// Returns list of all companies that have log files (for tenant selector in UI)
+router.get("/logs/companies", (_req, res) => {
+  res.json({ companies: logger.listCompanies() });
 });
 
 // ── POST /erpnext/resolve-company ─────────────────────────────────────────────

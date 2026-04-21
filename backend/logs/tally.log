@@ -1,0 +1,128 @@
+[
+  {
+    "id": 1776773342310.2405,
+    "ts": "2026-04-21T12:09:02.310Z",
+    "level": "success",
+    "message": "Fetched 129 vouchers (filtered: 2025-01-01 → 2026-04-21) from 129 total",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776773342305.7283,
+    "ts": "2026-04-21T12:09:02.305Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 129",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776773342295.371,
+    "ts": "2026-04-21T12:09:02.295Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 129",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776773341881.9133,
+    "ts": "2026-04-21T12:09:01.881Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": "2025-01-01",
+      "toDate": "2026-04-21"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776772723990.5247,
+    "ts": "2026-04-21T11:58:43.990Z",
+    "level": "success",
+    "message": "Fetched 129 vouchers (filtered: 2025-01-01 → 2026-04-21) from 129 total",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776772723982.5845,
+    "ts": "2026-04-21T11:58:43.982Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 129",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776772723974.5078,
+    "ts": "2026-04-21T11:58:43.974Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 129",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776772723691.5413,
+    "ts": "2026-04-21T11:58:43.691Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": "2025-01-01",
+      "toDate": "2026-04-21"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776772661153.5642,
+    "ts": "2026-04-21T11:57:41.153Z",
+    "level": "success",
+    "message": "Fetched 129 vouchers (filtered: 2025-01-01 → 2026-04-21) from 129 total",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776772661147.9758,
+    "ts": "2026-04-21T11:57:41.147Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 129",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776772661137.7168,
+    "ts": "2026-04-21T11:57:41.137Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 129",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776772660362.7559,
+    "ts": "2026-04-21T11:57:40.362Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": "2025-01-01",
+      "toDate": "2026-04-21"
+    },
+    "company": "Tally"
+  }
+]

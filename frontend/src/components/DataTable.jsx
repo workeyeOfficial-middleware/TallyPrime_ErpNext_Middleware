@@ -1,10 +1,14 @@
 import { useState } from "react";
 
 const T = {
-  ink: "#0f1117", muted: "#7c7f8e", border: "#e2e4ec", panel: "#f5f6fa",
+  ink:    "#0f172a",
+  muted:  "#64748b",
+  dim:    "#94a3b8",
+  border: "#e2e8ef",
+  panel:  "#f8fafc",
   accent: "#2563eb",
-  mono:  "'IBM Plex Mono', monospace",
-  title: "'Syne', sans-serif",
+  mono:   "'JetBrains Mono', 'Fira Code', monospace",
+  title:  "'Plus Jakarta Sans', sans-serif",
 };
 
 export function DataTable({ title, rows, columns }) {
@@ -14,41 +18,47 @@ export function DataTable({ title, rows, columns }) {
   const preview = rows.slice(0, 5);
 
   return (
-    <div style={{ marginLeft: 32, marginTop: 4 }}>
+    <div style={{ marginLeft: 48, marginTop: 8 }}>
       <button
         onClick={() => setOpen((o) => !o)}
         style={{
           background: "none", border: "none", cursor: "pointer", padding: 0,
-          display: "flex", alignItems: "center", gap: 6,
-          fontFamily: T.mono, fontSize: 10, color: T.muted,
+          display: "inline-flex", alignItems: "center", gap: 7,
+          fontFamily: T.mono, fontSize: 10.5, color: T.dim,
           transition: "color 0.12s",
         }}
         onMouseEnter={(e) => { e.currentTarget.style.color = T.accent; }}
-        onMouseLeave={(e) => { e.currentTarget.style.color = T.muted; }}
+        onMouseLeave={(e) => { e.currentTarget.style.color = T.dim; }}
       >
         <span style={{
-          display: "inline-block", fontSize: 9, lineHeight: 1,
-          transition: "transform 0.2s", transform: open ? "rotate(90deg)" : "rotate(0deg)",
+          display: "inline-block", fontSize: 8, lineHeight: 1,
+          transition: "transform 0.18s ease",
+          transform: open ? "rotate(90deg)" : "rotate(0deg)",
         }}>▶</span>
         <span style={{ textDecoration: "underline", textUnderlineOffset: 2 }}>
-          {open ? "Hide" : "Preview"} sample ({Math.min(rows.length, 5)} of {rows.length} rows)
+          {open ? "Hide" : "Preview"} sample&nbsp;({Math.min(rows.length, 5)} of {rows.length} rows)
         </span>
       </button>
 
       {open && (
         <div style={{
-          marginTop: 8, overflowX: "auto", borderRadius: 10,
-          border: `0.5px solid ${T.border}`,
+          marginTop: 10, overflowX: "auto",
+          borderRadius: 12, border: `1px solid ${T.border}`,
+          background: "#fff",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.06), 0 1px 0 #fff inset",
           animation: "dt-fade 0.15s ease-out",
         }}>
-          <table style={{ width: "100%", fontFamily: T.mono, fontSize: 11, borderCollapse: "collapse" }}>
+          <table style={{
+            width: "100%", fontFamily: T.mono, fontSize: 11.5,
+            borderCollapse: "collapse",
+          }}>
             <thead>
-              <tr style={{ background: T.panel, borderBottom: `0.5px solid ${T.border}` }}>
+              <tr style={{ background: T.panel, borderBottom: `1px solid ${T.border}` }}>
                 {columns.map((c) => (
                   <th key={c.key} style={{
-                    textAlign: "left", padding: "7px 10px",
-                    color: T.muted, fontWeight: 500,
-                    fontSize: 9, letterSpacing: "0.1em",
+                    textAlign: "left", padding: "9px 14px",
+                    color: T.muted, fontWeight: 700,
+                    fontSize: 9.5, letterSpacing: "0.12em",
                     textTransform: "uppercase", whiteSpace: "nowrap",
                   }}>
                     {c.label}
@@ -58,10 +68,18 @@ export function DataTable({ title, rows, columns }) {
             </thead>
             <tbody>
               {preview.map((row, i) => (
-                <tr key={i} style={{ borderBottom: i < preview.length - 1 ? `0.5px solid ${T.border}` : "none" }}>
+                <tr
+                  key={i}
+                  style={{
+                    borderBottom: i < preview.length - 1 ? `1px solid ${T.border}` : "none",
+                    transition: "background 0.1s",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = T.panel; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+                >
                   {columns.map((c) => (
                     <td key={c.key} style={{
-                      padding: "6px 10px", color: T.ink,
+                      padding: "8px 14px", color: T.ink,
                       maxWidth: 160, overflow: "hidden",
                       textOverflow: "ellipsis", whiteSpace: "nowrap",
                     }}>
@@ -72,16 +90,20 @@ export function DataTable({ title, rows, columns }) {
               ))}
             </tbody>
           </table>
+
           {rows.length > 5 && (
-            <div style={{ padding: "5px 10px", borderTop: `0.5px solid ${T.border}`, background: T.panel }}>
-              <span style={{ fontFamily: T.mono, fontSize: 9, color: T.muted }}>
+            <div style={{
+              padding: "7px 14px",
+              borderTop: `1px solid ${T.border}`,
+              background: T.panel,
+            }}>
+              <span style={{ fontFamily: T.mono, fontSize: 9.5, color: T.dim }}>
                 +{rows.length - 5} more rows not shown
               </span>
             </div>
           )}
         </div>
       )}
-      <style>{`@keyframes dt-fade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }`}</style>
     </div>
   );
 }
