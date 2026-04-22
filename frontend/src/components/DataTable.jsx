@@ -1,11 +1,11 @@
 import { useState } from "react";
 
 const T = {
-  ink:    "#0f172a",
-  muted:  "#64748b",
-  dim:    "#94a3b8",
-  border: "#e2e8ef",
-  panel:  "#f8fafc",
+  ink:    "#0a0e1a",
+  muted:  "#5a6482",
+  dim:    "#8a94b0",
+  border: "#d8dff0",
+  panel:  "#f0f3fa",
   accent: "#2563eb",
   mono:   "'JetBrains Mono', 'Fira Code', monospace",
   title:  "'Plus Jakarta Sans', sans-serif",

@@ -7,9 +7,9 @@ const BASE_URL   = process.env.REACT_APP_API_URL || "http://localhost:4000/api";
 const ACTIVE_JOB_KEY = "sync_active_job";
 
 const C = {
-  card:"#ffffff",surface:"#f8f9fc",bg:"#eef0f6",border:"#e4e7ef",borderH:"#c8cedd",
-  ink:"#0c0e14",muted:"#6b7280",dim:"#9ca3af",
-  accent:"#2563eb",accentD:"#1d4ed8",accentL:"#eff6ff",accentB:"#bfdbfe",
+  card:"#ffffff",surface:"#f0f3fa",bg:"#e8edf6",border:"#d8dff0",borderH:"#b0bcd8",
+  ink:"#0a0e1a",muted:"#5a6482",dim:"#8a94b0",
+  accent:"#2563eb",accentD:"#1d4ed8",accentL:"#eef4ff",accentB:"#b8d0fe",
   green:"#16a34a",greenD:"#15803d",greenL:"#f0fdf4",greenB:"#bbf7d0",
   amber:"#d97706",amberL:"#fffbeb",amberB:"#fde68a",
   red:"#dc2626",redL:"#fef2f2",redB:"#fecaca",
@@ -309,7 +309,7 @@ export function SyncToErpNext({companies}){
   const dayCount=fromDate&&toDate?Math.round((new Date(toDate)-new Date(fromDate))/(1000*60*60*24)):0;
   const chunkCount=Math.ceil(dayCount/15);
 
-  const card={background:C.card,border:`1.5px solid ${C.border}`,borderRadius:14,padding:20,boxShadow:"0 1px 5px rgba(0,0,0,.05)"};
+  const card={background:C.card,border:`1.5px solid ${C.border}`,borderRadius:14,padding:20,boxShadow:"0 4px 24px rgba(13,21,50,.08), 0 1px 0 rgba(255,255,255,.9) inset"};
 
   return(
     <div style={{display:"flex",flexDirection:"column",gap:14,fontFamily:C.sans}}>

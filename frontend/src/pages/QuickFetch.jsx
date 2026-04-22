@@ -8,19 +8,19 @@ const YEAR_START = `${new Date().getFullYear()}-04-01`;
 
 // ── Design tokens ──────────────────────────────────────────────────────────────
 const C = {
-  bg:      "#f8f9fc",
+  bg:      "#e8edf6",
   card:    "#ffffff",
-  surface: "#f3f4f8",
-  border:  "#e4e7ef",
-  borderH: "#c9cfe0",
-  ink:     "#0c0e14",
-  ink2:    "#374151",
-  muted:   "#6b7280",
-  dim:     "#9ca3af",
+  surface: "#f0f3fa",
+  border:  "#d8dff0",
+  borderH: "#b0bcd8",
+  ink:     "#0a0e1a",
+  ink2:    "#1e2a4a",
+  muted:   "#5a6482",
+  dim:     "#8a94b0",
   accent:  "#2563eb",
   accentD: "#1d4ed8",
-  accentL: "#eff6ff",
-  accentB: "#bfdbfe",
+  accentL: "#eef4ff",
+  accentB: "#b8d0fe",
   green:   "#16a34a",
   greenD:  "#15803d",
   greenL:  "#f0fdf4",
@@ -288,7 +288,7 @@ export function QuickFetch({ companies }) {
       <div style={{
         background: C.card, border: `1.5px solid ${C.border}`,
         borderRadius: 14, padding: 20, marginBottom: 6,
-        boxShadow: "0 1px 5px rgba(0,0,0,.05)",
+        boxShadow: "0 4px 24px rgba(13,21,50,.08), 0 1px 0 rgba(255,255,255,.9) inset",
       }}>
         {/* Header */}
         <div style={{

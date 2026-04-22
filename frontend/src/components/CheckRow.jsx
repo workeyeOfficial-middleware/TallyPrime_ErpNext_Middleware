@@ -1,10 +1,10 @@
 import { StatusDot } from "./StatusDot";
 
 const T = {
-  ink:    "#0f172a",
-  muted:  "#64748b",
-  border: "#e2e8ef",
-  panel:  "#f8fafc",
+  ink:    "#0a0e1a",
+  muted:  "#5a6482",
+  border: "#d8dff0",
+  panel:  "#f0f3fa",
   accent: "#2563eb", accentL: "#eff6ff", accentB: "#bfdbfe",
   green:  "#059669", greenL:  "#ecfdf5", greenB:  "#a7f3d0",
   amber:  "#d97706", amberL:  "#fffbeb", amberB:  "#fde68a",

@@ -1,5 +1,1624 @@
 [
   {
+    "id": 1776835586797.5376,
+    "ts": "2026-04-22T05:26:26.797Z",
+    "level": "info",
+    "message": "Rate limit status — Limit: 3600000000, Used: undefined, Remaining: 3592000000",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776835234575.6377,
+    "ts": "2026-04-22T05:20:34.575Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776835234552.855,
+    "ts": "2026-04-22T05:20:34.552Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776835006365.9539,
+    "ts": "2026-04-22T05:16:46.365Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776835006340.396,
+    "ts": "2026-04-22T05:16:46.340Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776834587575.0002,
+    "ts": "2026-04-22T05:09:47.575Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776834587551.3328,
+    "ts": "2026-04-22T05:09:47.551Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776834411327.368,
+    "ts": "2026-04-22T05:06:51.327Z",
+    "level": "success",
+    "message": "Fetched 3 vouchers (filtered: 2026-04-01 → 2026-04-22) from 129 total",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776834411320.861,
+    "ts": "2026-04-22T05:06:51.320Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 129",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776834411312.148,
+    "ts": "2026-04-22T05:06:51.312Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 129",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776834411075.3882,
+    "ts": "2026-04-22T05:06:51.075Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": "2026-04-01",
+      "toDate": "2026-04-22"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776834323706.5427,
+    "ts": "2026-04-22T05:05:23.706Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776834323683.3174,
+    "ts": "2026-04-22T05:05:23.683Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776834275239.0586,
+    "ts": "2026-04-22T05:04:35.239Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776834275225.8784,
+    "ts": "2026-04-22T05:04:35.225Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776834083176.0154,
+    "ts": "2026-04-22T05:01:23.176Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776834083160.835,
+    "ts": "2026-04-22T05:01:23.160Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833965284.5488,
+    "ts": "2026-04-22T04:59:25.284Z",
+    "level": "success",
+    "message": "Fetched 0 stock categories",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833965256.2131,
+    "ts": "2026-04-22T04:59:25.256Z",
+    "level": "info",
+    "message": "Fetching stock categories from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833960664.851,
+    "ts": "2026-04-22T04:59:20.664Z",
+    "level": "success",
+    "message": "Fetched 3 vouchers (filtered: 2026-04-01 → 2026-04-22) from 129 total",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833960657.5945,
+    "ts": "2026-04-22T04:59:20.657Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 129",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833960648.8892,
+    "ts": "2026-04-22T04:59:20.648Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 129",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833960417.0835,
+    "ts": "2026-04-22T04:59:20.417Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": "2026-04-01",
+      "toDate": "2026-04-22"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833948426.0476,
+    "ts": "2026-04-22T04:59:08.426Z",
+    "level": "success",
+    "message": "Fetched 3 vouchers (filtered: 2026-04-01 → 2026-04-22) from 129 total",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833948421.5356,
+    "ts": "2026-04-22T04:59:08.421Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 129",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833948414.3574,
+    "ts": "2026-04-22T04:59:08.414Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 129",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833948190.2664,
+    "ts": "2026-04-22T04:59:08.190Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": "2026-04-01",
+      "toDate": "2026-04-22"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833945277.286,
+    "ts": "2026-04-22T04:59:05.277Z",
+    "level": "success",
+    "message": "Fetched 1 units",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833945260.7625,
+    "ts": "2026-04-22T04:59:05.260Z",
+    "level": "info",
+    "message": "Fetching units from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833939323.954,
+    "ts": "2026-04-22T04:58:59.323Z",
+    "level": "success",
+    "message": "Fetched 1 godowns",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833939309.2239,
+    "ts": "2026-04-22T04:58:59.309Z",
+    "level": "info",
+    "message": "Fetching godowns from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833932996.6052,
+    "ts": "2026-04-22T04:58:52.996Z",
+    "level": "success",
+    "message": "Fetched 1 godowns",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833932966.1243,
+    "ts": "2026-04-22T04:58:52.966Z",
+    "level": "info",
+    "message": "Fetching godowns from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833882597.6199,
+    "ts": "2026-04-22T04:58:02.597Z",
+    "level": "success",
+    "message": "Fetched 1 cost centres",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833882563.2673,
+    "ts": "2026-04-22T04:58:02.563Z",
+    "level": "info",
+    "message": "Fetching cost centres from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833880383.507,
+    "ts": "2026-04-22T04:58:00.383Z",
+    "level": "success",
+    "message": "Fetched 1 currencies",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833880345.7231,
+    "ts": "2026-04-22T04:58:00.345Z",
+    "level": "info",
+    "message": "Fetching currencies from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833874681.5007,
+    "ts": "2026-04-22T04:57:54.681Z",
+    "level": "success",
+    "message": "Fetched 1 currencies",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833874648.8115,
+    "ts": "2026-04-22T04:57:54.648Z",
+    "level": "info",
+    "message": "Fetching currencies from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833870968.7334,
+    "ts": "2026-04-22T04:57:50.968Z",
+    "level": "success",
+    "message": "Fetched 0 budgets",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833870941.361,
+    "ts": "2026-04-22T04:57:50.941Z",
+    "level": "info",
+    "message": "Fetching budgets from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833860183.9714,
+    "ts": "2026-04-22T04:57:40.183Z",
+    "level": "success",
+    "message": "Fetched 1 units",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833860164.9229,
+    "ts": "2026-04-22T04:57:40.164Z",
+    "level": "info",
+    "message": "Fetching units from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833855539.0166,
+    "ts": "2026-04-22T04:57:35.539Z",
+    "level": "success",
+    "message": "Fetched 1 stock groups",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833855505.4397,
+    "ts": "2026-04-22T04:57:35.505Z",
+    "level": "info",
+    "message": "Fetching stock groups from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833841965.188,
+    "ts": "2026-04-22T04:57:21.965Z",
+    "level": "success",
+    "message": "Fetched 67 ledgers",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833841907.429,
+    "ts": "2026-04-22T04:57:21.907Z",
+    "level": "info",
+    "message": "Fetching ledgers from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833828792.6465,
+    "ts": "2026-04-22T04:57:08.792Z",
+    "level": "success",
+    "message": "Fetched 67 ledgers",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833828723.6887,
+    "ts": "2026-04-22T04:57:08.723Z",
+    "level": "info",
+    "message": "Fetching ledgers from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833824556.7715,
+    "ts": "2026-04-22T04:57:04.556Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833818032.8508,
+    "ts": "2026-04-22T04:56:58.032Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833816066.9014,
+    "ts": "2026-04-22T04:56:56.066Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833322872.8894,
+    "ts": "2026-04-22T04:48:42.872Z",
+    "level": "info",
+    "message": "Middleware check complete: ok",
+    "meta": {
+      "companies": 2,
+      "groups": 28,
+      "ledgers": 67,
+      "voucherTypes": 29,
+      "costCategories": 1,
+      "costCentres": 1,
+      "currencies": 1,
+      "budgets": 0,
+      "stockGroups": 1,
+      "stockItems": 9,
+      "stockCategories": 0,
+      "units": 1,
+      "godowns": 1,
+      "vouchers": 129
+    },
+    "company": null
+  },
+  {
+    "id": 1776833322866.4497,
+    "ts": "2026-04-22T04:48:42.866Z",
+    "level": "success",
+    "message": "Fetched 129 total vouchers (all dates)",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322860.7378,
+    "ts": "2026-04-22T04:48:42.860Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 129",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322849.7893,
+    "ts": "2026-04-22T04:48:42.849Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 129",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322629.7336,
+    "ts": "2026-04-22T04:48:42.629Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": null,
+      "toDate": null
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322624.66,
+    "ts": "2026-04-22T04:48:42.624Z",
+    "level": "info",
+    "message": "Voucher check: fetching ALL vouchers",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322618.027,
+    "ts": "2026-04-22T04:48:42.618Z",
+    "level": "success",
+    "message": "Fetched 1 godowns",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322606.0073,
+    "ts": "2026-04-22T04:48:42.606Z",
+    "level": "info",
+    "message": "Fetching godowns from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322600.0496,
+    "ts": "2026-04-22T04:48:42.600Z",
+    "level": "success",
+    "message": "Fetched 1 units",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322587.5103,
+    "ts": "2026-04-22T04:48:42.587Z",
+    "level": "info",
+    "message": "Fetching units from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322582.4421,
+    "ts": "2026-04-22T04:48:42.582Z",
+    "level": "success",
+    "message": "Fetched 0 stock categories",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322570.6292,
+    "ts": "2026-04-22T04:48:42.570Z",
+    "level": "info",
+    "message": "Fetching stock categories from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322564.2275,
+    "ts": "2026-04-22T04:48:42.564Z",
+    "level": "success",
+    "message": "Fetched 9 stock items (0 with HSN/SAC, 0 with GST rate)",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322545.1682,
+    "ts": "2026-04-22T04:48:42.545Z",
+    "level": "info",
+    "message": "Fetching stock items from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322539.069,
+    "ts": "2026-04-22T04:48:42.539Z",
+    "level": "success",
+    "message": "Fetched 1 stock groups",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322522.009,
+    "ts": "2026-04-22T04:48:42.522Z",
+    "level": "info",
+    "message": "Fetching stock groups from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322518.8293,
+    "ts": "2026-04-22T04:48:42.518Z",
+    "level": "success",
+    "message": "Fetched 0 budgets",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322504.9456,
+    "ts": "2026-04-22T04:48:42.504Z",
+    "level": "info",
+    "message": "Fetching budgets from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322497.5918,
+    "ts": "2026-04-22T04:48:42.497Z",
+    "level": "success",
+    "message": "Fetched 1 currencies",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322484.3586,
+    "ts": "2026-04-22T04:48:42.484Z",
+    "level": "info",
+    "message": "Fetching currencies from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322476.5176,
+    "ts": "2026-04-22T04:48:42.476Z",
+    "level": "success",
+    "message": "Fetched 1 cost centres",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322461.8613,
+    "ts": "2026-04-22T04:48:42.461Z",
+    "level": "info",
+    "message": "Fetching cost centres from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322455.6636,
+    "ts": "2026-04-22T04:48:42.455Z",
+    "level": "success",
+    "message": "Fetched 1 cost categories",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322439.8984,
+    "ts": "2026-04-22T04:48:42.439Z",
+    "level": "info",
+    "message": "Fetching cost categories from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322432.8955,
+    "ts": "2026-04-22T04:48:42.432Z",
+    "level": "success",
+    "message": "Fetched 29 voucher types",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322411.859,
+    "ts": "2026-04-22T04:48:42.411Z",
+    "level": "info",
+    "message": "Fetching voucher types from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322405.984,
+    "ts": "2026-04-22T04:48:42.405Z",
+    "level": "success",
+    "message": "Fetched 67 ledgers",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322365.5732,
+    "ts": "2026-04-22T04:48:42.365Z",
+    "level": "info",
+    "message": "Fetching ledgers from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322359.5156,
+    "ts": "2026-04-22T04:48:42.359Z",
+    "level": "success",
+    "message": "Fetched 28 groups",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322336.0217,
+    "ts": "2026-04-22T04:48:42.336Z",
+    "level": "info",
+    "message": "Fetching groups from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833322322.091,
+    "ts": "2026-04-22T04:48:42.322Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833322286.0122,
+    "ts": "2026-04-22T04:48:42.286Z",
+    "level": "info",
+    "message": "Middleware check started for: Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833320798.5974,
+    "ts": "2026-04-22T04:48:40.798Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833320778.3413,
+    "ts": "2026-04-22T04:48:40.778Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833282303.2883,
+    "ts": "2026-04-22T04:48:02.303Z",
+    "level": "info",
+    "message": "Middleware check complete: ok",
+    "meta": {
+      "companies": 2,
+      "groups": 28,
+      "ledgers": 67,
+      "voucherTypes": 29,
+      "costCategories": 1,
+      "costCentres": 1,
+      "currencies": 1,
+      "budgets": 0,
+      "stockGroups": 1,
+      "stockItems": 9,
+      "stockCategories": 0,
+      "units": 1,
+      "godowns": 1,
+      "vouchers": 3
+    },
+    "company": null
+  },
+  {
+    "id": 1776833282297.638,
+    "ts": "2026-04-22T04:48:02.297Z",
+    "level": "success",
+    "message": "Fetched 3 total vouchers (all dates)",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282292.009,
+    "ts": "2026-04-22T04:48:02.292Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 3",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282287.5723,
+    "ts": "2026-04-22T04:48:02.287Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 3",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282216.4443,
+    "ts": "2026-04-22T04:48:02.216Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": null,
+      "toDate": null
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282212.6487,
+    "ts": "2026-04-22T04:48:02.212Z",
+    "level": "info",
+    "message": "Voucher check: fetching ALL vouchers",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282206.8765,
+    "ts": "2026-04-22T04:48:02.206Z",
+    "level": "success",
+    "message": "Fetched 1 godowns",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282193.8042,
+    "ts": "2026-04-22T04:48:02.193Z",
+    "level": "info",
+    "message": "Fetching godowns from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282187.4817,
+    "ts": "2026-04-22T04:48:02.187Z",
+    "level": "success",
+    "message": "Fetched 1 units",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282173.02,
+    "ts": "2026-04-22T04:48:02.173Z",
+    "level": "info",
+    "message": "Fetching units from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282165.3333,
+    "ts": "2026-04-22T04:48:02.165Z",
+    "level": "success",
+    "message": "Fetched 0 stock categories",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282153.7405,
+    "ts": "2026-04-22T04:48:02.153Z",
+    "level": "info",
+    "message": "Fetching stock categories from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282147.4177,
+    "ts": "2026-04-22T04:48:02.147Z",
+    "level": "success",
+    "message": "Fetched 9 stock items (0 with HSN/SAC, 0 with GST rate)",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282127.3079,
+    "ts": "2026-04-22T04:48:02.127Z",
+    "level": "info",
+    "message": "Fetching stock items from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282120.5222,
+    "ts": "2026-04-22T04:48:02.120Z",
+    "level": "success",
+    "message": "Fetched 1 stock groups",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282102.647,
+    "ts": "2026-04-22T04:48:02.102Z",
+    "level": "info",
+    "message": "Fetching stock groups from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282095.3403,
+    "ts": "2026-04-22T04:48:02.095Z",
+    "level": "success",
+    "message": "Fetched 0 budgets",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282082.624,
+    "ts": "2026-04-22T04:48:02.082Z",
+    "level": "info",
+    "message": "Fetching budgets from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282076.2852,
+    "ts": "2026-04-22T04:48:02.076Z",
+    "level": "success",
+    "message": "Fetched 1 currencies",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282062.765,
+    "ts": "2026-04-22T04:48:02.062Z",
+    "level": "info",
+    "message": "Fetching currencies from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282053.459,
+    "ts": "2026-04-22T04:48:02.053Z",
+    "level": "success",
+    "message": "Fetched 1 cost centres",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282040.9128,
+    "ts": "2026-04-22T04:48:02.040Z",
+    "level": "info",
+    "message": "Fetching cost centres from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282034.708,
+    "ts": "2026-04-22T04:48:02.034Z",
+    "level": "success",
+    "message": "Fetched 1 cost categories",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282023.4097,
+    "ts": "2026-04-22T04:48:02.023Z",
+    "level": "info",
+    "message": "Fetching cost categories from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833282018.6052,
+    "ts": "2026-04-22T04:48:02.018Z",
+    "level": "success",
+    "message": "Fetched 29 voucher types",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833281999.6775,
+    "ts": "2026-04-22T04:48:01.999Z",
+    "level": "info",
+    "message": "Fetching voucher types from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833281994.631,
+    "ts": "2026-04-22T04:48:01.994Z",
+    "level": "success",
+    "message": "Fetched 67 ledgers",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833281958.6284,
+    "ts": "2026-04-22T04:48:01.958Z",
+    "level": "info",
+    "message": "Fetching ledgers from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833281953.635,
+    "ts": "2026-04-22T04:48:01.953Z",
+    "level": "success",
+    "message": "Fetched 28 groups",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833281935.6128,
+    "ts": "2026-04-22T04:48:01.935Z",
+    "level": "info",
+    "message": "Fetching groups from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833281924.0276,
+    "ts": "2026-04-22T04:48:01.924Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833281911.17,
+    "ts": "2026-04-22T04:48:01.911Z",
+    "level": "info",
+    "message": "Middleware check started for: Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833264100.845,
+    "ts": "2026-04-22T04:47:44.100Z",
+    "level": "info",
+    "message": "Middleware check complete: ok",
+    "meta": {
+      "companies": 2,
+      "groups": 28,
+      "ledgers": 67,
+      "voucherTypes": 29,
+      "costCategories": 1,
+      "costCentres": 1,
+      "currencies": 1,
+      "budgets": 0,
+      "stockGroups": 1,
+      "stockItems": 9,
+      "stockCategories": 0,
+      "units": 1,
+      "godowns": 1,
+      "vouchers": 3
+    },
+    "company": null
+  },
+  {
+    "id": 1776833264093.119,
+    "ts": "2026-04-22T04:47:44.093Z",
+    "level": "success",
+    "message": "Fetched 3 total vouchers (all dates)",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833264085.2834,
+    "ts": "2026-04-22T04:47:44.085Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 3",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833264078.356,
+    "ts": "2026-04-22T04:47:44.078Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 3",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263973.3938,
+    "ts": "2026-04-22T04:47:43.973Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Tally",
+      "fromDate": null,
+      "toDate": null
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263966.9507,
+    "ts": "2026-04-22T04:47:43.966Z",
+    "level": "info",
+    "message": "Voucher check: fetching ALL vouchers",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263960.6626,
+    "ts": "2026-04-22T04:47:43.960Z",
+    "level": "success",
+    "message": "Fetched 1 godowns",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263946.7139,
+    "ts": "2026-04-22T04:47:43.946Z",
+    "level": "info",
+    "message": "Fetching godowns from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263939.7695,
+    "ts": "2026-04-22T04:47:43.939Z",
+    "level": "success",
+    "message": "Fetched 1 units",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263926.1323,
+    "ts": "2026-04-22T04:47:43.926Z",
+    "level": "info",
+    "message": "Fetching units from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263918.707,
+    "ts": "2026-04-22T04:47:43.918Z",
+    "level": "success",
+    "message": "Fetched 0 stock categories",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263907.0598,
+    "ts": "2026-04-22T04:47:43.907Z",
+    "level": "info",
+    "message": "Fetching stock categories from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263898.8894,
+    "ts": "2026-04-22T04:47:43.898Z",
+    "level": "success",
+    "message": "Fetched 9 stock items (0 with HSN/SAC, 0 with GST rate)",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263873.9458,
+    "ts": "2026-04-22T04:47:43.873Z",
+    "level": "info",
+    "message": "Fetching stock items from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263865.3435,
+    "ts": "2026-04-22T04:47:43.865Z",
+    "level": "success",
+    "message": "Fetched 1 stock groups",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263848.2668,
+    "ts": "2026-04-22T04:47:43.848Z",
+    "level": "info",
+    "message": "Fetching stock groups from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263840.1375,
+    "ts": "2026-04-22T04:47:43.840Z",
+    "level": "success",
+    "message": "Fetched 0 budgets",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263827.0774,
+    "ts": "2026-04-22T04:47:43.827Z",
+    "level": "info",
+    "message": "Fetching budgets from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263819.3628,
+    "ts": "2026-04-22T04:47:43.819Z",
+    "level": "success",
+    "message": "Fetched 1 currencies",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263805.5574,
+    "ts": "2026-04-22T04:47:43.805Z",
+    "level": "info",
+    "message": "Fetching currencies from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263798.5984,
+    "ts": "2026-04-22T04:47:43.798Z",
+    "level": "success",
+    "message": "Fetched 1 cost centres",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263781.0093,
+    "ts": "2026-04-22T04:47:43.781Z",
+    "level": "info",
+    "message": "Fetching cost centres from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263775.6274,
+    "ts": "2026-04-22T04:47:43.775Z",
+    "level": "success",
+    "message": "Fetched 1 cost categories",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263758.2065,
+    "ts": "2026-04-22T04:47:43.758Z",
+    "level": "info",
+    "message": "Fetching cost categories from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263751.418,
+    "ts": "2026-04-22T04:47:43.751Z",
+    "level": "success",
+    "message": "Fetched 29 voucher types",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263721.4915,
+    "ts": "2026-04-22T04:47:43.721Z",
+    "level": "info",
+    "message": "Fetching voucher types from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263712.5522,
+    "ts": "2026-04-22T04:47:43.712Z",
+    "level": "success",
+    "message": "Fetched 67 ledgers",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263647.329,
+    "ts": "2026-04-22T04:47:43.647Z",
+    "level": "info",
+    "message": "Fetching ledgers from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263640.4438,
+    "ts": "2026-04-22T04:47:43.640Z",
+    "level": "success",
+    "message": "Fetched 28 groups",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263600.2646,
+    "ts": "2026-04-22T04:47:43.600Z",
+    "level": "info",
+    "message": "Fetching groups from Tally",
+    "meta": {
+      "company": "Tally"
+    },
+    "company": "Tally"
+  },
+  {
+    "id": 1776833263583.8179,
+    "ts": "2026-04-22T04:47:43.583Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833263567.311,
+    "ts": "2026-04-22T04:47:43.567Z",
+    "level": "info",
+    "message": "Middleware check started for: Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833252511.8179,
+    "ts": "2026-04-22T04:47:32.511Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833252471.078,
+    "ts": "2026-04-22T04:47:32.471Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833177676.4126,
+    "ts": "2026-04-22T04:46:17.676Z",
+    "level": "error",
+    "message": "Failed to fetch companies",
+    "meta": {
+      "error": ""
+    },
+    "company": null
+  },
+  {
+    "id": 1776833177667.3394,
+    "ts": "2026-04-22T04:46:17.667Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833177653.154,
+    "ts": "2026-04-22T04:46:17.653Z",
+    "level": "error",
+    "message": "Failed to fetch companies",
+    "meta": {
+      "error": ""
+    },
+    "company": null
+  },
+  {
+    "id": 1776833177569.8542,
+    "ts": "2026-04-22T04:46:17.569Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833135623.5388,
+    "ts": "2026-04-22T04:45:35.623Z",
+    "level": "info",
+    "message": "Run POST /api/middleware/check to validate all Tally data",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833135619.9692,
+    "ts": "2026-04-22T04:45:35.619Z",
+    "level": "info",
+    "message": "Tally endpoint: http://localhost:9000",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833135615.2,
+    "ts": "2026-04-22T04:45:35.615Z",
+    "level": "info",
+    "message": "Tally Middleware server running on http://localhost:4000",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776833135596.9119,
+    "ts": "2026-04-22T04:45:35.596Z",
+    "level": "info",
+    "message": "Auto-sync disabled (set AUTO_SYNC_ENABLED=true in .env to enable)",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776776676690.3813,
+    "ts": "2026-04-21T13:04:36.690Z",
+    "level": "info",
+    "message": "Run POST /api/middleware/check to validate all Tally data",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776776676688.8362,
+    "ts": "2026-04-21T13:04:36.688Z",
+    "level": "info",
+    "message": "Tally endpoint: http://localhost:9000",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776776676686.438,
+    "ts": "2026-04-21T13:04:36.686Z",
+    "level": "info",
+    "message": "Tally Middleware server running on http://localhost:4000",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1776776676675.1943,
+    "ts": "2026-04-21T13:04:36.675Z",
+    "level": "info",
+    "message": "Auto-sync disabled (set AUTO_SYNC_ENABLED=true in .env to enable)",
+    "meta": {},
+    "company": null
+  },
+  {
     "id": 1776773449118.5051,
     "ts": "2026-04-21T12:10:49.118Z",
     "level": "info",
@@ -6768,1318 +8387,6 @@
     "ts": "2026-04-21T11:26:02.415Z",
     "level": "info",
     "message": "Auto-created missing account: \"Metayb Private Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770761852.715,
-    "ts": "2026-04-21T11:26:01.852Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"P. S. Patankar & Co. - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770761647.016,
-    "ts": "2026-04-21T11:26:01.647Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"S.S.Gold - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770761238.485,
-    "ts": "2026-04-21T11:26:01.238Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Leo Silver Art Private Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770760931.3425,
-    "ts": "2026-04-21T11:26:00.931Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Tunics Sponge Pvt. Ltd. - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770760520.5913,
-    "ts": "2026-04-21T11:26:00.520Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Toy Villa - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770760217.9968,
-    "ts": "2026-04-21T11:26:00.217Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Sachin Chavan - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770759882.1536,
-    "ts": "2026-04-21T11:25:59.882Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Salary Exp - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770759600.2751,
-    "ts": "2026-04-21T11:25:59.600Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Golden Era Care & Serve Charitable Trust - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770759192.2444,
-    "ts": "2026-04-21T11:25:59.192Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Bharat Shroff and Co - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770758883.5322,
-    "ts": "2026-04-21T11:25:58.883Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Asha International - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770758679.984,
-    "ts": "2026-04-21T11:25:58.679Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"J. K Enterprise - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770758333.1165,
-    "ts": "2026-04-21T11:25:58.333Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Bohra Enterpries - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770758064.7366,
-    "ts": "2026-04-21T11:25:58.064Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Raksha Paper Mart - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770757653.9575,
-    "ts": "2026-04-21T11:25:57.653Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"MS Traders - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770757243.9758,
-    "ts": "2026-04-21T11:25:57.243Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"BG Platinum - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770757041.6997,
-    "ts": "2026-04-21T11:25:57.041Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"EDUCO - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770756888.9546,
-    "ts": "2026-04-21T11:25:56.888Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Bhautik Mahesh Gohil - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770756732.7031,
-    "ts": "2026-04-21T11:25:56.732Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"AADI IMPEX - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770756528.9263,
-    "ts": "2026-04-21T11:25:56.528Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Trident Enterprises - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770756220.1387,
-    "ts": "2026-04-21T11:25:56.220Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"MAHAVIR PRASAD PUROHIT - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770755777.0562,
-    "ts": "2026-04-21T11:25:55.777Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Ved Prakash - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770755607.499,
-    "ts": "2026-04-21T11:25:55.607Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"MAHAABALA INC. - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770755291.282,
-    "ts": "2026-04-21T11:25:55.291Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Ainwesha Engineering & Projects Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770754991.609,
-    "ts": "2026-04-21T11:25:54.991Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Kheteshwar Metals ( India ) - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770750863.2444,
-    "ts": "2026-04-21T11:25:50.863Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Vikash Vyapar Pvt. Ltd - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770750187.7412,
-    "ts": "2026-04-21T11:25:50.187Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Shree Shakti Enterprises - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770749769.1387,
-    "ts": "2026-04-21T11:25:49.769Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"ANH Trading Co - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770749359.4805,
-    "ts": "2026-04-21T11:25:49.359Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Jindutt Steel� - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770748952.064,
-    "ts": "2026-04-21T11:25:48.952Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"DHAIRYA STEEL (INDIA) - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770748547.9177,
-    "ts": "2026-04-21T11:25:48.547Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Ajay Deshpande & Co - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770748207.798,
-    "ts": "2026-04-21T11:25:48.207Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Satyam Waterproofing & Repairs Solutions - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770747627.414,
-    "ts": "2026-04-21T11:25:47.627Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Indicore Infocomm Private Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770747317.2524,
-    "ts": "2026-04-21T11:25:47.317Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Union Square House Real Estate Broker L.L.C - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770746288.0369,
-    "ts": "2026-04-21T11:25:46.288Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Paar Services - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770746092.882,
-    "ts": "2026-04-21T11:25:46.092Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Falcon 18 Imports Private Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770745731.0652,
-    "ts": "2026-04-21T11:25:45.731Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Impulse Green Energy Pvt Ltd - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770745374.1182,
-    "ts": "2026-04-21T11:25:45.374Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Reliance Jio Infocomm Ltd - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770744854.9739,
-    "ts": "2026-04-21T11:25:44.854Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"GGI Clearing & Forwording Pvt Ltd - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770744444.4473,
-    "ts": "2026-04-21T11:25:44.444Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"R V Enterprise - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770744137.8755,
-    "ts": "2026-04-21T11:25:44.137Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Circular Management LLP - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770743628.9717,
-    "ts": "2026-04-21T11:25:43.628Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"A. G. Shendye and Co - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770743325.2139,
-    "ts": "2026-04-21T11:25:43.325Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Ambay Bhotika - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770742975.884,
-    "ts": "2026-04-21T11:25:42.975Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Perfect Infra-Tech - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770742705.2231,
-    "ts": "2026-04-21T11:25:42.705Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Swetu Electrical - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770742144.9763,
-    "ts": "2026-04-21T11:25:42.144Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Chetan Associates - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770741385.3328,
-    "ts": "2026-04-21T11:25:41.385Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Aggressive Electronics trading LLC - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770740661.1802,
-    "ts": "2026-04-21T11:25:40.661Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"NowFloats Technologies Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770739945.9497,
-    "ts": "2026-04-21T11:25:39.945Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"S N Referigeration - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770739640.1543,
-    "ts": "2026-04-21T11:25:39.640Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Anup Jha - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770738100.9792,
-    "ts": "2026-04-21T11:25:38.100Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Cogniscient Business Solutions Pvt Ltd - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770737378.415,
-    "ts": "2026-04-21T11:25:37.378Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Professional Fee - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770736667.0747,
-    "ts": "2026-04-21T11:25:36.667Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Stratwit Solutions Ltd. - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770736027.788,
-    "ts": "2026-04-21T11:25:36.027Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Suresh R Bari - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770735349.5474,
-    "ts": "2026-04-21T11:25:35.349Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Young Fashion(Mumbai) - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770734613.2864,
-    "ts": "2026-04-21T11:25:34.613Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Young Classic - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770733863.3167,
-    "ts": "2026-04-21T11:25:33.863Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Bagrecha Jewellers - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770733083.477,
-    "ts": "2026-04-21T11:25:33.083Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Renu Devi Murarka - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770732364.9167,
-    "ts": "2026-04-21T11:25:32.364Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Meena Jajodia - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770731645.5298,
-    "ts": "2026-04-21T11:25:31.645Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Iraj Robotics Automation Pvt.Ltd - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770731106.475,
-    "ts": "2026-04-21T11:25:31.106Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Ajira Software India Pvt Ltd - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770730750.3135,
-    "ts": "2026-04-21T11:25:30.750Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Klinera Global Services - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770730213.8403,
-    "ts": "2026-04-21T11:25:30.213Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Bhashkar Bhatt - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770729497.1558,
-    "ts": "2026-04-21T11:25:29.497Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Uptron Power Generator Services - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770729093.817,
-    "ts": "2026-04-21T11:25:29.093Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Zale Shipping & Logistics Sevices Pvt Ltd - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770728750.6738,
-    "ts": "2026-04-21T11:25:28.750Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Art Fertility Bank - T\" (type: Bank, parent: Bank Accounts - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770728404.3345,
-    "ts": "2026-04-21T11:25:28.404Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Akhilesh Kumar & Co - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770727962.571,
-    "ts": "2026-04-21T11:25:27.962Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Marudhar Metal & Engineering Co. - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770727435.8323,
-    "ts": "2026-04-21T11:25:27.435Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Galaxy Automation And Engineering - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770726836.2156,
-    "ts": "2026-04-21T11:25:26.836Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Rail Tours India Llp - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770726407.2834,
-    "ts": "2026-04-21T11:25:26.407Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"H. K. Enterprises(Sakinaka) - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770725909.0657,
-    "ts": "2026-04-21T11:25:25.909Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Tunneltech Solution Pvt Ltd - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770725297.263,
-    "ts": "2026-04-21T11:25:25.297Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Axzora Private Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770724481.7866,
-    "ts": "2026-04-21T11:25:24.481Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Bakers Pride - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770719061.096,
-    "ts": "2026-04-21T11:25:19.061Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Vibes Consultancy Services - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770709738.1675,
-    "ts": "2026-04-21T11:25:09.738Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Praveen Kumar Pathak - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770709107.2988,
-    "ts": "2026-04-21T11:25:09.107Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Ashwini M - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770708625.4807,
-    "ts": "2026-04-21T11:25:08.625Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Nilesh Kamble - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770708095.217,
-    "ts": "2026-04-21T11:25:08.095Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"CC EMI Unicorn - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770707741.033,
-    "ts": "2026-04-21T11:25:07.741Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Navkar Enterprise(Sanjay) - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770707377.6921,
-    "ts": "2026-04-21T11:25:07.377Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"DOXA SALON LLP - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770706976.91,
-    "ts": "2026-04-21T11:25:06.976Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Jsk Asset Franchise - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770706657.0032,
-    "ts": "2026-04-21T11:25:06.657Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Donation - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770706249.6829,
-    "ts": "2026-04-21T11:25:06.249Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Girish Sharma - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770705734.5474,
-    "ts": "2026-04-21T11:25:05.734Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Sweeper Charges - T\" (type: Bank, parent: Bank Accounts - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770705123.4744,
-    "ts": "2026-04-21T11:25:05.123Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Mahaabali Flanges (India) - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770704779.5486,
-    "ts": "2026-04-21T11:25:04.779Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Palas Infra Projects - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770704305.6943,
-    "ts": "2026-04-21T11:25:04.305Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Vefab Engineering Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770703814.3093,
-    "ts": "2026-04-21T11:25:03.814Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Shabbir Tapia & Associate - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770703586.339,
-    "ts": "2026-04-21T11:25:03.586Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Wonderworld Groceries AJ Corp Private Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770703279.6416,
-    "ts": "2026-04-21T11:25:03.279Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Kent Constructions Private Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770702899.1997,
-    "ts": "2026-04-21T11:25:02.899Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Lumilo Lights Private Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770702751.359,
-    "ts": "2026-04-21T11:25:02.751Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Dots2connect Marketing Pvt Ltd - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770702362.8313,
-    "ts": "2026-04-21T11:25:02.362Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"M/s K S Solution - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770701846.4255,
-    "ts": "2026-04-21T11:25:01.846Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"BabaSaheb Ramdas Sable - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770701539.2175,
-    "ts": "2026-04-21T11:25:01.539Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"YUG STATIONERY MART - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770701223.2678,
-    "ts": "2026-04-21T11:25:01.223Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Electricity - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770700925.6792,
-    "ts": "2026-04-21T11:25:00.925Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"General Expenses - T\" (type: Expense Account, parent: Advertisement Expenses - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770700413.7112,
-    "ts": "2026-04-21T11:25:00.413Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Jilly Enterprises - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770699805.7598,
-    "ts": "2026-04-21T11:24:59.805Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Indo Japan Industries - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770699288.9253,
-    "ts": "2026-04-21T11:24:59.288Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Rameshwar Enterprises - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770698742.415,
-    "ts": "2026-04-21T11:24:58.742Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Hem & Co - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770698492.3945,
-    "ts": "2026-04-21T11:24:58.492Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Ajmera Ajmera And Associates - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770698075.2996,
-    "ts": "2026-04-21T11:24:58.075Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Memon & Associates - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770697641.9868,
-    "ts": "2026-04-21T11:24:57.641Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Adih Biztech Private Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770697238.7493,
-    "ts": "2026-04-21T11:24:57.238Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Maharashtra State Ele, Distr. (MSED) - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770696929.5908,
-    "ts": "2026-04-21T11:24:56.929Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Vijay Jogani & Co. - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770696522.2366,
-    "ts": "2026-04-21T11:24:56.522Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Shakti Infotech Private Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770696018.8713,
-    "ts": "2026-04-21T11:24:56.018Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"AIM Security and Facility Service - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770695703.7295,
-    "ts": "2026-04-21T11:24:55.703Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Jasmira Engineers Pvt. Ltd - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770695297.9119,
-    "ts": "2026-04-21T11:24:55.297Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"LCD Plasto Film Pravate Ltd. - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770694990.5876,
-    "ts": "2026-04-21T11:24:54.990Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Mauli Computers - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770694454.5664,
-    "ts": "2026-04-21T11:24:54.454Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Sudarshan Chokhani & Company - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770693961.2703,
-    "ts": "2026-04-21T11:24:53.961Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Poornima Carbon Private Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770693463.9001,
-    "ts": "2026-04-21T11:24:53.463Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Cash Back - T\" (type: Cash, parent: Cash In Hand - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770693146.8887,
-    "ts": "2026-04-21T11:24:53.146Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Chemitronic India - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770692792.7341,
-    "ts": "2026-04-21T11:24:52.792Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"IFHS Steel - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770692428.8496,
-    "ts": "2026-04-21T11:24:52.428Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Rajat Steel Pipe Fitting - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770691818.722,
-    "ts": "2026-04-21T11:24:51.818Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Taxcon - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770691325.0437,
-    "ts": "2026-04-21T11:24:51.325Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Hitesh P Shah. - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770690748.6892,
-    "ts": "2026-04-21T11:24:50.748Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Amura Consultancy Services - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770689732.4873,
-    "ts": "2026-04-21T11:24:49.732Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Vikabh Securities Pvt Ltd - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770689406.6934,
-    "ts": "2026-04-21T11:24:49.406Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Dhanesh Kumar Udayavar - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770688947.1755,
-    "ts": "2026-04-21T11:24:48.947Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Zufy Industrial Products - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770688432.4175,
-    "ts": "2026-04-21T11:24:48.432Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Avishkar Decore World - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770687822.806,
-    "ts": "2026-04-21T11:24:47.822Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Goel & Sons - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770687612.4834,
-    "ts": "2026-04-21T11:24:47.612Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Pioneer Foundation Engineers Private limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770687102.0198,
-    "ts": "2026-04-21T11:24:47.102Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Rajog Equipment Private Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770686794.636,
-    "ts": "2026-04-21T11:24:46.794Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"21N78E Creative LABS Pvt. Ltd. - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770686373.086,
-    "ts": "2026-04-21T11:24:46.373Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Altitude Marine Services Private Limited - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770686077.6887,
-    "ts": "2026-04-21T11:24:46.077Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Godavari Constructions - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770685770.9414,
-    "ts": "2026-04-21T11:24:45.770Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Urja Communications - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770685154.114,
-    "ts": "2026-04-21T11:24:45.154Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Chetan Traders - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770684643.2463,
-    "ts": "2026-04-21T11:24:44.643Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Ram Ray Sharma - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770684184.538,
-    "ts": "2026-04-21T11:24:44.184Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Aditya kothari - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770683622.0076,
-    "ts": "2026-04-21T11:24:43.622Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"MRJK & Associates - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770683209.4512,
-    "ts": "2026-04-21T11:24:43.209Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Mayank Sharma - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770682904.6587,
-    "ts": "2026-04-21T11:24:42.904Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Prasanta Kumar Bhoi - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770682391.2192,
-    "ts": "2026-04-21T11:24:42.391Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Praveen Radheshyam Yadav - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770681985.4746,
-    "ts": "2026-04-21T11:24:41.985Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Ankit Bhagwati Prasad Dhandharia - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770681470.6162,
-    "ts": "2026-04-21T11:24:41.470Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Anushka Arvind Fondke - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770680854.7795,
-    "ts": "2026-04-21T11:24:40.854Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Aniket Santosh Chavan - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770680039.7637,
-    "ts": "2026-04-21T11:24:40.039Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Anagha Pradeep Naik - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770678502.7373,
-    "ts": "2026-04-21T11:24:38.502Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Amit Kumar - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770678090.9817,
-    "ts": "2026-04-21T11:24:38.090Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Tarun Kumar - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770677683.199,
-    "ts": "2026-04-21T11:24:37.683Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Shreyashree Dhandharia - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770676862.9841,
-    "ts": "2026-04-21T11:24:36.862Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Sayali Dhamne - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770676188.416,
-    "ts": "2026-04-21T11:24:36.188Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Satakshi Dhandharia - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770675643.8977,
-    "ts": "2026-04-21T11:24:35.643Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Ritika Dhandharia Salary Exps. - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770675019.3958,
-    "ts": "2026-04-21T11:24:35.019Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Rambilas Tiwari - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770674711.039,
-    "ts": "2026-04-21T11:24:34.711Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Raju Babasaheb Kamble - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770674305.5596,
-    "ts": "2026-04-21T11:24:34.305Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Rajesh Chatterjee - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770673795.5715,
-    "ts": "2026-04-21T11:24:33.795Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Payal Mistry - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770673278.017,
-    "ts": "2026-04-21T11:24:33.278Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Mohd Awaish - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770672055.7627,
-    "ts": "2026-04-21T11:24:32.055Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"KannamNaidu reddy-OLD - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770667953.3022,
-    "ts": "2026-04-21T11:24:27.953Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Hamid Khan - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770655377.7732,
-    "ts": "2026-04-21T11:24:15.377Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Girdhar Bagla - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770654749.579,
-    "ts": "2026-04-21T11:24:14.749Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Deepika Umesh Suryavanshi - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770654149.6482,
-    "ts": "2026-04-21T11:24:14.149Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Chinta Naga Lakshmi Krishna Mounika - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770653616.2021,
-    "ts": "2026-04-21T11:24:13.616Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Bhagwati Prasad Dhandharia - Remuneration - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770653026.9995,
-    "ts": "2026-04-21T11:24:13.026Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Asha Devi Dhandharia - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770652313.249,
-    "ts": "2026-04-21T11:24:12.313Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Rupal Consulting - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770651783.7822,
-    "ts": "2026-04-21T11:24:11.783Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Shivraj Enterprises - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770651274.7898,
-    "ts": "2026-04-21T11:24:11.275Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"M/s Uday Steel - T\" (type: Payable, parent: Sundry Creditors - T)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1776770650776.1677,
-    "ts": "2026-04-21T11:24:10.776Z",
-    "level": "info",
-    "message": "Auto-created missing account: \"Technovation - T\" (type: Payable, parent: Sundry Creditors - T)",
     "meta": {},
     "company": null
   }

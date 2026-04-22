@@ -91,36 +91,54 @@ export default function Dashboard() {
         ::-webkit-scrollbar { width:5px; height:5px; }
         ::-webkit-scrollbar-track { background:transparent; }
         ::-webkit-scrollbar-thumb { background:${C.border}; border-radius:10px; }
-        .nav-item:hover { background: rgba(255,255,255,0.08) !important; }
-        .nav-item.active { background: rgba(255,255,255,0.13) !important; }
+        .nav-item:hover { background: linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.04)) !important; border-color: rgba(255,255,255,.07) !important; box-shadow: 0 2px 8px rgba(0,0,0,.15) !important; }
+        .nav-item.active { background: linear-gradient(135deg,rgba(37,99,235,.35),rgba(29,78,216,.2)) !important; }
       `}</style>
 
       {/* ── Sidebar ── */}
       <aside style={{
-        width:192, flexShrink:0, background:"linear-gradient(180deg,#1e293b 0%,#0f172a 100%)",
+        width:200, flexShrink:0,
+        background:"linear-gradient(160deg,#1a2540 0%,#0d1528 50%,#080e1e 100%)",
         display:"flex", flexDirection:"column", padding:"0 0 16px",
-        boxShadow:"2px 0 16px rgba(0,0,0,.18)", zIndex:10,
+        boxShadow:"4px 0 32px rgba(0,0,0,.45), 2px 0 0 rgba(255,255,255,.04)",
+        zIndex:10, position:"relative",
       }}>
+        {/* 3D depth accent line */}
+        <div style={{
+          position:"absolute", top:0, left:0, width:"100%", height:"100%",
+          background:"linear-gradient(90deg, rgba(37,99,235,.06) 0%, transparent 60%)",
+          pointerEvents:"none",
+        }}/>
+        {/* Subtle grid texture */}
+        <div style={{
+          position:"absolute", top:0, left:0, width:"100%", height:"100%",
+          backgroundImage:"radial-gradient(circle, rgba(255,255,255,.025) 1px, transparent 1px)",
+          backgroundSize:"20px 20px",
+          pointerEvents:"none",
+        }}/>
+
         {/* Logo */}
-        <div style={{ padding:"22px 18px 20px", borderBottom:"1px solid rgba(255,255,255,.08)" }}>
-          <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+        <div style={{ padding:"22px 16px 18px", borderBottom:"1px solid rgba(255,255,255,.07)", position:"relative" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:11 }}>
             <div style={{
-              width:34, height:34, borderRadius:9,
-              background:"linear-gradient(135deg,#2563eb,#1d4ed8)",
+              width:38, height:38, borderRadius:11,
+              background:"linear-gradient(145deg,#3b82f6,#1d4ed8)",
               display:"flex", alignItems:"center", justifyContent:"center",
-              boxShadow:"0 4px 12px rgba(37,99,235,.45)", flexShrink:0,
+              boxShadow:"0 6px 20px rgba(37,99,235,.5), 0 2px 0 rgba(255,255,255,.15) inset, 0 -2px 0 rgba(0,0,0,.3) inset",
+              flexShrink:0,
+              transform:"perspective(60px) rotateX(5deg)",
             }}>
-              <span style={{ fontSize:16 }}>⇄</span>
+              <span style={{ fontSize:17, filter:"drop-shadow(0 2px 3px rgba(0,0,0,.4))" }}>⇄</span>
             </div>
             <div>
-              <p style={{ fontFamily:C.title, fontSize:13, fontWeight:800, color:"#fff", lineHeight:1.2 }}>Tally → ERP</p>
-              <p style={{ fontFamily:C.mono, fontSize:9, color:"rgba(255,255,255,.38)", letterSpacing:"0.1em", textTransform:"uppercase" }}>MIDDLEWARE</p>
+              <p style={{ fontFamily:C.title, fontSize:13.5, fontWeight:800, color:"#fff", lineHeight:1.2, letterSpacing:"-0.3px", textShadow:"0 1px 8px rgba(37,99,235,.3)" }}>Tally → ERP</p>
+              <p style={{ fontFamily:C.mono, fontSize:8.5, color:"rgba(255,255,255,.32)", letterSpacing:"0.14em", textTransform:"uppercase", marginTop:1 }}>MIDDLEWARE</p>
             </div>
           </div>
         </div>
 
         {/* Nav */}
-        <nav style={{ flex:1, padding:"12px 10px", display:"flex", flexDirection:"column", gap:3 }}>
+        <nav style={{ flex:1, padding:"14px 10px", display:"flex", flexDirection:"column", gap:4, position:"relative" }}>
           {NAV_ITEMS.map(item => {
             const isActive = activePage === item.id;
             return (
@@ -129,22 +147,44 @@ export default function Dashboard() {
                 className={`nav-item${isActive ? " active" : ""}`}
                 onClick={() => setActivePage(item.id)}
                 style={{
-                  display:"flex", alignItems:"center", gap:10, padding:"9px 10px",
-                  borderRadius:9, border:"none", cursor:"pointer", textAlign:"left",
-                  background: isActive ? "rgba(255,255,255,.13)" : "transparent",
-                  transition:"background .15s",
-                  borderLeft: isActive ? `3px solid ${C.accent}` : "3px solid transparent",
+                  display:"flex", alignItems:"center", gap:10, padding:"10px 10px",
+                  borderRadius:11, border: isActive ? "1px solid rgba(255,255,255,.12)" : "1px solid transparent",
+                  cursor:"pointer", textAlign:"left",
+                  background: isActive
+                    ? "linear-gradient(135deg,rgba(37,99,235,.35),rgba(29,78,216,.2))"
+                    : "transparent",
+                  boxShadow: isActive
+                    ? "0 4px 16px rgba(37,99,235,.25), 0 1px 0 rgba(255,255,255,.08) inset, 0 -1px 0 rgba(0,0,0,.2) inset"
+                    : "none",
+                  transition:"all .18s cubic-bezier(.4,0,.2,1)",
+                  position:"relative",
+                  transform: isActive ? "perspective(200px) translateZ(2px)" : "none",
                 }}
               >
+                {/* Active left glow bar */}
+                {isActive && (
+                  <div style={{
+                    position:"absolute", left:0, top:"20%", height:"60%", width:3,
+                    borderRadius:"0 3px 3px 0",
+                    background:"linear-gradient(180deg,#60a5fa,#2563eb,#1d4ed8)",
+                    boxShadow:"0 0 10px rgba(96,165,250,.7)",
+                  }}/>
+                )}
                 <div style={{
-                  width:28, height:28, borderRadius:7, flexShrink:0,
-                  background: isActive ? C.accent : "rgba(255,255,255,.07)",
+                  width:30, height:30, borderRadius:8, flexShrink:0,
+                  background: isActive
+                    ? "linear-gradient(145deg,#3b82f6,#1e40af)"
+                    : "rgba(255,255,255,.06)",
+                  border: isActive ? "1px solid rgba(255,255,255,.2)" : "1px solid rgba(255,255,255,.04)",
                   display:"flex", alignItems:"center", justifyContent:"center",
-                  fontSize:12, color:"#fff", transition:"background .15s",
+                  fontSize:13, color:"#fff", transition:"all .18s",
+                  boxShadow: isActive
+                    ? "0 3px 10px rgba(37,99,235,.4), 0 1px 0 rgba(255,255,255,.15) inset"
+                    : "0 2px 4px rgba(0,0,0,.2)",
                 }}>{item.icon}</div>
                 <div>
-                  <p style={{ fontFamily:C.sans, fontSize:12, fontWeight:600, color:isActive?"#fff":"rgba(255,255,255,.65)", lineHeight:1.2 }}>{item.label}</p>
-                  <p style={{ fontFamily:C.mono, fontSize:9, color:"rgba(255,255,255,.3)" }}>{item.sub}</p>
+                  <p style={{ fontFamily:C.sans, fontSize:12.5, fontWeight:600, color:isActive?"#fff":"rgba(255,255,255,.58)", lineHeight:1.2, letterSpacing:"-0.1px" }}>{item.label}</p>
+                  <p style={{ fontFamily:C.mono, fontSize:9, color:isActive?"rgba(255,255,255,.4)":"rgba(255,255,255,.25)", marginTop:1 }}>{item.sub}</p>
                 </div>
               </button>
             );
@@ -152,10 +192,18 @@ export default function Dashboard() {
         </nav>
 
         {/* Version pill */}
-        <div style={{ padding:"0 14px" }}>
-          <div style={{ display:"flex", alignItems:"center", gap:7, padding:"7px 10px", borderRadius:8, background:"rgba(255,255,255,.05)" }}>
-            <span style={{ width:7, height:7, borderRadius:"50%", background:C.green, flexShrink:0 }}/>
-            <span style={{ fontFamily:C.mono, fontSize:9, color:"rgba(255,255,255,.35)" }}>v1.0 · online</span>
+        <div style={{ padding:"0 12px", position:"relative" }}>
+          <div style={{
+            display:"flex", alignItems:"center", gap:8, padding:"8px 12px", borderRadius:10,
+            background:"rgba(255,255,255,.04)",
+            border:"1px solid rgba(255,255,255,.07)",
+            boxShadow:"0 2px 8px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.05) inset",
+          }}>
+            <span style={{
+              width:7, height:7, borderRadius:"50%", background:C.green, flexShrink:0,
+              boxShadow:`0 0 8px ${C.green}`,
+            }}/>
+            <span style={{ fontFamily:C.mono, fontSize:9, color:"rgba(255,255,255,.3)", letterSpacing:"0.06em" }}>v1.0 · online</span>
           </div>
         </div>
       </aside>

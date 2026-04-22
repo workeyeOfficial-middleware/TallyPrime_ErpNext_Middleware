@@ -4,39 +4,39 @@ const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:4000/api";
 const TODAY    = new Date().toISOString().slice(0, 10);
 
 const C = {
-  bg:      "#0d1117",
-  surface: "#161b22",
-  card:    "#1c2128",
-  border:  "#30363d",
-  borderB: "#484f58",
-  ink:     "#f0f6fc",
-  sub:     "#cdd9e5",
-  muted:   "#8b949e",
-  dimmed:  "#6e7681",
-  accent:  "#4493f8",
-  accentL: "#1f3358",
-  green:   "#3fb950",
-  greenL:  "#122d1a",
-  greenB:  "#238636",
-  amber:   "#e3b341",
-  amberL:  "#2d2000",
-  amberB:  "#9e6a03",
-  red:     "#ff7b72",
-  redL:    "#2d1216",
-  redB:    "#b62324",
+  bg:      "#e8edf6",
+  surface: "#f0f3fa",
+  card:    "#ffffff",
+  border:  "#d8dff0",
+  borderB: "#b0bcd8",
+  ink:     "#0a0e1a",
+  sub:     "#1e2a4a",
+  muted:   "#5a6482",
+  dimmed:  "#8a94b0",
+  accent:  "#2563eb",
+  accentL: "#eef4ff",
+  green:   "#16a34a",
+  greenL:  "#f0fdf4",
+  greenB:  "#bbf7d0",
+  amber:   "#d97706",
+  amberL:  "#fffbeb",
+  amberB:  "#fde68a",
+  red:     "#dc2626",
+  redL:    "#fef2f2",
+  redB:    "#fecaca",
   mono:    "'JetBrains Mono','Fira Code','Cascadia Code',monospace",
-  sans:    "'Inter','DM Sans','Plus Jakarta Sans',sans-serif",
+  sans:    "'DM Sans','Plus Jakarta Sans',sans-serif",
 };
 
 const LEVEL = {
-  info:    { color: C.sub,   bg: "transparent",      pill: "#30363d", pillText: C.muted,  tag: "INFO",    dot: C.dimmed },
-  success: { color: C.green, bg: C.greenL + "99",    pill: C.greenB,  pillText: "#aff5b4", tag: "OK",     dot: C.green  },
-  warn:    { color: C.amber, bg: C.amberL + "99",    pill: C.amberB,  pillText: "#ffd8a8", tag: "WARN",   dot: C.amber  },
-  error:   { color: C.red,   bg: C.redL   + "99",    pill: C.redB,    pillText: "#ffa198", tag: "ERROR",  dot: C.red    },
+  info:    { color: "#cdd9e5", bg: "transparent",   pill: "#30363d",  pillText: "#8b949e",  tag: "INFO",  dot: "#6e7681" },
+  success: { color: "#3fb950",  bg: "#122d1a99",   pill: "#238636",  pillText: "#aff5b4", tag: "OK",    dot: "#3fb950"  },
+  warn:    { color: "#e3b341",  bg: "#2d200099",   pill: "#9e6a03",  pillText: "#ffd8a8", tag: "WARN",  dot: "#e3b341"  },
+  error:   { color: "#ff7b72",    bg: "#2d121699",     pill: "#b62324",    pillText: "#ffa198", tag: "ERROR", dot: "#ff7b72"    },
 };
 
 const selStyle = {
-  background: C.surface,
+  background: C.card,
   border: `1.5px solid ${C.border}`,
   borderRadius: 8,
   color: C.sub,
@@ -48,6 +48,7 @@ const selStyle = {
   cursor: "pointer",
   appearance: "none",
   WebkitAppearance: "none",
+  boxShadow: "0 1px 4px rgba(13,21,50,.05)",
 };
 
 function useCounts(logs) {
@@ -55,8 +56,6 @@ function useCounts(logs) {
 }
 
 export function LiveLogs({ currentCompany = null }) {
-  const [company,     setCompany]     = useState(currentCompany || "");
-  const [companies,   setCompanies]   = useState([]);
   const [fromDate,    setFromDate]    = useState(TODAY);
   const [toDate,      setToDate]      = useState(TODAY);
   const [levelFilter, setLevelFilter] = useState("");
@@ -65,16 +64,8 @@ export function LiveLogs({ currentCompany = null }) {
   const pollRef  = useRef(null);
   const scrollRef = useRef(null);
 
-  useEffect(() => {
-    fetch(`${BASE_URL}/logs/companies`)
-      .then(r => r.ok ? r.json() : { companies: [] })
-      .then(d => setCompanies(d.companies || []))
-      .catch(() => {});
-  }, []);
-
   const fetchLogs = useCallback(() => {
     const p = new URLSearchParams({ limit: 500 });
-    if (company)     p.set("company",  company);
     if (fromDate)    p.set("fromDate", fromDate);
     if (toDate)      p.set("toDate",   toDate);
     if (levelFilter) p.set("level",    levelFilter);
@@ -84,7 +75,7 @@ export function LiveLogs({ currentCompany = null }) {
       .then(d => setLogs(d.logs || []))
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [company, fromDate, toDate, levelFilter]);
+  }, [fromDate, toDate, levelFilter]);
 
   useEffect(() => {
     fetchLogs();
@@ -99,12 +90,12 @@ export function LiveLogs({ currentCompany = null }) {
       <style>{`
         @keyframes ll-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.75)} }
         @keyframes ll-in    { from{opacity:0;transform:translateY(-3px)} to{opacity:1;transform:none} }
-        .ll-row:hover { background: rgba(99,110,123,.08) !important; }
+        .ll-row:hover { background: rgba(37,99,235,.04) !important; }
         .ll-ctrl:hover { border-color: ${C.accent} !important; }
         .ll-btn-pri:hover  { opacity:.88; }
         .ll-btn-sec:hover  { border-color:${C.borderB} !important; color:${C.sub} !important; }
-        .ll-ctrl option { background:${C.surface}; color:${C.sub}; }
-        input[type=date]::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor:pointer; }
+        .ll-ctrl option { background:${C.card}; color:${C.sub}; }
+        input[type=date]::-webkit-calendar-picker-indicator { filter: none; cursor:pointer; }
       `}</style>
 
       {/* ── Header ─────────────────────────────────────────────────────── */}
@@ -116,7 +107,7 @@ export function LiveLogs({ currentCompany = null }) {
               Live Logs
             </h2>
             <p style={{ margin:0, fontFamily:C.mono, fontSize:10, color:C.muted, marginTop:2 }}>
-              {company ? `● ${company.replace(/-/g," ")}` : "● All companies · middleware output stream"}
+"● All companies · middleware output stream"
             </p>
           </div>
         </div>
@@ -161,21 +152,10 @@ export function LiveLogs({ currentCompany = null }) {
       {/* ── Filter bar ─────────────────────────────────────────────────── */}
       <div style={{
         display:"flex", alignItems:"flex-end", gap:12, flexWrap:"wrap",
-        background:C.surface, border:`1.5px solid ${C.border}`,
+        background:C.card, border:`1.5px solid ${C.border}`,
         borderRadius:12, padding:"14px 18px",
+        boxShadow:"0 4px 20px rgba(13,21,50,.07), 0 1px 0 rgba(255,255,255,.9) inset",
       }}>
-        {/* Company */}
-        <div style={{ display:"flex", flexDirection:"column", gap:5, flex:"2 1 180px" }}>
-          <label style={{ fontFamily:C.sans, fontSize:11, fontWeight:600, color:C.muted, letterSpacing:"0.04em" }}>
-            🏢 Company
-          </label>
-          <select className="ll-ctrl" value={company} onChange={e => setCompany(e.target.value)}
-            style={{ ...selStyle, width:"100%" }}>
-            <option value="">— All Companies —</option>
-            {companies.map(c => <option key={c} value={c}>{c.replace(/-/g," ")}</option>)}
-          </select>
-        </div>
-
         {/* From */}
         <div style={{ display:"flex", flexDirection:"column", gap:5, flex:"1 1 130px" }}>
           <label style={{ fontFamily:C.sans, fontSize:11, fontWeight:600, color:C.muted, letterSpacing:"0.04em" }}>
@@ -222,7 +202,6 @@ export function LiveLogs({ currentCompany = null }) {
               Apply
             </button>
             <button className="ll-btn-sec" onClick={() => {
-              setCompany(currentCompany || "");
               setFromDate(TODAY); setToDate(TODAY); setLevelFilter("");
             }} style={{
               fontFamily:C.sans, fontSize:13, fontWeight:500, color:C.muted,
@@ -250,8 +229,8 @@ export function LiveLogs({ currentCompany = null }) {
       }}>
         {/* Title bar */}
         <div style={{
-          background:C.surface,
-          borderBottom:`1.5px solid ${C.border}`,
+          background:"#1c2232",
+          borderBottom:`1.5px solid #2a3248`,
           padding:"10px 18px",
           display:"flex", alignItems:"center", gap:0,
         }}>
@@ -264,10 +243,10 @@ export function LiveLogs({ currentCompany = null }) {
               }}/>
             ))}
           </div>
-          <span style={{ fontFamily:C.mono, fontSize:11, color:C.muted, flex:1, textAlign:"center", letterSpacing:"0.06em" }}>
-            {company ? `${company.replace(/-/g," ")}.log` : "middleware.log — all companies"}
+          <span style={{ fontFamily:C.mono, fontSize:11, color:"#8b949e", flex:1, textAlign:"center", letterSpacing:"0.06em" }}>
+"middleware.log — all companies"
           </span>
-          <span style={{ fontFamily:C.mono, fontSize:10, color:C.dimmed }}>UTF-8</span>
+          <span style={{ fontFamily:C.mono, fontSize:10, color:"#6e7681" }}>UTF-8</span>
         </div>
 
         {/* Column headers */}
@@ -276,11 +255,10 @@ export function LiveLogs({ currentCompany = null }) {
           padding:"6px 0", borderBottom:`1px solid ${C.border}22`,
           background:"#010409",
         }}>
-          <span style={{ fontFamily:C.mono, fontSize:9, color:C.dimmed, width:46, textAlign:"right", paddingRight:12, flexShrink:0, letterSpacing:"0.1em" }}>#</span>
-          <span style={{ fontFamily:C.mono, fontSize:9, color:C.dimmed, width:140, paddingRight:10, flexShrink:0, letterSpacing:"0.1em" }}>TIMESTAMP</span>
-          <span style={{ fontFamily:C.mono, fontSize:9, color:C.dimmed, width:62, paddingRight:10, flexShrink:0, letterSpacing:"0.1em" }}>LEVEL</span>
-          {!company && <span style={{ fontFamily:C.mono, fontSize:9, color:C.dimmed, width:120, paddingRight:10, flexShrink:0, letterSpacing:"0.1em" }}>COMPANY</span>}
-          <span style={{ fontFamily:C.mono, fontSize:9, color:C.dimmed, flex:1, letterSpacing:"0.1em" }}>MESSAGE</span>
+          <span style={{ fontFamily:C.mono, fontSize:9, color:"#6e7681", width:46, textAlign:"right", paddingRight:12, flexShrink:0, letterSpacing:"0.1em" }}>#</span>
+          <span style={{ fontFamily:C.mono, fontSize:9, color:"#6e7681", width:140, paddingRight:10, flexShrink:0, letterSpacing:"0.1em" }}>TIMESTAMP</span>
+          <span style={{ fontFamily:C.mono, fontSize:9, color:"#6e7681", width:62, paddingRight:10, flexShrink:0, letterSpacing:"0.1em" }}>LEVEL</span>
+          <span style={{ fontFamily:C.mono, fontSize:9, color:"#6e7681", flex:1, letterSpacing:"0.1em" }}>MESSAGE</span>
         </div>
 
         {/* Log rows */}
@@ -295,9 +273,9 @@ export function LiveLogs({ currentCompany = null }) {
             <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", height:"100%", gap:16 }}>
               <div style={{ width:56, height:56, borderRadius:14, background:C.surface, border:`1.5px solid ${C.border}`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:26 }}>📋</div>
               <div style={{ textAlign:"center" }}>
-                <p style={{ fontFamily:C.sans, fontSize:14, fontWeight:600, color:C.muted, margin:0 }}>No logs found</p>
-                <p style={{ fontFamily:C.sans, fontSize:12, color:C.dimmed, margin:"6px 0 0" }}>
-                  {company ? "No logs for this company in the selected range" : "Run a middleware check to see output"}
+<p style={{ fontFamily:C.sans, fontSize:14, fontWeight:600, color:"#8b949e", margin:0 }}>No logs found</p>
+                <p style={{ fontFamily:C.sans, fontSize:12, color:"#6e7681", margin:"6px 0 0" }}>
+"Run a middleware check to see output"
                 </p>
               </div>
             </div>
@@ -313,12 +291,12 @@ export function LiveLogs({ currentCompany = null }) {
                 minHeight:32,
               }}>
                 {/* Line no */}
-                <span style={{ fontFamily:C.mono, fontSize:11, color:C.dimmed, flexShrink:0, width:46, textAlign:"right", paddingRight:12, userSelect:"none", fontVariantNumeric:"tabular-nums" }}>
+                <span style={{ fontFamily:C.mono, fontSize:11, color:"#6e7681", flexShrink:0, width:46, textAlign:"right", paddingRight:12, userSelect:"none", fontVariantNumeric:"tabular-nums" }}>
                   {String(idx + 1).padStart(3, " ")}
                 </span>
 
                 {/* Timestamp */}
-                <span style={{ fontFamily:C.mono, fontSize:11, color:C.muted, flexShrink:0, paddingRight:10, fontVariantNumeric:"tabular-nums", width:140 }}>
+                <span style={{ fontFamily:C.mono, fontSize:11, color:"#8b949e", flexShrink:0, paddingRight:10, fontVariantNumeric:"tabular-nums", width:140 }}>
                   {new Date(log.ts).toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"2-digit" })}
                   {"  "}{new Date(log.ts).toLocaleTimeString("en-IN", { hour12:false })}
                 </span>
@@ -335,23 +313,10 @@ export function LiveLogs({ currentCompany = null }) {
                   {lvl.tag}
                 </span>
 
-                {/* Company chip — only in "all" view */}
-                {!company && log.company && (
-                  <span style={{
-                    fontFamily:C.mono, fontSize:10, color:"#79c0ff",
-                    background:"#1f2d3d", border:"1px solid #264466",
-                    borderRadius:4, padding:"1px 6px",
-                    marginRight:10, flexShrink:0,
-                    maxWidth:116, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap",
-                  }}>
-                    {log.company.split(/[\s\-(]/)[0]}
-                  </span>
-                )}
-
                 {/* Message */}
                 <span style={{
                   fontFamily:C.mono, fontSize:12, fontWeight: log.level === "info" ? 400 : 600,
-                  color: log.level === "info" ? C.sub : lvl.color,
+                  color: log.level === "info" ? "#cdd9e5" : lvl.color,
                   flex:1, lineHeight:1.5,
                   wordBreak:"break-word", paddingRight:18,
                 }}>
@@ -364,8 +329,8 @@ export function LiveLogs({ currentCompany = null }) {
 
         {/* Status bar */}
         <div style={{
-          background:C.surface,
-          borderTop:`1.5px solid ${C.border}`,
+          background:"#1c2232",
+          borderTop:`1.5px solid #2a3248`,
           padding:"7px 18px",
           display:"flex", alignItems:"center", justifyContent:"space-between",
         }}>
@@ -376,12 +341,12 @@ export function LiveLogs({ currentCompany = null }) {
               { key:"success", label:"Success",  color:C.green },
               { key:"info",    label:"Info",     color:C.dimmed},
             ].map(({ key, label, color }) => (
-              <span key={key} style={{ fontFamily:C.sans, fontSize:12, fontWeight:500, color: counts[key] > 0 ? color : C.dimmed }}>
+              <span key={key} style={{ fontFamily:C.sans, fontSize:12, fontWeight:500, color: counts[key] > 0 ? color : "#6e7681" }}>
                 {label}: <strong style={{ fontWeight:700 }}>{counts[key] || 0}</strong>
               </span>
             ))}
           </div>
-          <span style={{ fontFamily:C.sans, fontSize:11, color:C.dimmed }}>
+          <span style={{ fontFamily:C.sans, fontSize:11, color:"#6e7681" }}>
             {logs.length} total entries · 15-day retention
           </span>
         </div>
