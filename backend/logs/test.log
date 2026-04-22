@@ -1,0 +1,286 @@
+[
+  {
+    "id": 1776852436922.9355,
+    "ts": "2026-04-22T10:07:16.922Z",
+    "level": "success",
+    "message": "Fetched 0 vouchers (filtered: 2026-04-22 → 2026-04-22) from 1 total",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852436920.7014,
+    "ts": "2026-04-22T10:07:16.920Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 1",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852436918.4902,
+    "ts": "2026-04-22T10:07:16.918Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 1",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852436862.9768,
+    "ts": "2026-04-22T10:07:16.862Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Test",
+      "fromDate": "2026-04-22",
+      "toDate": "2026-04-22"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852436854.7666,
+    "ts": "2026-04-22T10:07:16.854Z",
+    "level": "success",
+    "message": "Fetched 0 stock items (0 with HSN/SAC, 0 with GST rate)",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852436846.318,
+    "ts": "2026-04-22T10:07:16.846Z",
+    "level": "info",
+    "message": "Fetching stock items from Tally",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852436815.3936,
+    "ts": "2026-04-22T10:07:16.815Z",
+    "level": "success",
+    "message": "Fetched 15887 ledgers",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852430882.0361,
+    "ts": "2026-04-22T10:07:10.882Z",
+    "level": "info",
+    "message": "Fetching ledgers from Tally",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852430874.9001,
+    "ts": "2026-04-22T10:07:10.874Z",
+    "level": "success",
+    "message": "Fetched 1 godowns",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852430861.082,
+    "ts": "2026-04-22T10:07:10.861Z",
+    "level": "info",
+    "message": "Fetching godowns from Tally",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852430855.349,
+    "ts": "2026-04-22T10:07:10.855Z",
+    "level": "success",
+    "message": "Fetched 0 cost centres",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852430844.025,
+    "ts": "2026-04-22T10:07:10.844Z",
+    "level": "info",
+    "message": "Fetching cost centres from Tally",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852430834.9824,
+    "ts": "2026-04-22T10:07:10.834Z",
+    "level": "success",
+    "message": "Fetched 243 groups",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852430723.2854,
+    "ts": "2026-04-22T10:07:10.723Z",
+    "level": "info",
+    "message": "Fetching groups from Tally",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852223199.376,
+    "ts": "2026-04-22T10:03:43.199Z",
+    "level": "success",
+    "message": "Fetched 0 vouchers (filtered: 2026-04-22 → 2026-04-22) from 1 total",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852223197.128,
+    "ts": "2026-04-22T10:03:43.197Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 1",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852223194.1418,
+    "ts": "2026-04-22T10:03:43.194Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 1",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852223134.967,
+    "ts": "2026-04-22T10:03:43.134Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Test",
+      "fromDate": "2026-04-22",
+      "toDate": "2026-04-22"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852223127.764,
+    "ts": "2026-04-22T10:03:43.127Z",
+    "level": "success",
+    "message": "Fetched 0 stock items (0 with HSN/SAC, 0 with GST rate)",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852223119.5015,
+    "ts": "2026-04-22T10:03:43.119Z",
+    "level": "info",
+    "message": "Fetching stock items from Tally",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852223087.6663,
+    "ts": "2026-04-22T10:03:43.087Z",
+    "level": "success",
+    "message": "Fetched 15887 ledgers",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852217024.9585,
+    "ts": "2026-04-22T10:03:37.024Z",
+    "level": "info",
+    "message": "Fetching ledgers from Tally",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852217015.3513,
+    "ts": "2026-04-22T10:03:37.015Z",
+    "level": "success",
+    "message": "Fetched 1 godowns",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852216998.382,
+    "ts": "2026-04-22T10:03:36.998Z",
+    "level": "info",
+    "message": "Fetching godowns from Tally",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852216990.5547,
+    "ts": "2026-04-22T10:03:36.990Z",
+    "level": "success",
+    "message": "Fetched 0 cost centres",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852216977.484,
+    "ts": "2026-04-22T10:03:36.977Z",
+    "level": "info",
+    "message": "Fetching cost centres from Tally",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852216968.746,
+    "ts": "2026-04-22T10:03:36.968Z",
+    "level": "success",
+    "message": "Fetched 243 groups",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  },
+  {
+    "id": 1776852216810.6343,
+    "ts": "2026-04-22T10:03:36.810Z",
+    "level": "info",
+    "message": "Fetching groups from Tally",
+    "meta": {
+      "company": "Test"
+    },
+    "company": "Test"
+  }
+]

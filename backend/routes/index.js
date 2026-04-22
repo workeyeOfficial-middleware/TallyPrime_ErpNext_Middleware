@@ -412,8 +412,18 @@ router.post("/sync/ledgers", async (req, res) => {
   // Run in background (intentionally not awaited)
   (async () => {
     try {
-      const ledgers = await fetchTallyLedgers(company);
-      const result  = await syncLedgersToErpNext(ledgers, creds);
+      const state      = getCompanyState(company);
+      const allLedgers = await fetchTallyLedgers(company);
+      const { toSync, unchanged } = filterChangedMasters(allLedgers, state.ledgerAlterIds);
+      logger.info(`Ledgers: ${toSync.length} to sync, ${unchanged} unchanged (skipped)`);
+      if (toSync.length === 0) {
+        logger.info(`Ledger sync job ${jobId}: already up to date`);
+        saveCompanyState(company, { ledgerAlterIds: buildAlterIdMap(allLedgers), lastMasterSyncAt: new Date().toISOString() });
+        finishJob(jobId, { nothingToSync: true, message: "All ledgers are already up to date — nothing pushed to ERPNext." });
+        return;
+      }
+      const result = await syncLedgersToErpNext(toSync, creds);
+      saveCompanyState(company, { ledgerAlterIds: buildAlterIdMap(allLedgers), lastMasterSyncAt: new Date().toISOString() });
       logger.info(`Ledger sync job ${jobId} done`, result);
       finishJob(jobId, result);
     } catch (err) {
@@ -466,8 +476,18 @@ router.post("/sync/stock", async (req, res) => {
 
   (async () => {
     try {
-      const stock  = await fetchTallyStockItems(company);
-      const result = await syncStockToErpNext(stock, creds);
+      const state    = getCompanyState(company);
+      const allStock = await fetchTallyStockItems(company);
+      const { toSync, unchanged } = filterChangedMasters(allStock, state.stockAlterIds);
+      logger.info(`Stock: ${toSync.length} to sync, ${unchanged} unchanged (skipped)`);
+      if (toSync.length === 0) {
+        logger.info(`Stock sync job ${jobId}: already up to date`);
+        saveCompanyState(company, { stockAlterIds: buildAlterIdMap(allStock), lastMasterSyncAt: new Date().toISOString() });
+        finishJob(jobId, { nothingToSync: true, message: "All stock items are already up to date — nothing pushed to ERPNext." });
+        return;
+      }
+      const result = await syncStockToErpNext(toSync, creds);
+      saveCompanyState(company, { stockAlterIds: buildAlterIdMap(allStock), lastMasterSyncAt: new Date().toISOString() });
       finishJob(jobId, result);
     } catch (err) {
       logger.error(`Stock sync job ${jobId} failed: ${err.message}`);
@@ -489,8 +509,19 @@ router.post("/sync/vouchers", async (req, res) => {
 
   (async () => {
     try {
-      const vouchers = await fetchTallyVouchers(companyName, fromDate, toDate);
+      const { fromDate: effFrom, toDate: effTo, isIncremental } =
+        getIncrementalVoucherDates(companyName, req.body.forceFromDate || null, toDate);
+      const state       = getCompanyState(companyName);
+      const lastSynced  = state.lastVoucherSyncDate;
+      if (lastSynced && effTo <= lastSynced) {
+        logger.info(`Voucher sync job ${jobId}: already up to date (window ${effFrom}→${effTo} covered by last sync ${lastSynced})`);
+        finishJob(jobId, { nothingToSync: true, message: "All vouchers in this date window are already up to date — nothing pushed to ERPNext." });
+        return;
+      }
+      logger.info(`Vouchers: ${isIncremental ? "incremental" : "full"} window ${effFrom} → ${effTo}`);
+      const vouchers = await fetchTallyVouchers(companyName, effFrom, effTo);
       const result   = await syncVouchersToErpNext(vouchers, companyName, creds);
+      saveCompanyState(companyName, { lastVoucherSyncDate: effTo, lastMasterSyncAt: new Date().toISOString() });
       finishJob(jobId, result);
     } catch (err) {
       logger.error(`Voucher sync job ${jobId} failed: ${err.message}`);
@@ -511,8 +542,18 @@ router.post("/sync/godowns", async (req, res) => {
 
   (async () => {
     try {
-      const godowns = await fetchTallyGodowns(company);
-      const result  = await syncGodownsToErpNext(godowns, company, creds);
+      const state      = getCompanyState(company);
+      const allGodowns = await fetchTallyGodowns(company);
+      const { toSync, unchanged } = filterChangedMasters(allGodowns, state.godownAlterIds);
+      logger.info(`Godowns: ${toSync.length} to sync, ${unchanged} unchanged (skipped)`);
+      if (toSync.length === 0) {
+        logger.info(`Godown sync job ${jobId}: already up to date`);
+        saveCompanyState(company, { godownAlterIds: buildAlterIdMap(allGodowns), lastMasterSyncAt: new Date().toISOString() });
+        finishJob(jobId, { nothingToSync: true, message: "All godowns are already up to date — nothing pushed to ERPNext." });
+        return;
+      }
+      const result = await syncGodownsToErpNext(toSync, company, creds);
+      saveCompanyState(company, { godownAlterIds: buildAlterIdMap(allGodowns), lastMasterSyncAt: new Date().toISOString() });
       finishJob(jobId, result);
     } catch (err) {
       logger.error(`Godown sync job ${jobId} failed: ${err.message}`);
@@ -567,8 +608,18 @@ router.post("/sync/cost-centres", async (req, res) => {
 
   (async () => {
     try {
-      const costCentres = await fetchTallyCostCentres(company);
-      const result      = await syncCostCentresToErpNext(costCentres, company, creds);
+      const state          = getCompanyState(company);
+      const allCostCentres = await fetchTallyCostCentres(company);
+      const { toSync, unchanged } = filterChangedMasters(allCostCentres, state.costCentreAlterIds);
+      logger.info(`Cost Centres: ${toSync.length} to sync, ${unchanged} unchanged (skipped)`);
+      if (toSync.length === 0) {
+        logger.info(`Cost centre sync job ${jobId}: already up to date`);
+        saveCompanyState(company, { costCentreAlterIds: buildAlterIdMap(allCostCentres), lastMasterSyncAt: new Date().toISOString() });
+        finishJob(jobId, { nothingToSync: true, message: "All cost centres are already up to date — nothing pushed to ERPNext." });
+        return;
+      }
+      const result = await syncCostCentresToErpNext(toSync, company, creds);
+      saveCompanyState(company, { costCentreAlterIds: buildAlterIdMap(allCostCentres), lastMasterSyncAt: new Date().toISOString() });
       finishJob(jobId, result);
     } catch (err) {
       logger.error(`Cost centre sync job ${jobId} failed: ${err.message}`);
@@ -713,7 +764,7 @@ router.post("/sync/full", async (req, res) => {
       let effectiveToDate   = toDate;
 
       if (syncVouchers || syncInvoices) {
-        const dateWindow = getIncrementalVoucherDates(companyName, fromDate, toDate);
+        const dateWindow = getIncrementalVoucherDates(companyName, req.body.forceFromDate || null, toDate);
         effectiveFromDate = dateWindow.fromDate;
         effectiveToDate   = dateWindow.toDate;
 
@@ -785,8 +836,6 @@ router.post("/sync/full", async (req, res) => {
 
       // ── Save checkpoint only on success ───────────────────────────────────
       logger.info(`Full sync job ${jobId} done`);
-      // Save checkpoint BEFORE finishJob so state is persisted even if
-      // the process restarts (e.g. nodemon) immediately after finishing.
       if (result.status !== "failed") {
         const today = new Date().toISOString().slice(0, 10);
         saveCompanyState(companyName, {
