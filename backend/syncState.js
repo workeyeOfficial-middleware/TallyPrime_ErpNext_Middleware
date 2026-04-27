@@ -171,7 +171,7 @@ export function getIncrementalVoucherDates(company, requestedFromDate, requested
     ? requestedFromDate
     : checkpoint;
 
-  const isIncremental = fromDate > (requestedFromDate || "1900-01-01");
+  const isIncremental = fromDate > (requestedFromDate || "1900-01-01") || !!state.lastVoucherSyncDate;
 
   logger.info(`syncState: incremental voucher window → ${fromDate} to ${toDate}` +
     ` (last sync was ${state.lastVoucherSyncDate}, overlap=${OVERLAP_DAYS}d)`);

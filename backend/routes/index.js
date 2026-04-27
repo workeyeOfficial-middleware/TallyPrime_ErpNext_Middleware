@@ -35,6 +35,8 @@ import {
   smartSyncLedgersToErpNext,
   runFullSync,
   resolveErpNextCompanyPublic,
+  cancelSync,
+  resetCancel,
 } from "../tally/Erpnextclient.js";
 import {
   getCompanyState,
@@ -83,6 +85,7 @@ function createJob(type) {
   const id = `${type}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
   jobs.set(id, { id, type, status: "running", result: null, error: null, startedAt: new Date().toISOString() });
   setTimeout(() => jobs.delete(id), 2 * 60 * 60 * 1000);
+  resetCancel(); // clear any prior cancellation so the new job runs cleanly
   return id;
 }
 
@@ -133,6 +136,7 @@ router.post("/sync/cancel/:jobId", (req, res) => {
     return res.json({ ok: true, message: `Job already in state: ${job.status}` });
   }
   cancelJob(jobId);
+  cancelSync(); // signal the ERPNext sync inner loop to stop
   logger.info(`Job ${jobId} cancelled by user`);
   res.json({ ok: true, message: "Job cancelled", jobId });
 });
@@ -504,7 +508,7 @@ router.post("/sync/vouchers", async (req, res) => {
   (async () => {
     try {
       const { fromDate: effFrom, toDate: effTo, isIncremental } =
-        getIncrementalVoucherDates(companyName, req.body.forceFromDate || null, toDate, erpnextUrl);
+        getIncrementalVoucherDates(companyName, req.body.forceFromDate || fromDate || null, toDate, erpnextUrl);
       const state      = getCompanyState(companyName, erpnextUrl);
       const lastSynced = state.lastVoucherSyncDate;
       if (lastSynced && effTo <= lastSynced) {

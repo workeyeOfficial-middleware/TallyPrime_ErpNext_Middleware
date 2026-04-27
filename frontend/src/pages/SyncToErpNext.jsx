@@ -2,8 +2,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { tallyAPI } from "../api/tallyAPI";
 
 const TODAY      = new Date().toISOString().slice(0, 10);
-// Indian FY starts April 1. Recomputed dynamically so it is always correct
-// even if the app runs across financial year boundaries.
 function getFYStart() {
   const now = new Date();
   const year = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
@@ -12,6 +10,7 @@ function getFYStart() {
 const YEAR_START = getFYStart();
 const BASE_URL   = process.env.REACT_APP_API_URL || "http://localhost:4000/api";
 const ACTIVE_JOB_KEY = "sync_active_job";
+const AUTO_SYNC_OPTS_KEY = "auto_sync_options"; // persisted separately from manual opts
 
 const C = {
   card:"#ffffff",surface:"#f0f3fa",bg:"#e8edf6",border:"#d8dff0",borderH:"#b0bcd8",
@@ -20,6 +19,7 @@ const C = {
   green:"#16a34a",greenD:"#15803d",greenL:"#f0fdf4",greenB:"#bbf7d0",
   amber:"#d97706",amberL:"#fffbeb",amberB:"#fde68a",
   red:"#dc2626",redL:"#fef2f2",redB:"#fecaca",
+  teal:"#0d9488",tealL:"#f0fdfa",tealB:"#99f6e4",
   mono:"'JetBrains Mono','Fira Code',monospace",
   sans:"'DM Sans','Plus Jakarta Sans',sans-serif",
   title:"'Syne','Plus Jakarta Sans',sans-serif",
@@ -42,19 +42,22 @@ const SYNC_OPTIONS=[
   {key:"syncVouchers",icon:"🧾",label:"Vouchers",sub:"→ Journal Entries",individual:"vouchers"},
   {key:"syncInvoices",icon:"🧾",label:"Invoices",sub:"Sales/Purchase → Invoices",individual:"invoices"},
 ];
+
+const EMPTY_OPTS = Object.fromEntries(SYNC_OPTIONS.map(o => [o.key, false]));
+
 const CREDS_KEY="erp_creds";
 function loadAllCreds(){try{return JSON.parse(localStorage.getItem(CREDS_KEY)||"{}");}catch{return {};}}
 function saveAllCreds(all){localStorage.setItem(CREDS_KEY,JSON.stringify(all));}
 function fmt(n){return(n??0).toLocaleString();}
 function fmtTime(ms){if(!ms)return"—";const s=Math.floor(ms/1000);if(s<60)return`${s}s`;const m=Math.floor(s/60);if(m<60)return`${m}m ${s%60}s`;return`${Math.floor(m/60)}h ${m%60}m`;}
 
-function Spinner({size=14,color=C.accent}){return <span style={{display:"inline-block",width:size,height:size,borderRadius:"50%",border:`2px solid ${color}20`,borderTopColor:color,animation:"se-spin .7s linear infinite",flexShrink:0}}/>;};
+function Spinner({size=14,color=C.accent}){return <span style={{display:"inline-block",width:size,height:size,borderRadius:"50%",border:`2px solid ${color}20`,borderTopColor:color,animation:"se-spin .7s linear infinite",flexShrink:0}}/>;}
 const inp=(extra={})=>({width:"100%",padding:"9px 13px",border:`1.5px solid ${C.border}`,borderRadius:9,fontFamily:C.sans,fontSize:13,color:C.ink,background:C.surface,outline:"none",transition:"border-color .15s,background .15s,box-shadow .15s",boxSizing:"border-box",...extra});
 const onFocus=(e)=>{e.target.style.borderColor=C.accent;e.target.style.background=C.card;e.target.style.boxShadow=`0 0 0 3px ${C.accentB}55`;};
 const onBlur=(e)=>{e.target.style.borderColor=C.border;e.target.style.background=C.surface;e.target.style.boxShadow="none";};
 
 function StatusBadge({status}){
-  const map={ok:{bg:C.greenL,bd:C.greenB,color:C.green,label:"SUCCESS"},warning:{bg:C.amberL,bd:C.amberB,color:C.amber,label:"WARNING"},failed:{bg:C.redL,bd:C.redB,color:C.red,label:"FAILED"},running:{bg:C.accentL,bd:C.accentB,color:C.accent,label:"RUNNING"}};
+  const map={ok:{bg:C.greenL,bd:C.greenB,color:C.green,label:"SUCCESS"},uptodate:{bg:C.tealL,bd:C.tealB,color:C.teal,label:"UP TO DATE"},warning:{bg:C.amberL,bd:C.amberB,color:C.amber,label:"WARNING"},failed:{bg:C.redL,bd:C.redB,color:C.red,label:"FAILED"},running:{bg:C.accentL,bd:C.accentB,color:C.accent,label:"RUNNING"}};
   const s=map[status]||{bg:C.surface,bd:C.border,color:C.muted,label:(status||"—").toUpperCase()};
   return <span style={{fontFamily:C.mono,fontSize:9,fontWeight:700,letterSpacing:"0.12em",padding:"3px 9px",borderRadius:20,background:s.bg,border:`1px solid ${s.bd}`,color:s.color}}>{s.label}</span>;
 }
@@ -83,6 +86,32 @@ function StepResult({title,data}){
     </div>
   );
 }
+
+// ── Up To Date Banner ─────────────────────────────────────────────────────────
+function UpToDateBanner({finishedAt,mode="manual"}){
+  return(
+    <div style={{background:C.card,border:`2px solid ${C.tealB}`,borderRadius:14,padding:"18px 20px",display:"flex",flexDirection:"column",gap:11,boxShadow:`0 4px 20px ${C.teal}18`,animation:"se-pop .25s ease"}}>
+      <div style={{display:"flex",alignItems:"center",gap:12}}>
+        <div style={{width:40,height:40,borderRadius:11,background:C.tealL,border:`2px solid ${C.tealB}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>✓</div>
+        <div style={{flex:1}}>
+          <p style={{fontFamily:C.title,fontSize:14,fontWeight:800,color:C.ink,margin:0,letterSpacing:"-0.3px"}}>Already Up to Date</p>
+          <p style={{fontFamily:C.mono,fontSize:10,color:C.teal,margin:"3px 0 0"}}>
+            {mode==="auto"?"Auto-sync checked — no new or changed data found":"No new or changed data since the last sync"}
+          </p>
+        </div>
+        <StatusBadge status="uptodate"/>
+      </div>
+      <div style={{padding:"10px 14px",borderRadius:9,background:C.tealL,border:`1.5px solid ${C.tealB}`}}>
+        <p style={{fontFamily:C.mono,fontSize:10,color:C.teal,margin:0,lineHeight:1.7}}>
+          All masters have the same ALTERID as the last sync and the voucher date window is already covered.
+          <strong> Nothing was pushed to ERPNext.</strong>
+        </p>
+      </div>
+      {finishedAt&&<p style={{fontFamily:C.mono,fontSize:10,color:C.muted,margin:0}}>Checked at {new Date(finishedAt).toLocaleTimeString("en-IN")}</p>}
+    </div>
+  );
+}
+
 function CountdownRing({remainingMs,totalMs}){
   const pct=totalMs>0?Math.max(0,remainingMs/totalMs):0;
   const r=20,circ=2*Math.PI*r;
@@ -149,14 +178,60 @@ function ErpCredentialsPanel({company,onSaved}){
     </div>
   );
 }
-function SectionHead({step,title,done}){
+function SectionHead({step,title,done,badge}){
   return(
     <div style={{display:"flex",alignItems:"center",gap:11,marginBottom:16,paddingBottom:13,borderBottom:`1px solid ${C.border}`}}>
       <div style={{width:25,height:25,borderRadius:7,flexShrink:0,background:done?C.green:`linear-gradient(135deg,${C.accent},${C.accentD})`,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:done?`0 2px 8px ${C.green}44`:`0 2px 8px ${C.accent}44`}}>
         <span style={{fontFamily:C.mono,fontSize:10,fontWeight:800,color:"#fff"}}>{done?"✓":step}</span>
       </div>
       <h2 style={{fontFamily:C.title,fontWeight:800,fontSize:13.5,color:C.ink,flex:1,letterSpacing:"-0.3px",margin:0}}>{title}</h2>
+      {badge}
     </div>
+  );
+}
+
+// ── Sync Option Checkboxes — reusable for both manual and auto ────────────────
+function SyncCheckboxGrid({opts,onToggle,onIndividualSync,busy,co,loadingItem,mode="manual"}){
+  const selectedCount=Object.values(opts).filter(Boolean).length;
+  const accentColor=mode==="auto"?C.teal:C.accent;
+  const accentLColor=mode==="auto"?C.tealL:C.accentL;
+  const accentBColor=mode==="auto"?C.tealB:C.accentB;
+  const accentDColor=mode==="auto"?C.teal:C.accentD;
+  return(
+    <>
+      <div style={{display:"flex",gap:7,marginBottom:11,alignItems:"center"}}>
+        <span style={{fontFamily:C.mono,fontSize:10,color:C.muted,flex:1}}>
+          {selectedCount}/{SYNC_OPTIONS.length} selected
+        </span>
+        <button
+          onClick={()=>SYNC_OPTIONS.forEach(o=>onToggle(o.key,true))}
+          style={{padding:"4px 12px",borderRadius:7,border:`1.5px solid ${accentBColor}`,background:accentLColor,color:accentDColor,fontFamily:C.mono,fontSize:10,fontWeight:700,cursor:"pointer",transition:"all .15s"}}
+        >☑ Select All</button>
+        <button
+          onClick={()=>SYNC_OPTIONS.forEach(o=>onToggle(o.key,false))}
+          style={{padding:"4px 12px",borderRadius:7,border:`1.5px solid ${C.border}`,background:C.surface,color:C.muted,fontFamily:C.mono,fontSize:10,fontWeight:600,cursor:"pointer",transition:"all .15s"}}
+        >☐ Clear</button>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7}}>
+        {SYNC_OPTIONS.map(opt=>(
+          <label key={opt.key} className="se-opt" style={{display:"flex",alignItems:"center",gap:9,cursor:"pointer",padding:"10px 13px",borderRadius:10,background:opts[opt.key]?accentLColor:C.surface,border:`1.5px solid ${opts[opt.key]?accentBColor:C.border}`,transition:"all .15s",userSelect:"none",boxShadow:opts[opt.key]?`0 2px 8px ${accentColor}18`:"none"}}>
+            <input type="checkbox" checked={opts[opt.key]} onChange={()=>onToggle(opt.key)} style={{accentColor:accentColor,width:14,height:14,flexShrink:0}}/>
+            <div style={{width:30,height:30,borderRadius:7,flexShrink:0,background:opts[opt.key]?C.card:`${C.border}88`,border:`1px solid ${opts[opt.key]?accentBColor:C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,transition:"all .15s"}}>{opt.icon}</div>
+            <div style={{minWidth:0,flex:1}}>
+              <p style={{fontFamily:C.title,fontSize:11.5,fontWeight:700,color:opts[opt.key]?accentDColor:C.ink,margin:0,letterSpacing:"-0.2px"}}>{opt.label}</p>
+              <p style={{fontFamily:C.mono,fontSize:9,color:C.muted,margin:"1px 0 0"}}>{opt.sub}</p>
+            </div>
+            {/* Individual sync button only shown in manual mode */}
+            {mode==="manual"&&onIndividualSync&&(
+              <button onClick={e=>{e.preventDefault();e.stopPropagation();onIndividualSync(opt.individual);}} disabled={busy||!co} title={`Sync ${opt.label} only`}
+                style={{padding:"4px 9px",borderRadius:6,border:`1px solid ${C.accentB}`,background:C.card,color:C.accentD,fontFamily:C.mono,fontSize:9,fontWeight:700,cursor:busy||!co?"not-allowed":"pointer",flexShrink:0,opacity:busy||!co?0.4:1,transition:"all .15s"}}>
+                {loadingItem===opt.individual?<Spinner size={9}/>:"↑"}
+              </button>
+            )}
+          </label>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -167,13 +242,53 @@ export function SyncToErpNext({companies}){
   const [erpPing,setErpPing]=useState(null);
   const [pinging,setPinging]=useState(false);
   const [erpCompany,setErpCompany]=useState(()=>{const initCo=companies?.[0]?.name||"";const allMappings=JSON.parse(localStorage.getItem("erp_company_map")||"{}");return allMappings[initCo]||"";});
-  const [erpCompanyLoading,setErpCompanyLoading]=useState(false);
   const [result,setResult]=useState(null);
   const [loading,setLoading]=useState(null);
   const [activeJob,setActiveJob]=useState(null);
   const [cancelling,setCancelling]=useState(false);
   const pollRef=useRef(null);
 
+  // ── Manual sync options ───────────────────────────────────────────────────
+  const [syncOpts,setSyncOpts]=useState({...EMPTY_OPTS});
+  const toggleOpt=(key,forceTo)=>setSyncOpts(o=>({...o,[key]:forceTo!==undefined?forceTo:!o[key]}));
+
+  // ── Auto sync options — SEPARATE from manual, persisted to localStorage ───
+  const [autoSyncOpts,setAutoSyncOpts]=useState(()=>{
+    try{
+      const saved=JSON.parse(localStorage.getItem(AUTO_SYNC_OPTS_KEY)||"null");
+      if(saved)return saved;
+    }catch{}
+    // Sensible defaults for first time
+    return {...EMPTY_OPTS,syncLedgers:true,syncStock:true,syncVouchers:true};
+  });
+  const toggleAutoOpt=(key,forceTo)=>{
+    setAutoSyncOpts(o=>{
+      const next={...o,[key]:forceTo!==undefined?forceTo:!o[key]};
+      localStorage.setItem(AUTO_SYNC_OPTS_KEY,JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const [lastSyncDates,setLastSyncDates]=useState(()=>{try{return JSON.parse(localStorage.getItem("last_sync_dates")||"{}");}catch{return {};}});
+  function saveLastSyncDate(co,date){const updated={...lastSyncDates,[co]:date};setLastSyncDates(updated);localStorage.setItem("last_sync_dates",JSON.stringify(updated));}
+
+  const [autoMode,setAutoMode]=useState(false);
+  const [autoInterval,setAutoInterval]=useState(INTERVALS[2].value);
+  const [autoRunning,setAutoRunning]=useState(false);
+  const [autoNextRun,setAutoNextRun]=useState(null);
+  const [autoRemainingMs,setAutoRemainingMs]=useState(0);
+  const [autoHistory,setAutoHistory]=useState([]);
+  const [autoRunCount,setAutoRunCount]=useState(0);
+  const [autoSyncing,setAutoSyncing]=useState(false);
+  // Last auto-sync result for "up to date" display in auto panel
+  const [lastAutoResult,setLastAutoResult]=useState(null);
+  const timerRef=useRef(null);const countdownRef=useRef(null);
+  const [companyCreds,setCompanyCreds]=useState({});
+
+  useEffect(()=>{if(!company)return;const saved=loadAllCreds()[company]||{};setCompanyCreds(saved);const allMappings=JSON.parse(localStorage.getItem("erp_company_map")||"{}");setErpCompany(allMappings[company]||"");},[company]);
+  useEffect(()=>()=>clearTimeout(pollRef.current),[]);
+
+  // Restore active job on page load
   useEffect(()=>{
     const stored=sessionStorage.getItem(ACTIVE_JOB_KEY);if(!stored)return;
     try{const job=JSON.parse(stored);if(!job?.jobId||!job?.type){sessionStorage.removeItem(ACTIVE_JOB_KEY);return;}
@@ -205,27 +320,6 @@ export function SyncToErpNext({companies}){
     finally{setCancelling(false);}
   }
 
-  // Persist the last successful sync toDate so auto-sync can do incremental runs.
-  // Key is per-company so switching companies doesn't bleed dates.
-  const [syncOpts,setSyncOpts]=useState({syncChartOfAccounts:false,syncLedgers:false,syncSmartLedgers:false,syncOpeningBalances:false,syncGodowns:false,syncCostCentres:false,syncStock:false,syncVouchers:false,syncInvoices:false});
-  // Track last successful sync date per company for incremental auto-sync
-  const [lastSyncDates,setLastSyncDates]=useState(()=>{try{return JSON.parse(localStorage.getItem("last_sync_dates")||"{}");}catch{return {};}});
-  function saveLastSyncDate(co,date){const updated={...lastSyncDates,[co]:date};setLastSyncDates(updated);localStorage.setItem("last_sync_dates",JSON.stringify(updated));}
-  const toggleOpt=(key)=>setSyncOpts(o=>({...o,[key]:!o[key]}));
-  const [autoMode,setAutoMode]=useState(false);
-  const [autoInterval,setAutoInterval]=useState(INTERVALS[2].value);
-  const [autoRunning,setAutoRunning]=useState(false);
-  const [autoNextRun,setAutoNextRun]=useState(null);
-  const [autoRemainingMs,setAutoRemainingMs]=useState(0);
-  const [autoHistory,setAutoHistory]=useState([]);
-  const [autoRunCount,setAutoRunCount]=useState(0);
-  const [autoSyncing,setAutoSyncing]=useState(false);
-  const timerRef=useRef(null);const countdownRef=useRef(null);
-  const [companyCreds,setCompanyCreds]=useState({});
-
-  useEffect(()=>{if(!company)return;const saved=loadAllCreds()[company]||{};setCompanyCreds(saved);const allMappings=JSON.parse(localStorage.getItem("erp_company_map")||"{}");setErpCompany(allMappings[company]||"");setErpCompanyLoading(false);},[company]);
-  useEffect(()=>()=>clearTimeout(pollRef.current),[]);
-
   function credsOverride(){if(companyCreds.url&&companyCreds.apiKey&&companyCreds.apiSecret){return{erpnextUrl:companyCreds.url,erpnextApiKey:companyCreds.apiKey,erpnextApiSecret:companyCreds.apiSecret};}return{};}
 
   async function pollUntilDone(jobId,type){
@@ -249,7 +343,7 @@ export function SyncToErpNext({companies}){
   }
 
   const runSync=useCallback(async(type)=>{
-    const co=company.trim();console.log("SYNC TYPE CLICKED:",type);if(!co)return;
+    const co=company.trim();if(!co)return;
     setLoading(type);setResult(null);setActiveJob(null);
     try{
       const creds=credsOverride();const erpCoName=erpCompany&&erpCompany.trim();
@@ -260,7 +354,6 @@ export function SyncToErpNext({companies}){
           ...syncCreds,
           syncChartOfAccounts: syncOpts.syncChartOfAccounts,
           syncLedgers:         syncOpts.syncLedgers,
-          // FIX: syncSmartLedgers was in the checkbox list but never sent to the server
           syncSmartLedgers:    syncOpts.syncSmartLedgers,
           syncOpeningBalances: syncOpts.syncOpeningBalances,
           syncGodowns:         syncOpts.syncGodowns,
@@ -269,8 +362,7 @@ export function SyncToErpNext({companies}){
           syncVouchers:        syncOpts.syncVouchers,
           syncInvoices:        syncOpts.syncInvoices,
         });
-        // Save today as last successful manual sync date for this company
-        saveLastSyncDate(co, toDate);
+        saveLastSyncDate(co,toDate);
       }
       else if(type==="chart-of-accounts")apiRes=await tallyAPI.syncChartOfAccounts(co,syncCreds);
       else if(type==="ledgers")apiRes=await tallyAPI.syncLedgers(co,syncCreds);
@@ -287,72 +379,69 @@ export function SyncToErpNext({companies}){
     finally{setLoading(null);}
   },[company,fromDate,toDate,syncOpts,companyCreds,erpCompany]); // eslint-disable-line
 
+  // ── Auto sync — uses autoSyncOpts, not syncOpts ───────────────────────────
   const runAutoSync=useCallback(async()=>{
-    const co=company.trim();if(!co||autoSyncing)return;setAutoSyncing(true);const started=new Date();
+    const co=company.trim();if(!co||autoSyncing)return;setAutoSyncing(true);
+    setLastAutoResult(null);
+    const started=new Date();
     try{
       const creds=credsOverride();
       const erpCoName=erpCompany&&erpCompany.trim();
       const todayStr=new Date().toISOString().slice(0,10);
 
-      // FIX: Use incremental fromDate for auto sync.
-      // If we have synced before, go back 3 days from the last sync date
-      // (overlap catches backdated entries in Tally).
-      // If never synced, use the current FY start date.
       let autoFromDate=getFYStart();
       const lastSynced=lastSyncDates[co];
       if(lastSynced){
         const d=new Date(lastSynced);
-        d.setDate(d.getDate()-3); // 3-day overlap
+        d.setDate(d.getDate()-3);
         autoFromDate=d.toISOString().slice(0,10);
       }
 
-      // FIX: Auto sync flags — if user has checked items use those,
-      // otherwise default to syncing Ledgers + Vouchers + Stock (the
-      // most important data). Previously all flags were false by default
-      // so auto sync would connect and then do absolutely nothing.
-      const hasUserSelection=Object.values(syncOpts).some(Boolean);
-      const autoFlags=hasUserSelection?{
-        syncChartOfAccounts: syncOpts.syncChartOfAccounts,
-        syncLedgers:         syncOpts.syncLedgers,
-        syncSmartLedgers:    syncOpts.syncSmartLedgers,
-        syncOpeningBalances: syncOpts.syncOpeningBalances,
-        syncGodowns:         syncOpts.syncGodowns,
-        syncCostCentres:     syncOpts.syncCostCentres,
-        syncStock:           syncOpts.syncStock,
-        syncVouchers:        syncOpts.syncVouchers,
-        syncInvoices:        syncOpts.syncInvoices,
-      }:{
-        // Sensible defaults when nothing is ticked — sync the core data
-        syncChartOfAccounts: false,
-        syncLedgers:         true,
-        syncSmartLedgers:    false,
-        syncOpeningBalances: false,
-        syncGodowns:         false,
-        syncCostCentres:     false,
-        syncStock:           true,
-        syncVouchers:        true,
-        syncInvoices:        true,
-      };
+      // Use the user's chosen auto-sync options (autoSyncOpts), not manual syncOpts
+      const hasSelection=Object.values(autoSyncOpts).some(Boolean);
+      if(!hasSelection){
+        setLastAutoResult({nothingSelected:true});
+        setAutoHistory(h=>[{at:started,status:"warning",error:"No data types selected for auto-sync"},...h].slice(0,8));
+        return;
+      }
 
       const apiRes=await tallyAPI.syncFull(co,autoFromDate,todayStr,{
         ...creds,
         erpnextCompany: erpCoName,
-        ...autoFlags,
-      });let finalStatus="ok";
+        syncChartOfAccounts: autoSyncOpts.syncChartOfAccounts,
+        syncLedgers:         autoSyncOpts.syncLedgers,
+        syncSmartLedgers:    autoSyncOpts.syncSmartLedgers,
+        syncOpeningBalances: autoSyncOpts.syncOpeningBalances,
+        syncGodowns:         autoSyncOpts.syncGodowns,
+        syncCostCentres:     autoSyncOpts.syncCostCentres,
+        syncStock:           autoSyncOpts.syncStock,
+        syncVouchers:        autoSyncOpts.syncVouchers,
+        syncInvoices:        autoSyncOpts.syncInvoices,
+      });
+
+      let finalStatus="ok";
+      let isUpToDate=false;
+
       if(apiRes?.jobId){
         const polled=await pollUntilDone(apiRes.jobId,"full");
         finalStatus=polled.error?"failed":(polled.data?.result?.status||"ok");
-        // Save checkpoint only on success so next auto sync starts from here
-        if(finalStatus!=="failed") saveLastSyncDate(co,todayStr);
+        isUpToDate=!polled.error&&!!polled.data?.result?.nothingToSync;
+        setLastAutoResult({upToDate:isUpToDate,error:polled.error,result:polled.data?.result});
+        if(finalStatus!=="failed"&&!isUpToDate) saveLastSyncDate(co,todayStr);
         setAutoRunCount(c=>c+1);
-        setAutoHistory(h=>[{at:started,status:finalStatus,error:polled.error,from:autoFromDate,to:todayStr},...h].slice(0,8));
+        setAutoHistory(h=>[{at:started,status:isUpToDate?"uptodate":finalStatus,error:polled.error,from:autoFromDate,to:todayStr,upToDate:isUpToDate},...h].slice(0,8));
       }else{
+        isUpToDate=!!apiRes?.result?.nothingToSync;
+        setLastAutoResult({upToDate:isUpToDate,result:apiRes?.result});
         setAutoRunCount(c=>c+1);
-        setAutoHistory(h=>[{at:started,status:apiRes?.result?.status||"ok",from:autoFromDate,to:todayStr},...h].slice(0,8));
+        setAutoHistory(h=>[{at:started,status:isUpToDate?"uptodate":apiRes?.result?.status||"ok",from:autoFromDate,to:todayStr,upToDate:isUpToDate},...h].slice(0,8));
       }
-    }catch(e){setAutoHistory(h=>[{at:started,status:"failed",error:e.message},...h].slice(0,8));}
+    }catch(e){
+      setLastAutoResult({error:e.message});
+      setAutoHistory(h=>[{at:started,status:"failed",error:e.message},...h].slice(0,8));
+    }
     finally{setAutoSyncing(false);}
-  },[company,fromDate,syncOpts,autoSyncing,companyCreds,erpCompany,lastSyncDates]); // eslint-disable-line
+  },[company,autoSyncOpts,autoSyncing,companyCreds,erpCompany,lastSyncDates]); // eslint-disable-line
 
   useEffect(()=>{
     if(!autoRunning){clearInterval(timerRef.current);clearInterval(countdownRef.current);setAutoNextRun(null);setAutoRemainingMs(0);return;}
@@ -364,6 +453,7 @@ export function SyncToErpNext({companies}){
   },[autoRunning,autoInterval]); // eslint-disable-line
 
   const busy=!!loading,co=company.trim(),noSync=!Object.values(syncOpts).some(Boolean);
+  const noAutoSync=!Object.values(autoSyncOpts).some(Boolean);
   const hasCreds=!!(companyCreds.url&&companyCreds.apiKey&&companyCreds.apiSecret);
   const isReady=co&&erpCompany&&!noSync;
   const dayCount=fromDate&&toDate?Math.round((new Date(toDate)-new Date(fromDate))/(1000*60*60*24)):0;
@@ -399,7 +489,7 @@ export function SyncToErpNext({companies}){
         </div>
       )}
 
-      {/* Step 1 */}
+      {/* Step 1 — ERPNext Setup */}
       <div style={card}>
         <SectionHead step="1" title="ERPNext Setup" done={hasCreds&&!!erpCompany}/>
         {co&&<ErpCredentialsPanel company={co} onSaved={creds=>setCompanyCreds(creds)}/>}
@@ -410,7 +500,6 @@ export function SyncToErpNext({companies}){
             <button onClick={()=>{const all=JSON.parse(localStorage.getItem("erp_company_map")||"{}");all[company]=erpCompany;localStorage.setItem("erp_company_map",JSON.stringify(all));}} disabled={!erpCompany} style={{padding:"9px 15px",borderRadius:9,border:"none",background:erpCompany?C.accentD:C.surface,color:erpCompany?"#fff":C.dim,fontFamily:C.title,fontSize:11,fontWeight:700,cursor:erpCompany?"pointer":"not-allowed",flexShrink:0,transition:"all .15s"}}>Save</button>
           </div>
           {erpCompany&&<p style={{fontFamily:C.mono,fontSize:10,color:C.green,margin:"5px 0 0"}}>✓ Will sync to: <strong>{erpCompany}</strong></p>}
-          {erpCompany&&<p style={{fontFamily:C.mono,fontSize:9,color:C.muted,margin:"3px 0 0"}}>⚠ Company name is case-sensitive. If sync fails with "company not found", check the exact name in ERPNext → Settings → Company.</p>}
         </div>
         <div style={{display:"flex",alignItems:"center",gap:9}}>
           <button onClick={async()=>{setPinging(true);setErpPing(null);try{const creds=credsOverride();if(creds.erpnextUrl){const res=await fetch(`${BASE_URL}/erpnext/ping`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(creds)});let _d;try{_d=await res.json();}catch(_){_d={connected:false,error:"Backend returned non-JSON (status "+res.status+")"};} setErpPing(_d);}else{setErpPing(await tallyAPI.erpnextPing());}}catch(e){const m=e.message||"Unknown";setErpPing({connected:false,error:m.includes("fetch")?`Cannot reach backend at ${BASE_URL} — is the server running on port 4000?`:m});}finally{setPinging(false);}}} disabled={pinging}
@@ -426,7 +515,7 @@ export function SyncToErpNext({companies}){
         </div>
       </div>
 
-      {/* Step 2 */}
+      {/* Step 2 — Company & Dates */}
       <div style={card}>
         <SectionHead step="2" title="Tally Company & Date Range" done={!!co}/>
         <div style={{marginBottom:13}}>
@@ -458,64 +547,15 @@ export function SyncToErpNext({companies}){
         {dayCount>90&&(
           <div style={{marginTop:12,padding:"10px 13px",borderRadius:9,background:C.amberL,border:`1.5px solid ${C.amberB}`,display:"flex",gap:8,alignItems:"flex-start"}}>
             <span style={{fontSize:13,flexShrink:0}}>⏱</span>
-            <p style={{fontFamily:C.mono,fontSize:10,color:C.amber,margin:0,lineHeight:1.65}}><strong>Large date range ({dayCount} days)</strong> — Voucher sync will be split into <strong>~{chunkCount} chunks of 15 days</strong> to prevent Tally from hanging. This is normal and safe.</p>
+            <p style={{fontFamily:C.mono,fontSize:10,color:C.amber,margin:0,lineHeight:1.65}}><strong>Large date range ({dayCount} days)</strong> — Voucher sync will be split into <strong>~{chunkCount} chunks of 15 days</strong> to prevent Tally from hanging.</p>
           </div>
         )}
       </div>
 
-      {/* Step 3 */}
+      {/* Step 3 — Sync Mode Tabs */}
       <div style={card}>
-        <SectionHead step="3" title="What to Sync" done={false}/>
-        <div style={{background:C.accentL,border:`1.5px solid ${C.accentB}`,borderRadius:9,padding:"10px 14px",marginBottom:16,display:"flex",gap:9,alignItems:"flex-start"}}>
-          <span style={{fontSize:14,flexShrink:0}}>💡</span>
-          <p style={{fontFamily:C.mono,fontSize:10,color:C.accentD,margin:0,lineHeight:1.65}}><strong>Recommended order:</strong> 🗂 Chart of Accounts → 👥 Ledgers → ⚡ Smart Ledgers → 🧾 Vouchers<br/>Always sync ledgers before vouchers to avoid "Account not found" errors.</p>
-        </div>
-        {/* Select All / Deselect All */}
-        <div style={{display:"flex",gap:7,marginBottom:11,alignItems:"center"}}>
-          <span style={{fontFamily:C.mono,fontSize:10,color:C.muted,flex:1}}>
-            {Object.values(syncOpts).filter(Boolean).length}/{SYNC_OPTIONS.length} selected
-          </span>
-          <button
-            onClick={()=>setSyncOpts(Object.fromEntries(SYNC_OPTIONS.map(o=>[o.key,true])))}
-            style={{padding:"4px 12px",borderRadius:7,border:`1.5px solid ${C.accentB}`,background:C.accentL,color:C.accentD,fontFamily:C.mono,fontSize:10,fontWeight:700,cursor:"pointer",transition:"all .15s"}}
-          >☑ Select All</button>
-          <button
-            onClick={()=>setSyncOpts(Object.fromEntries(SYNC_OPTIONS.map(o=>[o.key,false])))}
-            style={{padding:"4px 12px",borderRadius:7,border:`1.5px solid ${C.border}`,background:C.surface,color:C.muted,fontFamily:C.mono,fontSize:10,fontWeight:600,cursor:"pointer",transition:"all .15s"}}
-          >☐ Clear</button>
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7,marginBottom:20}}>
-          {SYNC_OPTIONS.map(opt=>(
-            <label key={opt.key} className="se-opt" style={{display:"flex",alignItems:"center",gap:9,cursor:"pointer",padding:"10px 13px",borderRadius:10,background:syncOpts[opt.key]?C.accentL:C.surface,border:`1.5px solid ${syncOpts[opt.key]?C.accentB:C.border}`,transition:"all .15s",userSelect:"none",boxShadow:syncOpts[opt.key]?`0 2px 8px ${C.accent}18`:"none"}}>
-              <input type="checkbox" checked={syncOpts[opt.key]} onChange={()=>toggleOpt(opt.key)} style={{accentColor:C.accent,width:14,height:14,flexShrink:0}}/>
-              <div style={{width:30,height:30,borderRadius:7,flexShrink:0,background:syncOpts[opt.key]?C.card:`${C.border}88`,border:`1px solid ${syncOpts[opt.key]?C.accentB:C.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,transition:"all .15s"}}>{opt.icon}</div>
-              <div style={{minWidth:0,flex:1}}>
-                <p style={{fontFamily:C.title,fontSize:11.5,fontWeight:700,color:syncOpts[opt.key]?C.accentD:C.ink,margin:0,letterSpacing:"-0.2px"}}>{opt.label}</p>
-                <p style={{fontFamily:C.mono,fontSize:9,color:C.muted,margin:"1px 0 0"}}>{opt.sub}</p>
-              </div>
-              <button onClick={e=>{e.preventDefault();e.stopPropagation();runSync(opt.individual);}} disabled={busy||!co} title={`Sync ${opt.label} only`}
-                style={{padding:"4px 9px",borderRadius:6,border:`1px solid ${C.accentB}`,background:C.card,color:C.accentD,fontFamily:C.mono,fontSize:9,fontWeight:700,cursor:busy||!co?"not-allowed":"pointer",flexShrink:0,opacity:busy||!co?0.4:1,transition:"all .15s"}}>
-                {loading===opt.individual?<Spinner size={9}/>:"↑"}
-              </button>
-            </label>
-          ))}
-        </div>
-        <button className="se-btn" onClick={()=>runSync("full")} disabled={busy||!co||noSync||!erpCompany}
-          style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:11,padding:"15px 22px",borderRadius:11,border:"none",background:busy||!isReady?C.surface:`linear-gradient(135deg,${C.accent},${C.accentD})`,color:busy||!isReady?C.dim:"#fff",fontFamily:C.title,fontSize:14,fontWeight:800,letterSpacing:"-0.3px",cursor:busy||!isReady?"not-allowed":"pointer",boxShadow:busy||!isReady?"none":`0 4px 18px ${C.accent}44`,transition:"all .2s"}}>
-          {loading==="full"?<><Spinner color={busy&&isReady?"#fff":C.dim} size={15}/> Syncing to ERPNext…</>:<><span style={{fontSize:16}}>⇄</span> Sync Selected → ERPNext</>}
-          {!busy&&isReady&&<span style={{fontFamily:C.mono,fontSize:10,opacity:0.6,fontWeight:400}}>{Object.values(syncOpts).filter(Boolean).length} item{Object.values(syncOpts).filter(Boolean).length!==1?"s":""} selected</span>}
-        </button>
-        {!isReady&&!busy&&(
-          <div style={{marginTop:9,padding:"9px 13px",borderRadius:9,background:C.amberL,border:`1.5px solid ${C.amberB}`}}>
-            <p style={{fontFamily:C.mono,fontSize:10,color:C.amber,margin:0}}>{!co?"⚠ Select a Tally company first":!erpCompany?"⚠ Enter ERPNext company name in Step 1":noSync?"⚠ Select at least one item to sync":""}</p>
-          </div>
-        )}
-      </div>
-
-      {/* Step 4 */}
-      <div style={card}>
-        <SectionHead step="4" title="Sync Mode" done={false}/>
-        <div style={{display:"flex",gap:9,marginBottom:autoMode?18:0}}>
+        <SectionHead step="3" title="Sync Mode" done={false}/>
+        <div style={{display:"flex",gap:9,marginBottom:20}}>
           {[{id:false,icon:"🖱",label:"Manual",desc:"Sync on demand"},{id:true,icon:"⏱",label:"Auto Sync",desc:"Runs on schedule"}].map(m=>(
             <button key={String(m.id)} onClick={()=>{setAutoMode(m.id);if(!m.id)setAutoRunning(false);}}
               style={{flex:1,padding:"12px 14px",borderRadius:10,border:`1.5px solid ${autoMode===m.id?C.accentD:C.border}`,background:autoMode===m.id?`linear-gradient(135deg,${C.accent},${C.accentD})`:C.surface,cursor:"pointer",transition:"all .15s",display:"flex",flexDirection:"column",alignItems:"center",gap:4,boxShadow:autoMode===m.id?`0 4px 14px ${C.accent}33`:"none"}}>
@@ -525,8 +565,67 @@ export function SyncToErpNext({companies}){
             </button>
           ))}
         </div>
+
+        {/* ── MANUAL MODE ───────────────────────────────────────────────── */}
+        {!autoMode&&(
+          <div style={{animation:"se-fade .2s ease"}}>
+            <div style={{background:C.accentL,border:`1.5px solid ${C.accentB}`,borderRadius:9,padding:"10px 14px",marginBottom:16,display:"flex",gap:9,alignItems:"flex-start"}}>
+              <span style={{fontSize:14,flexShrink:0}}>💡</span>
+              <p style={{fontFamily:C.mono,fontSize:10,color:C.accentD,margin:0,lineHeight:1.65}}><strong>Recommended order:</strong> 🗂 Chart of Accounts → 👥 Ledgers → ⚡ Smart Ledgers → 🧾 Vouchers<br/>Always sync ledgers before vouchers to avoid "Account not found" errors.</p>
+            </div>
+            <SyncCheckboxGrid
+              opts={syncOpts}
+              onToggle={toggleOpt}
+              onIndividualSync={(individual)=>runSync(individual)}
+              busy={busy}
+              co={co}
+              loadingItem={loading}
+              mode="manual"
+            />
+            <div style={{marginTop:20}}>
+              <button className="se-btn" onClick={()=>runSync("full")} disabled={busy||!co||noSync||!erpCompany}
+                style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:11,padding:"15px 22px",borderRadius:11,border:"none",background:busy||!isReady?C.surface:`linear-gradient(135deg,${C.accent},${C.accentD})`,color:busy||!isReady?C.dim:"#fff",fontFamily:C.title,fontSize:14,fontWeight:800,letterSpacing:"-0.3px",cursor:busy||!isReady?"not-allowed":"pointer",boxShadow:busy||!isReady?"none":`0 4px 18px ${C.accent}44`,transition:"all .2s"}}>
+                {loading==="full"?<><Spinner color={busy&&isReady?"#fff":C.dim} size={15}/> Syncing to ERPNext…</>:<><span style={{fontSize:16}}>⇄</span> Sync Selected → ERPNext</>}
+                {!busy&&isReady&&<span style={{fontFamily:C.mono,fontSize:10,opacity:0.6,fontWeight:400}}>{Object.values(syncOpts).filter(Boolean).length} item{Object.values(syncOpts).filter(Boolean).length!==1?"s":""} selected</span>}
+              </button>
+              {!isReady&&!busy&&(
+                <div style={{marginTop:9,padding:"9px 13px",borderRadius:9,background:C.amberL,border:`1.5px solid ${C.amberB}`}}>
+                  <p style={{fontFamily:C.mono,fontSize:10,color:C.amber,margin:0}}>{!co?"⚠ Select a Tally company first":!erpCompany?"⚠ Enter ERPNext company name in Step 1":noSync?"⚠ Select at least one item to sync":""}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ── AUTO MODE ─────────────────────────────────────────────────── */}
         {autoMode&&(
           <div style={{animation:"se-fade .2s ease"}}>
+
+            {/* Auto-sync specific checkbox selection */}
+            <div style={{marginBottom:18}}>
+              <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:13,padding:"10px 14px",borderRadius:9,background:C.tealL,border:`1.5px solid ${C.tealB}`}}>
+                <span style={{fontSize:15,flexShrink:0}}>⚙️</span>
+                <div style={{flex:1}}>
+                  <p style={{fontFamily:C.title,fontSize:12,fontWeight:700,color:C.teal,margin:0}}>Auto-Sync Data Selection</p>
+                  <p style={{fontFamily:C.mono,fontSize:9,color:C.teal,margin:"2px 0 0",opacity:0.8}}>Choose what gets synced on every scheduled run — saved separately from manual sync</p>
+                </div>
+                <span style={{fontFamily:C.mono,fontSize:9,fontWeight:700,padding:"3px 9px",borderRadius:12,background:C.tealB,color:C.teal}}>
+                  {Object.values(autoSyncOpts).filter(Boolean).length}/{SYNC_OPTIONS.length}
+                </span>
+              </div>
+              <SyncCheckboxGrid
+                opts={autoSyncOpts}
+                onToggle={toggleAutoOpt}
+                mode="auto"
+              />
+              {noAutoSync&&(
+                <div style={{marginTop:9,padding:"9px 13px",borderRadius:9,background:C.amberL,border:`1.5px solid ${C.amberB}`}}>
+                  <p style={{fontFamily:C.mono,fontSize:10,color:C.amber,margin:0}}>⚠ Select at least one data type to enable auto-sync</p>
+                </div>
+              )}
+            </div>
+
+            {/* Interval picker */}
             <label style={{display:"block",fontFamily:C.mono,fontSize:9,color:C.muted,letterSpacing:"0.14em",textTransform:"uppercase",marginBottom:7,fontWeight:700}}>Sync Interval</label>
             <div style={{display:"flex",gap:5,flexWrap:"wrap",marginBottom:14}}>
               {INTERVALS.map(iv=>(
@@ -536,13 +635,17 @@ export function SyncToErpNext({companies}){
                 </button>
               ))}
             </div>
+
+            {/* Start/Stop button */}
             <div style={{display:"flex",alignItems:"center",gap:12}}>
-              <button onClick={()=>setAutoRunning(r=>!r)} disabled={!co||noSync}
-                style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:8,padding:"11px 16px",borderRadius:9,border:"none",background:autoRunning?C.red:C.green,color:"#fff",fontFamily:C.title,fontSize:13,fontWeight:700,cursor:!co||noSync?"not-allowed":"pointer",opacity:!co||noSync?0.5:1,transition:"all .15s",boxShadow:autoRunning?"0 4px 14px rgba(220,38,38,.28)":"0 4px 14px rgba(22,163,74,.28)"}}>
+              <button onClick={()=>setAutoRunning(r=>!r)} disabled={!co||noAutoSync||!erpCompany}
+                style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:8,padding:"11px 16px",borderRadius:9,border:"none",background:autoRunning?C.red:C.green,color:"#fff",fontFamily:C.title,fontSize:13,fontWeight:700,cursor:!co||noAutoSync||!erpCompany?"not-allowed":"pointer",opacity:!co||noAutoSync||!erpCompany?0.5:1,transition:"all .15s",boxShadow:autoRunning?"0 4px 14px rgba(220,38,38,.28)":"0 4px 14px rgba(22,163,74,.28)"}}>
                 {autoRunning?<><span>■</span> Stop Auto-Sync</>:<><span>▶</span> Start Auto-Sync</>}
               </button>
               {autoRunning&&<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:2}}><CountdownRing remainingMs={autoRemainingMs} totalMs={autoInterval}/><span style={{fontFamily:C.mono,fontSize:9,color:C.muted}}>next run</span></div>}
             </div>
+
+            {/* Running status bar */}
             {autoRunning&&(
               <div style={{marginTop:12,padding:"11px 14px",borderRadius:9,background:C.accentL,border:`1.5px solid ${C.accentB}`,display:"flex",alignItems:"center",gap:9}}>
                 <span style={{width:7,height:7,borderRadius:"50%",background:C.accent,flexShrink:0,animation:"se-pulse 1.4s ease-in-out infinite"}}/>
@@ -553,18 +656,43 @@ export function SyncToErpNext({companies}){
                 {autoSyncing&&<Spinner size={12}/>}
               </div>
             )}
+
+            {/* Last auto-sync result — up to date or error */}
+            {lastAutoResult&&!autoSyncing&&(
+              <div style={{marginTop:12,animation:"se-fade .2s ease"}}>
+                {lastAutoResult.upToDate?(
+                  <UpToDateBanner finishedAt={lastAutoResult.result?.finishedAt} mode="auto"/>
+                ):lastAutoResult.nothingSelected?(
+                  <div style={{padding:"11px 14px",borderRadius:9,background:C.amberL,border:`1.5px solid ${C.amberB}`}}>
+                    <p style={{fontFamily:C.mono,fontSize:10,color:C.amber,margin:0}}>⚠ Auto-sync ran but no data types were selected — nothing was synced.</p>
+                  </div>
+                ):lastAutoResult.error?(
+                  <div style={{padding:"11px 14px",borderRadius:9,background:C.redL,border:`1.5px solid ${C.redB}`}}>
+                    <p style={{fontFamily:C.mono,fontSize:10,color:C.red,margin:0,fontWeight:700}}>✗ Auto-sync failed</p>
+                    <p style={{fontFamily:C.mono,fontSize:10,color:C.red,margin:"4px 0 0"}}>{lastAutoResult.error}</p>
+                  </div>
+                ):(
+                  <div style={{padding:"11px 14px",borderRadius:9,background:C.greenL,border:`1.5px solid ${C.greenB}`,display:"flex",alignItems:"center",gap:9}}>
+                    <span style={{fontSize:14}}>✓</span>
+                    <p style={{fontFamily:C.mono,fontSize:10,color:C.green,margin:0,fontWeight:600}}>Auto-sync completed successfully</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Sync history */}
             {autoHistory.length>0&&(
               <div style={{marginTop:14}}>
                 <label style={{display:"block",fontFamily:C.mono,fontSize:9,color:C.muted,letterSpacing:"0.14em",textTransform:"uppercase",marginBottom:7,fontWeight:700}}>Sync History</label>
                 <div style={{display:"flex",flexDirection:"column",gap:4}}>
                   {autoHistory.map((h,i)=>(
-                    <div key={i} style={{display:"flex",alignItems:"center",gap:9,padding:"7px 12px",borderRadius:8,background:C.surface,border:`1px solid ${C.border}`}}>
-                      <span style={{width:7,height:7,borderRadius:"50%",flexShrink:0,background:h.status==="ok"?C.green:h.status==="failed"?C.red:C.amber}}/>
+                    <div key={i} style={{display:"flex",alignItems:"center",gap:9,padding:"8px 12px",borderRadius:8,background:h.upToDate?C.tealL:C.surface,border:`1px solid ${h.upToDate?C.tealB:C.border}`}}>
+                      <span style={{width:7,height:7,borderRadius:"50%",flexShrink:0,background:h.upToDate?C.teal:h.status==="ok"?C.green:h.status==="failed"?C.red:C.amber}}/>
                       <div style={{flex:1}}>
                         <span style={{fontFamily:C.mono,fontSize:10,color:C.muted,display:"block"}}>{h.at.toLocaleTimeString("en-IN",{hour12:false})}</span>
-                        {h.from&&<span style={{fontFamily:C.mono,fontSize:9,color:C.dim,display:"block"}}>{h.from} → {h.to} (incremental)</span>}
+                        {h.from&&<span style={{fontFamily:C.mono,fontSize:9,color:C.dim,display:"block"}}>{h.from} → {h.to}</span>}
                       </div>
-                      <StatusBadge status={h.status}/>
+                      <StatusBadge status={h.upToDate?"uptodate":h.status}/>
                       {h.error&&<span style={{fontFamily:C.mono,fontSize:9,color:C.red,maxWidth:160,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{h.error}</span>}
                     </div>
                   ))}
@@ -575,10 +703,10 @@ export function SyncToErpNext({companies}){
         )}
       </div>
 
-      {/* Progress banner */}
-      {!autoMode&&activeJob&&<div style={{animation:"se-fade .2s ease"}}><JobProgressBanner jobId={activeJob.jobId} type={activeJob.type} onStop={cancelActiveJob} cancelling={cancelling}/></div>}
+      {/* Progress banner (manual mode) */}
+      {!autoMode&&activeJob&&<div style={{animation:"se-fade .2s ease"}}><JobProgressBanner jobId={activeJob.jobId} type={activeJob.type}/></div>}
 
-      {/* Result */}
+      {/* Result panel (manual mode) */}
       {!autoMode&&result&&!activeJob&&(
         <div style={{animation:"se-pop .25s ease"}}>
           {result.error?(
@@ -587,32 +715,20 @@ export function SyncToErpNext({companies}){
               <p style={{fontFamily:C.mono,fontSize:11,color:C.red,margin:"5px 0 0"}}>{result.error}</p>
             </div>
           ):result.data?.ok&&result.data?.result?.serverRestarted?(
-            <div style={{background:C.card,border:`1.5px solid ${C.amberB}`,borderRadius:14,padding:18,display:'flex',flexDirection:'column',gap:10}}>
-              <div style={{display:'flex',alignItems:'center',gap:11}}>
-                <div style={{width:36,height:36,borderRadius:10,background:C.amberL,border:`1.5px solid ${C.amberB}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>⚠</div>
+            <div style={{background:C.card,border:`1.5px solid ${C.amberB}`,borderRadius:14,padding:18,display:"flex",flexDirection:"column",gap:10}}>
+              <div style={{display:"flex",alignItems:"center",gap:11}}>
+                <div style={{width:36,height:36,borderRadius:10,background:C.amberL,border:`1.5px solid ${C.amberB}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>⚠</div>
                 <div style={{flex:1}}>
-                  <p style={{fontFamily:C.title,fontSize:13.5,fontWeight:800,color:C.ink,margin:0,letterSpacing:'-0.3px'}}>Server Restarted During Sync</p>
-                  <p style={{fontFamily:C.mono,fontSize:10,color:C.amber,margin:'3px 0 0'}}>The sync likely completed — please verify in ERPNext</p>
+                  <p style={{fontFamily:C.title,fontSize:13.5,fontWeight:800,color:C.ink,margin:0,letterSpacing:"-0.3px"}}>Server Restarted During Sync</p>
+                  <p style={{fontFamily:C.mono,fontSize:10,color:C.amber,margin:"3px 0 0"}}>The sync likely completed — please verify in ERPNext</p>
                 </div>
-                <StatusBadge status='warning'/>
+                <StatusBadge status="warning"/>
               </div>
               <p style={{fontFamily:C.mono,fontSize:10,color:C.muted,margin:0,lineHeight:1.6}}>{result.data.result.note}</p>
             </div>
           ):result.data?.ok&&result.data?.result?.nothingToSync?(
-            <div style={{background:C.card,border:`1.5px solid ${C.greenB}`,borderRadius:14,padding:18,display:'flex',flexDirection:'column',gap:10,boxShadow:`0 4px 18px ${C.green}14`}}>
-              <div style={{display:'flex',alignItems:'center',gap:11}}>
-                <div style={{width:36,height:36,borderRadius:10,background:C.greenL,border:`1.5px solid ${C.greenB}`,display:'flex',alignItems:'center',justifyContent:'center',fontSize:20,flexShrink:0}}>✓</div>
-                <div style={{flex:1}}>
-                  <p style={{fontFamily:C.title,fontSize:13.5,fontWeight:800,color:C.ink,margin:0,letterSpacing:'-0.3px'}}>Already Up to Date</p>
-                  <p style={{fontFamily:C.mono,fontSize:10,color:C.green,margin:'3px 0 0'}}>No new or changed data since the last sync — ERPNext was not called</p>
-                </div>
-                <StatusBadge status='ok'/>
-              </div>
-              <div style={{padding:'10px 13px',borderRadius:9,background:C.accentL,border:`1.5px solid ${C.accentB}`}}>
-                <p style={{fontFamily:C.mono,fontSize:10,color:C.accentD,margin:0,lineHeight:1.65}}>All masters have the same ALTERID as the last sync and the voucher date window is already covered. Nothing was pushed to ERPNext.</p>
-              </div>
-              {result.data.result?.finishedAt&&<p style={{fontFamily:C.mono,fontSize:10,color:C.muted,margin:0}}>Checked at {new Date(result.data.result.finishedAt).toLocaleTimeString('en-IN')}</p>}
-            </div>
+            /* ── Manual "Up to Date" banner ── */
+            <UpToDateBanner finishedAt={result.data.result?.finishedAt} mode="manual"/>
           ):result.data?.ok?(
             <div style={{background:C.card,border:`1.5px solid ${C.greenB}`,borderRadius:14,padding:18,display:"flex",flexDirection:"column",gap:11,boxShadow:`0 4px 18px ${C.green}14`}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingBottom:13,borderBottom:`1px solid ${C.border}`}}>

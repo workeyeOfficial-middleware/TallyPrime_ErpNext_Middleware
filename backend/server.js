@@ -19,22 +19,6 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-// ── Health check — root route (fixes 404 on /) ────────────────────────────
-app.get("/", (_req, res) => {
-  res.json({
-    status: "ok",
-    service: "Tally ↔ ERPNext Middleware",
-    version: "1.0.0",
-    endpoints: {
-      autoSyncStatus:  "GET  /api/auto-sync/status",
-      autoSyncRunNow:  "POST /api/auto-sync/run-now",
-      autoSyncReset:   "POST /api/auto-sync/reset-state",
-      autoSyncState:   "GET  /api/auto-sync/state",
-    },
-  });
-});
-
 app.use("/api", router);
 
 // ── Auto-Sync Scheduler ────────────────────────────────────────────────────
@@ -84,7 +68,8 @@ async function runAutoSync() {
   };
 
   // ── Load incremental state for this company ───────────────────────────────
-  const state = getCompanyState(companyName);
+  const erpnextUrl = config.erpnext.url || "default";
+  const state = getCompanyState(companyName, erpnextUrl);
   const isFirstSync = !state.lastVoucherSyncDate && !state.lastMasterSyncAt;
 
   logger.info(
@@ -108,7 +93,7 @@ async function runAutoSync() {
       logger.info(`Groups: ${changedGroups.length} to sync, ${unchangedGroups} unchanged`);
       groups = changedGroups;
       // Save updated alterId map regardless so new records are tracked
-      saveCompanyState(companyName, { groupAlterIds: buildAlterIdMap(allGroups) });
+      saveCompanyState(companyName, { groupAlterIds: buildAlterIdMap(allGroups) }, erpnextUrl);
     }
 
     if (opts.syncCostCentres) {
@@ -125,7 +110,7 @@ async function runAutoSync() {
         filterChangedMasters(allLedgers, state.ledgerAlterIds);
       logger.info(`Ledgers: ${changedLedgers.length} to sync, ${unchangedLedgers} unchanged`);
       ledgers = changedLedgers;
-      saveCompanyState(companyName, { ledgerAlterIds: buildAlterIdMap(allLedgers) });
+      saveCompanyState(companyName, { ledgerAlterIds: buildAlterIdMap(allLedgers) }, erpnextUrl);
     }
 
     if (opts.syncStock || opts.syncTaxes) {
@@ -134,14 +119,14 @@ async function runAutoSync() {
         filterChangedMasters(allStock, state.stockAlterIds);
       logger.info(`Stock: ${changedStock.length} to sync, ${unchangedStock} unchanged`);
       stockItems = changedStock;
-      saveCompanyState(companyName, { stockAlterIds: buildAlterIdMap(allStock) });
+      saveCompanyState(companyName, { stockAlterIds: buildAlterIdMap(allStock) }, erpnextUrl);
     }
 
     // ── 2. VOUCHERS — only fetch new/amended date window ──────────────────
     let vouchers = [];
     if (opts.syncVouchers || opts.syncInvoices) {
       const { fromDate, toDate: vToDate, isIncremental } =
-        getIncrementalVoucherDates(companyName, fallbackFromDate, toDate);
+        getIncrementalVoucherDates(companyName, fallbackFromDate, toDate, erpnextUrl);
 
       logger.info(
         `Vouchers: fetching ${isIncremental ? "incremental" : "full"} range ${fromDate} → ${vToDate}`
@@ -161,7 +146,7 @@ async function runAutoSync() {
       saveCompanyState(companyName, {
         lastVoucherSyncDate: toDate,
         lastMasterSyncAt:    now.toISOString(),
-      });
+      }, erpnextUrl);
       logger.info(`syncState: checkpoint saved → vouchers up to ${toDate}`);
     }
 
@@ -211,7 +196,7 @@ app.post("/api/auto-sync/reset-state", (req, res) => {
   const { company } = req.body || {};
   const companyName = company || config.tally.companyName;
   if (!companyName) return res.status(400).json({ ok: false, error: "company required" });
-  resetCompanyState(companyName);
+  resetCompanyState(companyName, config.erpnext.url || "default");
   res.json({ ok: true, message: `Incremental state cleared for "${companyName}" — next sync will be full` });
 });
 
@@ -219,7 +204,7 @@ app.post("/api/auto-sync/reset-state", (req, res) => {
 app.get("/api/auto-sync/state", (req, res) => {
   const company = req.query.company || config.tally.companyName;
   if (!company) return res.status(400).json({ ok: false, error: "company required" });
-  const state = getCompanyState(company);
+  const state = getCompanyState(company, config.erpnext.url || "default");
   res.json({ ok: true, company, state });
 });
 

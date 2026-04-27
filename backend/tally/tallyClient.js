@@ -870,7 +870,7 @@ async function fetchTallyVouchersChunk(companyName, fromDate, toDate) {
     <TDLMESSAGE>
      <COLLECTION NAME="VoucherCollection" ISMODIFY="No">
       <TYPE>Voucher</TYPE>
-      <FETCH>GUID,DATE,VOUCHERNUMBER,VOUCHERTYPENAME,PARTYLEDGERNAME,NARRATION,REFERENCE,ISINVOICE,ISOPTIONAL,ISPOSTDATED,ALLLEDGERENTRIES.LIST</FETCH>
+      <FETCH>GUID,DATE,VOUCHERNUMBER,VOUCHERTYPENAME,PARTYLEDGERNAME,NARRATION,REFERENCE,ISINVOICE,ISOPTIONAL,ISPOSTDATED,ALLLEDGERENTRIES.LIST,ALLINVENTORYENTRIES.LIST,INVENTORYENTRIES.LIST</FETCH>
      </COLLECTION>
     </TDLMESSAGE>
    </TDL>
@@ -921,20 +921,82 @@ async function fetchTallyVouchersChunk(companyName, fromDate, toDate) {
       if (ledgerName) entries.push({ ledger: ledgerName, amount, isDebit: isDeemedPositive });
     }
 
+    // ── Parse inventory line items ───────────────────────────────────────────────
+    // Tally stores inventory items in different sub-lists depending on voucher type:
+    //   "Sales Invoice" / "Purchase Invoice" → ALLINVENTORYENTRIES.LIST
+    //   "Sales" / "Purchase" (simple voucher) → INVENTORYENTRIES.LIST
+    //   Some builds export both; we merge both lists so nothing is missed.
+    //
+    // Field quirks (explicitArray:false mode):
+    //   STOCKITEMNAME → plain string (item name)  e.g. "Red Pen"
+    //   ACTUALQTY     → string with UoM suffix    e.g. "1 Nos"  — strip non-numeric
+    //   BILLEDQTY     → same format               e.g. "1 Nos"
+    //   RATE          → string with UoM suffix    e.g. "79.00 /Nos" — strip non-numeric
+    //   AMOUNT        → plain number string       e.g. "-79.00"
+    //
+    // parseTallyQty / parseTallyRate strip the UoM suffix before parsing.
+
+    function parseTallyQty(raw) {
+      if (!raw) return 1;
+      // "1 Nos", "2.5 Kgs", "10 Box" → keep only leading number
+      const n = parseFloat(String(raw).replace(/[^0-9.\-]/g, "").trim());
+      return isNaN(n) || n === 0 ? 1 : Math.abs(n);
+    }
+    function parseTallyRate(raw) {
+      if (!raw) return 0;
+      // "79.00 /Nos", "150.00/ Pcs" → keep only leading number
+      const n = parseFloat(String(raw).replace(/[^0-9.\-]/g, "").trim());
+      return isNaN(n) ? 0 : Math.abs(n);
+    }
+
+    // Merge both inventory entry lists — order: ALLINVENTORYENTRIES first
+    const rawInvAll  = v["ALLINVENTORYENTRIES.LIST"] || [];
+    const rawInvSimp = v["INVENTORYENTRIES.LIST"]    || [];
+    const rawInvEntries = [
+      ...(Array.isArray(rawInvAll)  ? rawInvAll  : (rawInvAll  ? [rawInvAll]  : [])),
+      ...(Array.isArray(rawInvSimp) ? rawInvSimp : (rawInvSimp ? [rawInvSimp] : [])),
+    ];
+
+    const inventoryItems = [];
+    for (const ie of rawInvEntries) {
+      if (!ie || typeof ie !== "object") continue;
+
+      // Item name: try STOCKITEMNAME first, then NAME (some Tally versions use NAME)
+      const itemName = val(ie.STOCKITEMNAME) || val(ie.NAME);
+      if (!itemName) continue;
+
+      // Qty: prefer BILLEDQTY over ACTUALQTY (matches what appears on the invoice)
+      const qty    = parseTallyQty(val(ie.BILLEDQTY) || val(ie.ACTUALQTY));
+      const rate   = parseTallyRate(val(ie.RATE));
+      const amount = parseTallyAmount(val(ie.AMOUNT));
+
+      // Derive missing rate/amount from the other field
+      const finalRate   = rate   || (qty ? amount / qty : 0);
+      const finalAmount = amount || (rate * qty);
+
+      inventoryItems.push({
+        itemName,
+        qty:    qty,
+        rate:   Math.abs(finalRate),
+        amount: Math.abs(finalAmount),
+      });
+    }
+
     vouchers.push({
       guid: guid || `voucher-${vouchers.length}`,
-      voucherDate:   tallyDateToISO(val(v.DATE)),
-      voucherType:   val(v.VOUCHERTYPENAME) || val(v.VOUCHERTYPE),
-      voucherNumber: val(v.VOUCHERNUMBER),
-      referenceNo:   val(v.REFERENCE),
-      partyName:     val(v.PARTYLEDGERNAME),
-      narration:     val(v.NARRATION),
+      voucherDate:    tallyDateToISO(val(v.DATE)),
+      voucherType:    val(v.VOUCHERTYPENAME) || val(v.VOUCHERTYPE),
+      voucherNumber:  val(v.VOUCHERNUMBER),
+      referenceNo:    val(v.REFERENCE),
+      partyName:      val(v.PARTYLEDGERNAME),
+      narration:      val(v.NARRATION),
       netAmount,
       entries,
-      lineItemCount: entries.length,
-      isInvoice:   val(v.ISINVOICE)   === "Yes",
-      isOptional:  val(v.ISOPTIONAL)  === "Yes",
-      isPostDated: val(v.ISPOSTDATED) === "Yes",
+      inventoryItems,                          // ← real item rows from Tally
+      lineItemCount:  entries.length,
+      isInvoice:    val(v.ISINVOICE)   === "Yes",
+      isOptional:   val(v.ISOPTIONAL)  === "Yes",
+      isPostDated:  val(v.ISPOSTDATED) === "Yes",
     });
   }
 

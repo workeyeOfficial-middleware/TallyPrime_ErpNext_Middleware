@@ -1,7 +1,7 @@
 {
   "Tally::https://tallytoerpnextt.m.frappe.cloud": {
-    "lastVoucherSyncDate": "2026-04-23",
-    "lastMasterSyncAt": "2026-04-23T11:51:39.357Z",
+    "lastVoucherSyncDate": "2026-04-24",
+    "lastMasterSyncAt": "2026-04-24T11:05:38.944Z",
     "groupAlterIds": {
       "Bank Accounts": "23",
       "Bank OD A/c": "12",
@@ -33,7 +33,9 @@
       "Unsecured Loans": "14"
     },
     "costCentreAlterIds": {
-      "Hyderabad": "347"
+      "Hyderabad": "347",
+      "Muskan": "419",
+      "Neha": "418"
     },
     "godownAlterIds": {
       "Main Location": "313"
@@ -55,6 +57,7 @@
       "JOJO": "217",
       "Kenstar Enterprises": "251",
       "Manish": "216",
+      "Neha": "417",
       "Office Expense": "276",
       "Office Expense2": "278",
       "Office Expense3": "281",
@@ -119,9 +122,9 @@
       "TEST-ITEM2": "333"
     }
   },
-  "Tally::https://tallytoerpnext.m.frappe.cloud": {
-    "lastVoucherSyncDate": "2026-04-24",
-    "lastMasterSyncAt": "2026-04-24T05:01:02.318Z",
+  "Tally::https://erpnext-nrg-urf.m.frappe.cloud": {
+    "lastVoucherSyncDate": "2026-04-27",
+    "lastMasterSyncAt": "2026-04-27T05:59:25.549Z",
     "groupAlterIds": {
       "Bank Accounts": "23",
       "Bank OD A/c": "12",
@@ -153,7 +156,9 @@
       "Unsecured Loans": "14"
     },
     "costCentreAlterIds": {
-      "Hyderabad": "347"
+      "Hyderabad": "347",
+      "Muskan": "419",
+      "Neha": "418"
     },
     "godownAlterIds": {
       "Main Location": "313"
@@ -175,6 +180,7 @@
       "JOJO": "217",
       "Kenstar Enterprises": "251",
       "Manish": "216",
+      "Neha": "417",
       "Office Expense": "276",
       "Office Expense2": "278",
       "Office Expense3": "281",

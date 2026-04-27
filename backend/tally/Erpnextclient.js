@@ -906,11 +906,14 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
     const isBusiness = hasGstin ||
       DEBTOR_KEYS.some((k) => (l.parentGroup || "").toLowerCase().includes(k));
     const doc = {
-      customer_name:    l.name,
-      customer_type:    isBusiness ? "Company" : "Individual",
-      customer_group:   _customerGroup,
-      territory:        resolveTerritory(l.state),
-      default_currency: "INR",
+      customer_name:       l.name,
+      customer_type:       isBusiness ? "Company" : "Individual",
+      customer_group:      _customerGroup,
+      territory:           resolveTerritory(l.state),
+      default_currency:    "INR",
+      custom_tally_id:     l.guid   || l.masterID || "",   // FIX: Tally GUID
+      custom_tally_group:  l.parentGroup || "",            // FIX: Tally parent group
+      custom_source:       "Tally",                        // FIX: sync origin marker
     };
     // Statutory
     if (l.gstin)  doc.tax_id          = l.gstin.trim();
@@ -937,11 +940,14 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
     l.name = (l.name || "").trim(); // trim Tally trailing newlines
     const hasGstin = !!(l.gstin && l.gstin.trim().length > 5);
     const doc = {
-      supplier_name:    l.name,
-      supplier_type:    hasGstin ? "Company" : "Individual",
-      supplier_group:   _supplierGroup,
-      country:          "India",
-      default_currency: "INR",
+      supplier_name:       l.name,
+      supplier_type:       hasGstin ? "Company" : "Individual",
+      supplier_group:      _supplierGroup,
+      country:             "India",
+      default_currency:    "INR",
+      custom_tally_id:     l.guid   || l.masterID || "",   // FIX: Tally GUID
+      custom_tally_group:  l.parentGroup || "",            // FIX: Tally parent group
+      custom_source:       "Tally",                        // FIX: sync origin marker
     };
     // Statutory
     if (l.gstin)  doc.tax_id          = l.gstin.trim();
@@ -2596,33 +2602,49 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
   const expenseAccount = await resolveAccount(client, "Purchase", companyAbbr, companyName) || ("Purchase - " + companyAbbr);
 
   const salesMapper = (v) => {
-    // Use real Tally inventory items if available, else fall back to single placeholder row
+    // Use real Tally inventory items if available, else fall back to single placeholder row.
+    // rate = Tally RATE field (UoM suffix already stripped in tallyClient).
+    // If rate is 0 but amount and qty are set, derive rate = amount / qty.
     const items = (v.inventoryItems && v.inventoryItems.length > 0)
-      ? v.inventoryItems.map((i) => ({
-          item_code:      i.itemName,
-          item_name:      i.itemName,
-          qty:            i.qty,
-          rate:           i.rate || (i.amount / (i.qty || 1)),
-          amount:         i.amount,
-          income_account: incomeAccount,
-        }))
+      ? v.inventoryItems.map((i) => {
+          const qty    = i.qty    || 1;
+          const amount = i.amount || 0;
+          const rate   = i.rate   || (amount / qty) || 0;
+          return {
+            item_code:      i.itemName,
+            item_name:      i.itemName,
+            qty,
+            rate:           Math.abs(rate),
+            amount:         Math.abs(amount) || Math.abs(rate * qty),
+            income_account: incomeAccount,
+          };
+        })
       : [{ item_code: "Sales Item", item_name: "Sales Item", qty: 1, rate: v.netAmount || 0, income_account: incomeAccount }];
 
     // voucherNumber fallback: use date+type as unique key if Tally didn't export a number
     const vSalesNum   = v.voucherNumber || (v.voucherDate + "-" + (v.voucherType || "Sales") + "-" + (v.guid || "").slice(-6));
     const salesRemarks = "Tally Voucher No: " + vSalesNum + (v.narration ? " | " + v.narration : "");
+
+    // DATE FIX: Always use the date Tally recorded on the voucher (YYYY-MM-DD).
+    // Never silently fall back to today — log missing dates so data issues are traceable.
+    if (!v.voucherDate) {
+      logger.warn("Sales voucher missing voucherDate — check Tally DATE field", { voucher: vSalesNum, guid: v.guid });
+    }
+    const effectiveSalesDate = v.voucherDate || new Date().toISOString().slice(0, 10);
+
     return {
-      // `title` is a virtual field — ERPNext rejects it in list-API filters, so upsert
-      // always fell through to CREATE, duplicating invoices on every sync.
-      // Use `remarks` (real DB column, unique per voucher) as the idempotency key instead.
+      // Use `remarks` (real DB column, unique per voucher) as the idempotency key.
       filters: { remarks: salesRemarks },
       doc: {
-        title:        "Tally:" + vSalesNum,
-        customer:     v.partyName || "Walk-in Customer",
-        posting_date: v.voucherDate || new Date().toISOString().slice(0, 10), // fallback: today if Tally date missing
-        company:      companyName,
-        po_no:        vSalesNum,
-        remarks:      salesRemarks,
+        title:             "Tally:" + vSalesNum,
+        customer:          v.partyName || "Walk-in Customer",
+        posting_date:      effectiveSalesDate,   // Tally voucher date (not today)
+        due_date:          effectiveSalesDate,   // Payment Due Date = voucher date (Tally default)
+        set_posting_time:  1,                    // preserve Tally date, not today
+        company:           companyName,
+        po_no:             vSalesNum,
+        remarks:           salesRemarks,
+        custom_tally_id:   v.guid || vSalesNum,
         items,
       },
     };
@@ -2630,28 +2652,44 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
 
   const purchaseMapper = (v) => {
     const items = (v.inventoryItems && v.inventoryItems.length > 0)
-      ? v.inventoryItems.map((i) => ({
-          item_code:       i.itemName,
-          item_name:       i.itemName,
-          qty:             i.qty,
-          rate:            i.rate || (i.amount / (i.qty || 1)),
-          amount:          i.amount,
-          expense_account: expenseAccount,
-        }))
+      ? v.inventoryItems.map((i) => {
+          const qty    = i.qty    || 1;
+          const amount = i.amount || 0;
+          const rate   = i.rate   || (amount / qty) || 0;
+          return {
+            item_code:       i.itemName,
+            item_name:       i.itemName,
+            qty,
+            rate:            Math.abs(rate),
+            amount:          Math.abs(amount) || Math.abs(rate * qty),
+            expense_account: expenseAccount,
+          };
+        })
       : [{ item_code: "Purchase Item", item_name: "Purchase Item", qty: 1, rate: v.netAmount || 0, expense_account: expenseAccount }];
 
     const vPurchaseNum    = v.voucherNumber || (v.voucherDate + "-" + (v.voucherType || "Purchase") + "-" + (v.guid || "").slice(-6));
     const purchaseRemarks = "Tally Voucher No: " + vPurchaseNum + (v.narration ? " | " + v.narration : "");
+
+    // DATE FIX: Always use the date Tally recorded on the voucher (YYYY-MM-DD).
+    // Never silently fall back to today — log missing dates so data issues are traceable.
+    if (!v.voucherDate) {
+      logger.warn("Purchase voucher missing voucherDate — check Tally DATE field", { voucher: vPurchaseNum, guid: v.guid });
+    }
+    const effectivePurchaseDate = v.voucherDate || new Date().toISOString().slice(0, 10);
+
     return {
       filters: { remarks: purchaseRemarks },
       doc: {
-        title:        "Tally:" + vPurchaseNum,
-        supplier:     v.partyName || "Unknown Supplier",
-        posting_date: v.voucherDate || new Date().toISOString().slice(0, 10), // fallback: today if Tally date missing
-        company:      companyName,
-        bill_no:      vPurchaseNum,
-        bill_date:    v.voucherDate   || new Date().toISOString().slice(0, 10),
-        remarks:      purchaseRemarks,
+        title:             "Tally:" + vPurchaseNum,
+        supplier:          v.partyName || "Unknown Supplier",
+        posting_date:      effectivePurchaseDate,  // Tally voucher date (not today)
+        set_posting_time:  1,                      // preserve Tally date, not today
+        company:           companyName,
+        bill_no:           vPurchaseNum,
+        bill_date:         effectivePurchaseDate,  // Supplier invoice date = Tally voucher date
+        due_date:          effectivePurchaseDate,  // Payment Due Date = voucher date
+        remarks:           purchaseRemarks,
+        custom_tally_id:   v.guid || vPurchaseNum,
         items,
       },
     };
@@ -2802,6 +2840,63 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
           }
           await sleep(300);
         }
+      }
+    }
+  }
+
+  // ── Pre-sync real Tally item names to ERPNext Items ───────────────────────────
+  // Collect every unique stock-item name from inventoryItems across all vouchers.
+  // Create any that don't exist yet as non-stock service items so the invoice
+  // batch never fails with "Item not found".
+  const allVouchersForItems = [...salesVouchers, ...purchaseVouchers];
+  const uniqueItemNames = [
+    ...new Set(
+      allVouchersForItems
+        .flatMap((v) => (v.inventoryItems || []).map((i) => (i.itemName || "").trim()))
+        .filter(Boolean)
+        .filter((n) => n !== "Sales Item" && n !== "Purchase Item")
+    ),
+  ];
+  if (uniqueItemNames.length > 0) {
+    logger.info("Pre-syncing " + uniqueItemNames.length + " Tally stock items to ERPNext before invoice batch");
+    for (const itemName of uniqueItemNames) {
+      try {
+        await client.get("/api/resource/Item/" + encodeURIComponent(itemName));
+        // already exists — skip
+      } catch (_) {
+        try {
+          await client.post("/api/resource/Item", {
+            doctype:          "Item",
+            item_code:        itemName,
+            item_name:        itemName,
+            item_group:       "All Item Groups",
+            stock_uom:        "Nos",
+            is_stock_item:    0,          // non-stock keeps things simple
+            is_sales_item:    1,
+            is_purchase_item: 1,
+          });
+          logger.info("Auto-created item from Tally: " + itemName);
+        } catch (firstErr) {
+          // If ERPNext still enforces HSN, retry with fallback code
+          try {
+            await ensureHsnCode(client, "99999999");
+            await client.post("/api/resource/Item", {
+              doctype:          "Item",
+              item_code:        itemName,
+              item_name:        itemName,
+              item_group:       "All Item Groups",
+              stock_uom:        "Nos",
+              is_stock_item:    0,
+              is_sales_item:    1,
+              is_purchase_item: 1,
+              gst_hsn_code:     "99999999",
+            });
+            logger.info("Auto-created item (with fallback HSN): " + itemName);
+          } catch (createErr) {
+            logger.warn("Could not auto-create item \"" + itemName + "\": " + parseErpError(createErr) + " — invoice lines for this item may fall back to placeholder");
+          }
+        }
+        await sleep(300);
       }
     }
   }
