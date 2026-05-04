@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "intervalMs": 1800000,
   "intervalLabel": "30 min",
   "options": {

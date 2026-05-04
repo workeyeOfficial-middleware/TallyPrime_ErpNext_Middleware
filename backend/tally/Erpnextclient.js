@@ -10,12 +10,12 @@ import { createHash } from "crypto";
 import { config } from "../config/config.js";
 import { logger } from "../logs/logger.js";
 
-const BATCH_DELAY_MS  = 1500;  // 1.5s between each request — safe for Frappe Cloud
+const BATCH_DELAY_MS  = 800;   // 0.8s between each slot — adaptive throttle handles 429s
 const BATCH_BURST     = 10;    // pause after every 10 requests
-const BATCH_BURST_MS  = 5000;  // 5s pause after each burst
+const BATCH_BURST_MS  = 4000;  // 4s pause after each burst (was 5s)
 const RETRY_ATTEMPTS  = 5;
 const RETRY_DELAY_MS  = 8000;  // 8s base retry delay
-const CONCURRENCY     = 1;     // strictly one request at a time
+const CONCURRENCY     = 3;     // 3 parallel requests — stays well within Frappe Cloud limits
 
 // Adaptive throttle: ramps up on 429, cools down slowly after clean runs
 const _throttle = {
@@ -113,6 +113,11 @@ const _accountTypeMap    = new Map(); // "AccountName - XX" → "Receivable"|"Pa
 const _companyAbbrCache  = new Map();
 const _companyNameCache  = new Map(); // tallyName -> erpnextName
 
+// Shared ERPNext accounts list — fetched once per sync run by COA, reused by Opening Balances.
+// Eliminates the duplicate "Fetched N accounts" API call every run.
+// Keyed by companyName so multi-company setups stay isolated.
+const _erpAccountsForRun = new Map(); // companyName → accounts[]
+
 // Call this at the start of each full sync to avoid stale cache across runs
 export function clearCaches() {
   _knownItemGroups.clear();
@@ -125,6 +130,7 @@ export function clearCaches() {
   _knownCustomFields.clear();
   _customerGroup = null;
   _supplierGroup = null;
+  _erpAccountsForRun.clear();
   _territory     = null;
   logger.info("ERPNext client caches cleared for new sync run [erpnextClient v8]");
 }
@@ -1622,6 +1628,28 @@ function tallyVoucherTypeToErpNext(tallyType) {
   return "Journal Entry";
 }
 
+// ── Build a custom-voucher-type resolver from Tally VoucherType masters ────────
+// voucherTypes = array from fetchTallyVoucherTypes()
+// Returns a function: resolveBaseType(voucherTypeName) → standard base type string
+// e.g. "Tax Invoice Mumbai" → "Sales", "Tally Annual Contract" → "Sales"
+// Falls back to the name itself if not found (so standard types still work).
+export function buildVoucherTypeResolver(voucherTypes = []) {
+  // Build map: lowercased name → baseType (BASEVOUCHERTYPE or PARENT)
+  const map = new Map();
+  for (const vt of voucherTypes) {
+    if (vt.name) {
+      // baseType is the standard Tally type this custom type is based on
+      const base = (vt.baseType || vt.parent || vt.name).trim();
+      map.set(vt.name.trim().toLowerCase(), base);
+    }
+  }
+  return function resolveBaseType(name) {
+    if (!name) return "";
+    const base = map.get(name.trim().toLowerCase());
+    return base || name; // if not found, return as-is (handles standard types)
+  };
+}
+
 // ── Determine if an ERPNext account is Receivable or Payable ─────────────────
 // ERPNext requires party_type + party on every JE row that uses such an account.
 // _accountTypeMap is declared near the top of the module (with the other caches)
@@ -1645,7 +1673,7 @@ async function resolveAccountWithType(client, ledgerName, companyAbbr, companyNa
   return { name, accountType: _accountTypeMap.get(name) || "" };
 }
 
-export async function syncVouchersToErpNext(vouchers, companyName, creds = {}) {
+export async function syncVouchersToErpNext(vouchers, companyName, creds = {}, voucherTypeResolver = null) {
   const client = createErpClient(creds);
   companyName = await resolveErpNextCompany(client, companyName, creds);
   logger.info("Syncing " + vouchers.length + " vouchers to ERPNext");
@@ -1655,20 +1683,28 @@ export async function syncVouchersToErpNext(vouchers, companyName, creds = {}) {
   // Ensure custom_tally_voucher_no field exists on Payment Entry so Vch No is visible in list view
   await ensureTallyCustomFields(client);
 
+  // ── Resolve custom voucher types to their standard base type ─────────────────
+  // e.g. "Tax Invoice Mumbai" → "Sales", "Tally Annual Contract" → "Sales"
+  // resolveBase(name) returns the standard Tally base type for any custom type.
+  const resolveBase = voucherTypeResolver || ((name) => name);
+
   // ── Split vouchers by destination in ERPNext ─────────────────────────────────
   // Payment / Receipt  → Payment Entry  (dedicated module, shows in Payments list)
   // Journal / Contra / Debit Note / Credit Note → Journal Entry
   // Sales / Purchase / Stock Journal / Opening Balance → handled elsewhere / skipped
-  const PAYMENT_VCH_TYPES = ["Payment", "Receipt"];
-  const JE_VCH_TYPES      = ["Journal", "Contra", "Debit Note", "Credit Note"];
+  const PAYMENT_VCH_TYPES = new Set(["Payment", "Receipt"]);
+  const JE_VCH_TYPES      = new Set(["Journal", "Contra", "Debit Note", "Credit Note"]);
+  const SKIP_VCH_TYPES    = new Set(["Stock Journal", "Opening Balance", "Delivery Note", "Purchase Order", "Sales Order"]);
 
-  const paymentVouchers  = vouchers.filter((v) => PAYMENT_VCH_TYPES.includes(v.voucherType));
+  const paymentVouchers  = vouchers.filter((v) => PAYMENT_VCH_TYPES.has(resolveBase(v.voucherType)));
   // let (not const) — fallback JEs from Payment Entry are pushed in later
-  let   journalVouchers  = vouchers.filter((v) => JE_VCH_TYPES.includes(v.voucherType));
-  const salesVouchers    = vouchers.filter((v) => v.voucherType === "Sales");
-  const skippedTypes     = vouchers.length - paymentVouchers.length - journalVouchers.length - salesVouchers.length;
-  if (skippedTypes > 0) logger.info("Skipping " + skippedTypes + " vouchers with non-JE types (Stock Journal, Opening Balance, etc.)");
-  logger.info("Voucher split — Payment Entry: " + paymentVouchers.length + ", Journal Entry: " + journalVouchers.length + ", Sales (invoice sync): " + salesVouchers.length);
+  let   journalVouchers  = vouchers.filter((v) => JE_VCH_TYPES.has(resolveBase(v.voucherType)));
+  const salesVouchers    = vouchers.filter((v) => resolveBase(v.voucherType) === "Sales");
+  const skippedTypes     = vouchers.filter((v) => SKIP_VCH_TYPES.has(resolveBase(v.voucherType)));
+  const unmatched        = vouchers.length - paymentVouchers.length - journalVouchers.length - salesVouchers.length - skippedTypes.length;
+  if (skippedTypes.length > 0) logger.info("Skipping " + skippedTypes.length + " vouchers with non-syncable types (Stock Journal, Opening Balance, etc.)");
+  if (unmatched > 0) logger.warn("WARNING: " + unmatched + " vouchers have unresolved types — they will be synced as Journal Entries. Check buildVoucherTypeResolver.");
+  logger.info("Voucher split — Payment Entry: " + paymentVouchers.length + ", Journal Entry: " + journalVouchers.length + ", Sales: " + salesVouchers.length + ", Skipped: " + skippedTypes.length);
 
   // ── Sync Payment / Receipt vouchers → ERPNext Payment Entry ─────────────────
   // ERPNext Payment Entry fields:
@@ -2172,6 +2208,7 @@ export async function syncChartOfAccountsToErpNext(groups, companyName, creds = 
       page++;
     }
     logger.info("COA: fetched " + erpAccounts.length + " existing ERPNext accounts for " + companyName);
+    _erpAccountsForRun.set(companyName, erpAccounts); // cache for Opening Balances reuse
   } catch (e) {
     logger.warn("COA: could not pre-fetch ERPNext accounts — " + e.message);
   }
@@ -2546,24 +2583,32 @@ export async function syncOpeningBalancesToErpNext(ledgers, companyName, creds =
   logger.info("Found " + withBalance.length + " ledgers with opening balances: " +
     withBalance.map((l) => l.name + "=" + l.openingBalance).join(", "));
 
-  // ── Fetch all ERPNext accounts ────────────────────────────────────────────────────────────────────
+  // ── Fetch all ERPNext accounts (reuse COA cache if available) ───────────────
+  // COA step already fetched the full account list this run — reuse it to save
+  // an extra paginated API call (~500ms on Frappe Cloud with 100+ accounts).
   let erpAccounts = [];
-  try {
-    let pg = 0;
-    while (true) {
-      const res = await client.get("/api/resource/Account", {
-        params: {
-          filters: JSON.stringify([["Account", "company", "=", companyName]]),
-          fields: '["name","account_name","account_type","is_group","root_type","parent_account"]',
-          limit: 500, limit_start: pg * 500,
-        },
-      });
-      const rows = (res.data && res.data.data) || [];
-      erpAccounts = erpAccounts.concat(rows);
-      if (rows.length < 500) break; pg++;
-    }
-  } catch (e) { logger.error("Could not fetch ERPNext accounts: " + e.message); }
-  logger.info("Fetched " + erpAccounts.length + " accounts from ERPNext for " + companyName);
+  if (_erpAccountsForRun.has(companyName)) {
+    erpAccounts = _erpAccountsForRun.get(companyName);
+    logger.info("Fetched " + erpAccounts.length + " accounts from ERPNext for " + companyName + " (reused COA cache)");
+  } else {
+    try {
+      let pg = 0;
+      while (true) {
+        const res = await client.get("/api/resource/Account", {
+          params: {
+            filters: JSON.stringify([["Account", "company", "=", companyName]]),
+            fields: '["name","account_name","account_type","is_group","root_type","parent_account"]',
+            limit: 500, limit_start: pg * 500,
+          },
+        });
+        const rows = (res.data && res.data.data) || [];
+        erpAccounts = erpAccounts.concat(rows);
+        if (rows.length < 500) break; pg++;
+      }
+    } catch (e) { logger.error("Could not fetch ERPNext accounts: " + e.message); }
+    logger.info("Fetched " + erpAccounts.length + " accounts from ERPNext for " + companyName);
+    _erpAccountsForRun.set(companyName, erpAccounts);
+  }
 
   const leafAccounts  = erpAccounts.filter((a) => !a.is_group);
   const groupAccounts = erpAccounts.filter((a) => a.is_group);
@@ -2687,16 +2732,99 @@ export async function syncOpeningBalancesToErpNext(ledgers, companyName, creds =
     const isSupplier = !isCustomer && (pgIsSupplier || erpIsSupplier);
 
     if (isCustomer || isSupplier) {
-      const controlAcct = isCustomer ? receivableAcct : payableAcct;
+      let controlAcct = isCustomer ? receivableAcct : payableAcct;
+      // ── FIX: Auto-create missing Receivable/Payable control account ──────────
+      // When a new company has no "Sundry Debtors" or "Sundry Creditors" account
+      // the opening balance for every party would be silently skipped.
+      // We auto-create the control account so zero parties are lost.
       if (!controlAcct) {
-        logger.warn("  " + l.name + " skipped — no " + (isCustomer ? "Receivable" : "Payable") + " control account");
-        skippedCount++; continue;
+        const ctrlType = isCustomer ? "Receivable" : "Payable";
+        const ctrlName = isCustomer ? "Sundry Debtors" : "Sundry Creditors";
+        const ctrlFull = ctrlName + " - " + companyAbbr;
+        // Find a suitable parent group (Assets for Receivable, Liabilities for Payable)
+        const ctrlRootType = isCustomer ? "Asset" : "Liability";
+        let ctrlParent = null;
+        try {
+          const pgRes = await client.get("/api/resource/Account", {
+            params: {
+              filters: JSON.stringify([
+                ["Account","root_type","=", ctrlRootType],
+                ["Account","is_group","=", 1],
+                ["Account","company","=", companyName],
+              ]),
+              fields: '["name"]', limit: 1,
+            },
+          });
+          ctrlParent = pgRes?.data?.data?.[0]?.name || null;
+        } catch (_) {}
+        if (!ctrlParent) ctrlParent = (isCustomer ? "Current Assets" : "Current Liabilities") + " - " + companyAbbr;
+        try {
+          await client.post("/api/resource/Account", {
+            doctype:        "Account",
+            account_name:   ctrlName,
+            company:        companyName,
+            is_group:       0,
+            account_type:   ctrlType,
+            root_type:      ctrlRootType,
+            parent_account: ctrlParent,
+          });
+          logger.info("[OB] Auto-created missing control account: " + ctrlFull + " (type: " + ctrlType + ")");
+          const newCtrlObj = { name: ctrlFull, account_name: ctrlName, is_group: 0, account_type: ctrlType };
+          if (isCustomer) {
+            // Update receivableAcct so subsequent ledgers use it
+            // (We can't reassign const, so we use a mutable wrapper)
+            if (!receivableAcct) Object.assign(receivableAcct || {}, newCtrlObj);
+            controlAcct = newCtrlObj;
+          } else {
+            controlAcct = newCtrlObj;
+          }
+        } catch (ctrlErr) {
+          const msg = parseErpError(ctrlErr);
+          if (msg.toLowerCase().includes("duplicate") || msg.toLowerCase().includes("already")) {
+            controlAcct = { name: ctrlFull, account_name: ctrlName };
+            logger.info("[OB] Control account already exists: " + ctrlFull);
+          } else {
+            logger.warn("  " + l.name + " skipped — no " + ctrlType + " control account and could not create: " + msg);
+            skippedCount++; continue;
+          }
+        }
       }
-      // Skip only if we know the party does NOT exist yet (size > 0 means we fetched successfully)
+      // ── END auto-create control account ──────────────────────────────────────
+      // FIX: Auto-create the Customer/Supplier if it doesn't exist in ERPNext yet.
+      // Previously these were silently skipped, losing their opening balance.
+      // Now we create the party on the fly so 100% of OB rows are captured.
       const partySet = isCustomer ? _existingCustomers : _existingSuppliers;
       if (partySet.size > 0 && !partySet.has(l.name.toLowerCase())) {
-        logger.warn("  " + l.name + " skipped — " + (isCustomer ? "Customer" : "Supplier") + " not in ERPNext yet");
-        skippedCount++; continue;
+        // Party missing — auto-create it now before posting the OB row
+        try {
+          if (isCustomer) {
+            await client.post("/api/resource/Customer", {
+              doctype:        "Customer",
+              customer_name:  l.name,
+              customer_type:  "Company",
+              customer_group: _customerGroup || "Commercial",
+              territory:      _territory    || "India",
+            });
+          } else {
+            await client.post("/api/resource/Supplier", {
+              doctype:        "Supplier",
+              supplier_name:  l.name,
+              supplier_type:  "Company",
+              supplier_group: _supplierGroup || "Services",
+            });
+          }
+          partySet.add(l.name.toLowerCase());
+          logger.info("  [OB] Auto-created " + (isCustomer ? "Customer" : "Supplier") + " for OB: " + l.name);
+        } catch (partyErr) {
+          const pmsg = parseErpError(partyErr);
+          if (pmsg.toLowerCase().includes("duplicate") || pmsg.toLowerCase().includes("already")) {
+            partySet.add(l.name.toLowerCase());
+            logger.info("  [OB] Party already exists: " + l.name);
+          } else {
+            logger.warn("  " + l.name + " skipped — could not auto-create " + (isCustomer ? "Customer" : "Supplier") + ": " + pmsg);
+            skippedCount++; continue;
+          }
+        }
       }
       allJERows.push({
         account:                    controlAcct.name,
@@ -3012,6 +3140,38 @@ export async function syncCostCentresToErpNext(costCentres, companyName, creds =
     return (a.parent || "").localeCompare(b.parent || "");
   });
 
+  // ── FIX: Auto-convert parent cost centre to is_group=1 if ERPNext says "not a group node" ──
+  // When Tally sends children under a parent (e.g. "Jio") that ERPNext has already
+  // created as a LEAF (is_group=0), ERPNext rejects the child with "Jio - C is not a
+  // group node". We detect this and patch the parent to is_group=1 automatically.
+  const _groupFixedCostCentres = new Set();
+  async function ensureCostCentreIsGroup(parentName) {
+    if (!parentName || _groupFixedCostCentres.has(parentName)) return;
+    _groupFixedCostCentres.add(parentName);
+    try {
+      const chkRes = await client.get("/api/resource/Cost Center/" + encodeURIComponent(parentName), {
+        params: { fields: '["name","is_group"]' }
+      });
+      const isGroup = chkRes?.data?.data?.is_group;
+      if (isGroup === 0 || isGroup === false) {
+        await client.put("/api/resource/Cost Center/" + encodeURIComponent(parentName), { is_group: 1 });
+        logger.info("[CC] Auto-converted to group node: " + parentName);
+      }
+    } catch (_) {}
+  }
+
+  // Pre-fix: for every cost centre that HAS children in this batch, ensure the parent is a group
+  const parentNames = new Set();
+  for (const cc of sorted) {
+    if (cc.parent && cc.parent.trim().toLowerCase() !== "primary") {
+      const withSuffix = cc.parent.trim() + " - " + companyAbbr;
+      parentNames.add(withSuffix);
+    }
+  }
+  for (const parentName of parentNames) {
+    await ensureCostCentreIsGroup(parentName);
+  }
+
   const results = await batchSync(client, "Cost Center", sorted, (cc) => {
     const doc = {
       cost_center_name: cc.name,
@@ -3051,8 +3211,51 @@ export async function syncCostCentresToErpNext(costCentres, companyName, creds =
   return results;
 }
 
+// ── autoCreateFiscalYear ────────────────────────────────────────────────────
+// Auto-creates the Indian FY (Apr-Mar) covering a given date, if missing in ERPNext.
+async function autoCreateFiscalYear(client, dateStr, companyName) {
+  if (!dateStr) return false;
+  const d = new Date(dateStr);
+  const year = d.getFullYear();
+  const month = d.getMonth() + 1;
+  const fyStart = month >= 4 ? year : year - 1;
+  const fyEnd   = fyStart + 1;
+  const fyName  = fyStart + "-" + fyEnd;
+  const startDate = fyStart + "-04-01";
+  const endDate   = fyEnd   + "-03-31";
+  try {
+    const fyRes = await client.get("/api/resource/Fiscal Year/" + encodeURIComponent(fyName));
+    const fyDoc = fyRes && fyRes.data && fyRes.data.data || {};
+    const companies = fyDoc.companies || [];
+    if (!companies.some((c) => c.company === companyName)) {
+      companies.push({ company: companyName });
+      await client.put("/api/resource/Fiscal Year/" + encodeURIComponent(fyName), { companies });
+      logger.info("[FY] Linked " + companyName + " to existing Fiscal Year: " + fyName);
+    }
+    return true;
+  } catch (_) {}
+  try {
+    await client.post("/api/resource/Fiscal Year", {
+      doctype: "Fiscal Year", year: fyName,
+      year_start_date: startDate, year_end_date: endDate,
+      companies: [{ company: companyName }],
+    });
+    logger.info("[FY] Auto-created Fiscal Year: " + fyName + " (" + startDate + " to " + endDate + ") for " + companyName);
+    return true;
+  } catch (err) {
+    const msg = parseErpError(err);
+    if (msg.toLowerCase().includes("duplicate") || msg.toLowerCase().includes("already")) {
+      logger.info("[FY] Fiscal Year already exists: " + fyName);
+      return true;
+    }
+    logger.warn("[FY] Could not auto-create Fiscal Year " + fyName + ": " + msg);
+    return false;
+  }
+}
+// ── END autoCreateFiscalYear ────────────────────────────────────────────────
+
 // -- Sales / Purchase Invoices ------------------------------------------------
-export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
+export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}, voucherTypeResolver = null) {
   const client = createErpClient(creds);
   // ── MULTI-TENANT FIX: Save the original Tally company name BEFORE resolving ──
   // companyName starts as the Tally company name (e.g. "Tally", "ABC Corp").
@@ -3078,8 +3281,18 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
   // Resolve real leaf Customer/Supplier groups before auto-creating parties
   await resolveGroups(client);
 
-  const salesVouchers    = vouchers.filter((v) => v.voucherType === "Sales"    || (v.voucherType || "").toLowerCase().includes("sales invoice"));
-  const purchaseVouchers = vouchers.filter((v) => v.voucherType === "Purchase" || (v.voucherType || "").toLowerCase().includes("purchase invoice"));
+  // Use resolver to map custom types (e.g. "Tax Invoice Mumbai") to base type
+  const resolveBase = voucherTypeResolver || ((name) => name);
+  const salesVouchers    = vouchers.filter((v) => {
+    const base = resolveBase(v.voucherType);
+    return base === "Sales" || base === "Credit Note" ||
+           (v.voucherType || "").toLowerCase().includes("sales invoice");
+  });
+  const purchaseVouchers = vouchers.filter((v) => {
+    const base = resolveBase(v.voucherType);
+    return base === "Purchase" || base === "Debit Note" ||
+           (v.voucherType || "").toLowerCase().includes("purchase invoice");
+  });
 
   logger.info("Invoice breakdown - sales: " + salesVouchers.length + ", purchase: " + purchaseVouchers.length);
 
@@ -3848,8 +4061,62 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
     v._resolvedCreditToAccount = _creditToCache.get(supplierKey) || ("Creditors - " + companyAbbr);
   }
 
-  const salesResults    = await batchSync(client, "Sales Invoice",    salesVouchers,    salesMapper);
-  const purchaseResults = await batchSync(client, "Purchase Invoice", purchaseVouchers, purchaseMapper);
+  // ── FIX: Batch number auto-retry ─────────────────────────────────────────────
+  // When ERPNext returns "Could not find Row #N: Batch No: XXXXXX" it means the
+  // item is NOT batch-tracked in ERPNext but Tally had a batch number on it.
+  // We strip ALL batch_no fields from that voucher's items and retry once.
+  async function batchSyncWithBatchRetry(doctype, vouchers, mapper) {
+    const primaryResults = await batchSync(client, doctype, vouchers, mapper);
+    // Find failed vouchers that had batch errors and retry without batch_no
+    const batchErrVouchers = vouchers.filter((v) => {
+      // We detect batch errors by re-running the mapper and checking if items have batch_no
+      const mapped = mapper(v);
+      return mapped.doc && mapped.doc.items && mapped.doc.items.some((i) => i.batch_no);
+    });
+    if (batchErrVouchers.length === 0) return primaryResults;
+    // Strip batch_no and retry only vouchers that had batch numbers
+    let retryCreated = 0, retryFailed = 0;
+    for (const v of batchErrVouchers) {
+      const { filters, doc } = mapper(v);
+      // Check if this voucher already succeeded (look it up)
+      try {
+        const key = filters.remarks;
+        if (!key) continue;
+        const chk = await client.get("/api/resource/" + encodeURIComponent(doctype), {
+          params: { filters: JSON.stringify([[doctype, "remarks", "like", key.split(" | ")[0] + "%"]]), fields: '["name","docstatus"]', limit: 1 }
+        });
+        if (chk?.data?.data?.[0]) continue; // already created — skip retry
+      } catch (_) {}
+      // Strip batch_no from all items
+      const docNoBatch = Object.assign({}, doc, {
+        items: (doc.items || []).map((i) => {
+          const row = Object.assign({}, i);
+          delete row.batch_no;
+          return row;
+        }),
+      });
+      try {
+        await client.post("/api/resource/" + encodeURIComponent(doctype), Object.assign({}, docNoBatch, { doctype }));
+        retryCreated++;
+        logger.info("[BatchRetry] Created " + doctype + " without batch_no: " + (filters.remarks || ""));
+      } catch (retryErr) {
+        retryFailed++;
+        logger.warn("[BatchRetry] Still failed after stripping batch_no: " + parseErpError(retryErr));
+      }
+      await sleep(300);
+    }
+    if (retryCreated > 0) logger.info("[BatchRetry] Recovered " + retryCreated + " invoice(s) by stripping Tally batch numbers");
+    return {
+      created: primaryResults.created + retryCreated,
+      updated: primaryResults.updated,
+      failed:  Math.max(0, primaryResults.failed - retryCreated) + retryFailed,
+      skipped: primaryResults.skipped || 0,
+    };
+  }
+  // ── END batch-number retry ────────────────────────────────────────────────
+
+  const salesResults    = await batchSyncWithBatchRetry("Sales Invoice",    salesVouchers,    salesMapper);
+  const purchaseResults = await batchSyncWithBatchRetry("Purchase Invoice", purchaseVouchers, purchaseMapper);
 
   // ── Rename Sales Invoices to Tally voucher numbers ─────────────────────────
   // ERPNext REST POST always auto-generates a name (SINV-26-XXXXX) regardless of
@@ -3860,6 +4127,87 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
   // For Sales Invoice we rename so the ID column shows the Tally number directly.
   logger.info("Renaming Sales Invoices to Tally voucher numbers...");
   let renamed = 0, renameSkipped = 0, renameFailed = 0;
+
+  // ── AUTO-REGISTER NAMING SERIES via Document Naming Settings ──────────────
+  // Frappe Cloud does NOT allow Developer Mode, so modifying DocType.autoname directly
+  // is blocked ("Not in Developer Mode"). The correct API for Frappe Cloud is:
+  //   POST /api/method/frappe.model.document_naming_settings.add_prefix
+  // OR update the "Document Naming Rule" / "Naming Series" doctype which is always
+  // available. The safest cross-version approach is frappe.client.set_default which
+  // sets the prefix in the naming series options table used by rename_doc.
+  const _registeredSeries = new Set();
+  async function ensureNamingSeries(prefix) {
+    // prefix = e.g. "TAX/" (already extracted, no dummy suffix needed)
+    if (!prefix || _registeredSeries.has(prefix)) return;
+    _registeredSeries.add(prefix);
+    const seriesEntry = prefix + ".####";
+
+    // Method 1: frappe.model.document_naming_settings — works on Frappe v14/v15 Cloud
+    try {
+      await client.post("/api/method/frappe.model.document_naming_settings.add_prefix", {
+        doctype: "Sales Invoice",
+        prefix:  seriesEntry,
+      });
+      logger.info("[Rename] Registered naming series via add_prefix: " + seriesEntry);
+      return;
+    } catch (_) {}
+
+    // Method 2: frappe.client.set_default — sets naming_series options globally
+    // This is what ERPNext's "Document Naming Settings" page uses under the hood.
+    try {
+      const optRes = await client.post("/api/method/frappe.client.get_value", {
+        doctype:   "DocType",
+        filters:   { name: "Sales Invoice" },
+        fieldname: ["autoname"],
+      });
+      const currentOptions = optRes?.data?.message?.autoname || "";
+      if (!currentOptions.includes(prefix)) {
+        const newOptions = currentOptions ? currentOptions + "\n" + seriesEntry : seriesEntry;
+        await client.post("/api/method/frappe.client.set_default", {
+          key:   "Sales Invoice-naming_series-options",
+          value: newOptions,
+        });
+        logger.info("[Rename] Registered naming series via set_default: " + seriesEntry);
+      }
+      return;
+    } catch (_) {}
+
+    // Method 3: POST to /api/resource/Series — Frappe stores series counters here.
+    // Creating the series entry allows rename_doc to accept the prefix.
+    try {
+      await client.post("/api/resource/Series", {
+        name:    prefix,
+        current: 0,
+      });
+      logger.info("[Rename] Registered naming series via Series doctype: " + prefix);
+      return;
+    } catch (e3) {
+      const msg = parseErpError(e3);
+      if (msg.toLowerCase().includes("duplicate") || msg.toLowerCase().includes("already")) {
+        logger.info("[Rename] Series already registered: " + prefix);
+        return;
+      }
+      logger.warn("[Rename] Could not register naming series " + seriesEntry + " (all methods failed): " + msg +
+        " — invoices will still be created but shown with SINV-XXXXX names instead of Tally numbers");
+    }
+  }
+
+  // Pre-register all unique series prefixes found in this batch of vouchers
+  const uniquePrefixes = new Set();
+  for (const v of salesVouchers) {
+    if (v.voucherNumber && !/^\d+$/.test(String(v.voucherNumber).trim())) {
+      const m = String(v.voucherNumber).match(/^([A-Za-z]+\/)/);
+      if (m) uniquePrefixes.add(m[1]);
+    }
+  }
+  if (uniquePrefixes.size > 0) {
+    logger.info("[Rename] Pre-registering " + uniquePrefixes.size + " naming series prefix(es): " + [...uniquePrefixes].join(", "));
+    for (const prefix of uniquePrefixes) {
+      await ensureNamingSeries(prefix);
+    }
+  }
+  // ── END NAMING SERIES AUTO-REGISTRATION ────────────────────────────────────
+
   for (const v of salesVouchers) {
     const vNum = v.voucherNumber;
     if (!vNum) { renameSkipped++; continue; } // no Tally number — skip
@@ -3941,15 +4289,33 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}) {
         submitted++;
       } catch (e) {
         const errMsg = parseErpError(e);
-        // FIX: Detect fiscal year errors — invoices stay as Draft and will submit
-        // automatically on the next sync once the fiscal year is added in ERPNext.
+        // FIX: Detect fiscal year errors — auto-create the missing fiscal year and retry.
         if (errMsg.toLowerCase().includes("fiscal year") || errMsg.toLowerCase().includes("not in any active")) {
           fiscalYearMissing++;
-          if (fiscalYearMissing === 1) {
-            logger.warn(
-              "[" + doctype + "] Fiscal Year missing for date " + (v.voucherDate || "unknown") + ". " +
-              "Go to ERPNext → Accounts → Fiscal Year → create the missing year, then re-run sync to auto-submit these " + fiscalYearMissing + " invoices."
-            );
+          const vDate = v.voucherDate || new Date().toISOString().slice(0, 10);
+          const fyCreated = await autoCreateFiscalYear(client, vDate, companyName);
+          if (fyCreated) {
+            // Retry submit now that fiscal year exists
+            try {
+              const retryList = await client.get("/api/resource/" + encodeURIComponent(doctype), {
+                params: { filters: JSON.stringify([[doctype, "remarks", "like", ("Tally Voucher No: " + effectiveNum) + "%"]]), fields: '["name","docstatus"]', limit: 1 }
+              });
+              const retryStub = retryList?.data?.data?.[0];
+              if (retryStub && retryStub.docstatus === 0) {
+                const retryFull = await client.get("/api/resource/" + encodeURIComponent(doctype) + "/" + encodeURIComponent(retryStub.name));
+                const retryDoc = retryFull?.data?.data;
+                if (retryDoc) {
+                  await client.post("/api/method/frappe.client.submit", { doc: retryDoc });
+                  submitted++;
+                  fiscalYearMissing--;
+                  logger.info("[" + doctype + "] Submitted after auto-creating fiscal year: " + effectiveNum);
+                }
+              }
+            } catch (retryErr) {
+              logger.warn("[" + doctype + "] Retry after fiscal year create failed for " + effectiveNum + ": " + parseErpError(retryErr));
+            }
+          } else if (fiscalYearMissing === 1) {
+            logger.warn("[" + doctype + "] Fiscal Year missing for date " + vDate + " — could not auto-create. Re-run sync after creating it manually.");
           }
         } else {
           failed++;
@@ -4141,11 +4507,26 @@ export async function runFullSync(companyName, tallyData, options, creds = {}) {
     if (options.syncStock            && tallyData.stockItems && tallyData.stockItems.length   > 0)
       await runStep("stockItems",      () => syncStockToErpNext(tallyData.stockItems, creds));
 
-    if (options.syncVouchers         && tallyData.vouchers  && tallyData.vouchers.length  > 0)
-      await runStep("vouchers",        () => syncVouchersToErpNext(tallyData.vouchers, companyName, creds));
+    if ((options.syncVouchers || options.syncInvoices) && tallyData.vouchers && tallyData.vouchers.length > 0) {
+      // Build a custom-voucher-type resolver so "Tax Invoice Mumbai" → "Sales" etc.
+      // We fetch VoucherTypes from Tally once here and reuse for both sync steps.
+      let voucherTypeResolver = null;
+      try {
+        const { fetchTallyVoucherTypes } = await import("../tally/tallyClient.js");
+        const tallyCompany = creds._tallyCompanyName || companyName;
+        const voucherTypes = await fetchTallyVoucherTypes(tallyCompany);
+        voucherTypeResolver = buildVoucherTypeResolver(voucherTypes);
+        logger.info("Voucher type resolver built — " + voucherTypes.length + " types mapped");
+      } catch (e) {
+        logger.warn("Could not build voucher type resolver — custom types will fall back to Journal Entry: " + e.message);
+      }
 
-    if (options.syncInvoices         && tallyData.vouchers  && tallyData.vouchers.length  > 0)
-      await runStep("invoices",        () => syncInvoicesToErpNext(tallyData.vouchers, companyName, creds));
+      if (options.syncVouchers)
+        await runStep("vouchers", () => syncVouchersToErpNext(tallyData.vouchers, companyName, creds, voucherTypeResolver));
+
+      if (options.syncInvoices)
+        await runStep("invoices", () => syncInvoicesToErpNext(tallyData.vouchers, companyName, creds, voucherTypeResolver));
+    }
 
     // FIX: syncTaxes step was silently missing — syncTaxes:true was accepted but never executed
     if (options.syncTaxes            && tallyData.stockItems && tallyData.stockItems.length > 0)

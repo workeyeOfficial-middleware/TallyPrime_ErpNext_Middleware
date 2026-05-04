@@ -419,7 +419,7 @@ export async function fetchTallyVoucherTypes(companyName) {
   const xml = buildCollectionXml(
     "VoucherTypeCollection",
     "VoucherType",
-    "NAME,GUID,PARENT,NUMBERINGMETHOD,ISOPTIONAL,ISACTIVE,COMMONNARRATION,AFFECTSSTOCK",
+    "NAME,GUID,PARENT,BASEVOUCHERTYPE,NUMBERINGMETHOD,ISOPTIONAL,ISACTIVE,COMMONNARRATION,AFFECTSSTOCK",
     companyName
   );
   const raw = await postXml(xml);
@@ -436,7 +436,8 @@ export async function fetchTallyVoucherTypes(companyName) {
       return {
         guid: val(v.GUID),
         name,
-        parent: val(v.PARENT),
+        parent:    val(v.PARENT),
+        baseType:  val(v.BASEVOUCHERTYPE) || val(v.PARENT) || name, // base standard type
         numberingMethod: val(v.NUMBERINGMETHOD),
         isOptional: val(v.ISOPTIONAL) === "Yes",
         isActive: val(v.ISACTIVE) !== "No",
@@ -1162,6 +1163,19 @@ export async function fetchTallyVouchers(companyName, fromDate = null, toDate = 
       return true;
     });
     logger.success(`Fetched ${filtered.length} vouchers (filtered: ${fromDate} → ${toDate}) from ${unique.length} total`, { company: companyName });
+    // Diagnostic: when all vouchers are filtered out, log the actual date range in Tally
+    // so it's immediately obvious whether the fromDate window is too narrow.
+    if (filtered.length === 0 && unique.length > 0) {
+      const dates = unique.map((v) => v.voucherDate).filter(Boolean).sort();
+      const earliest = dates[0] || "unknown";
+      const latest   = dates[dates.length - 1] || "unknown";
+      logger.warn(
+        `All ${unique.length} Tally vouchers are outside the requested window (${fromDate} → ${toDate}). ` +
+        `Actual voucher dates in Tally: ${earliest} → ${latest}. ` +
+        `If this is unexpected, reset the sync state so the next run uses the company start date as fromDate.`,
+        { company: companyName }
+      );
+    }
     return filtered;
   }
 
@@ -1389,8 +1403,11 @@ export async function runMiddlewareCheck(companyName, options = {}) {
   // Fetch ALL vouchers — no date filter at all.
   try {
     logger.info(`Voucher check: fetching ALL vouchers`, { company: companyName });
-    const vouchers = await fetchTallyVouchers(companyName);
+    const today  = new Date().toISOString().slice(0, 10);
+    const from365 = new Date(Date.now() - 365 * 864e5).toISOString().slice(0, 10);
+    const vouchers = await fetchTallyVouchers(companyName, from365, today);
     const byType = {};
+    
     vouchers.forEach((v) => {
       byType[v.voucherType] = (byType[v.voucherType] || 0) + 1;
     });

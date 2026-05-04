@@ -2,26 +2,23 @@ import { useState } from "react";
 
 import { SyncToErpNext } from "./pages/SyncToErpNext";
 import { MiddlewareCheck } from "./pages/MiddlewareCheck";
-import { QuickFetch } from "./pages/QuickFetch";
 import { LiveLogs } from "./pages/LiveLogs";
 
 const NAV = [
   { id: "check", label: "Data Check",  icon: "⬡", desc: "Validate connection" },
-  { id: "fetch", label: "Quick Fetch", icon: "⇅", desc: "Pull tally data"    },
   { id: "sync",  label: "Sync",        icon: "⟳", desc: "Push to ERPNext"   },
   { id: "logs",  label: "Live Logs",   icon: "≡", desc: "Monitor events"    },
 ];
 
 const PAGE_META = {
   check: { title: "Data Check",      sub: "Validates full Tally data connection" },
-  fetch: { title: "Quick Fetch",     sub: "Pull records directly from Tally"     },
   sync:  { title: "Sync to ERPNext", sub: "Push Tally data into ERPNext"         },
   logs:  { title: "Live Logs",       sub: "Real-time middleware event stream"     },
 };
 
 export default function DashboardWrapper({ companies }) {
   const [activeTab, setActiveTab] = useState("check");
-  const meta = PAGE_META[activeTab];
+  const meta = PAGE_META[activeTab] || PAGE_META["check"];
 
   return (
     <div style={{
@@ -239,7 +236,6 @@ export default function DashboardWrapper({ companies }) {
         <main style={{ flex: 1, overflowY: "auto", padding: "28px 32px" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
             {activeTab === "check" && <MiddlewareCheck companies={companies} />}
-            {activeTab === "fetch" && <QuickFetch companies={companies} />}
             {activeTab === "sync"  && <SyncToErpNext companies={companies} />}
             {activeTab === "logs"  && <LiveLogs />}
           </div>
