@@ -1,5 +1,833 @@
 [
   {
+    "id": 1777872551466.1863,
+    "ts": "2026-05-04T05:29:11.466Z",
+    "level": "info",
+    "message": "Middleware check complete: ok",
+    "meta": {
+      "companies": 2,
+      "groups": 243,
+      "ledgers": 16760,
+      "voucherTypes": 39,
+      "costCategories": 1,
+      "costCentres": 45,
+      "currencies": 2,
+      "budgets": 0,
+      "stockGroups": 6,
+      "stockItems": 115,
+      "stockCategories": 11,
+      "units": 5,
+      "godowns": 2,
+      "vouchers": 1158
+    },
+    "company": null
+  },
+  {
+    "id": 1777872551457.0964,
+    "ts": "2026-05-04T05:29:11.457Z",
+    "level": "success",
+    "message": "Fetched 1158 vouchers (filtered: 2025-01-01 → 2025-02-01) from 10672 total",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872551439.7988,
+    "ts": "2026-05-04T05:29:11.439Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 10672",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872551053.146,
+    "ts": "2026-05-04T05:29:11.053Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 10672",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525632.0962,
+    "ts": "2026-05-04T05:28:45.632Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)",
+      "fromDate": "2025-01-01",
+      "toDate": "2025-02-01"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525626.866,
+    "ts": "2026-05-04T05:28:45.626Z",
+    "level": "info",
+    "message": "Voucher check: fetching vouchers from 2025-01-01 to 2025-02-01",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525617.7512,
+    "ts": "2026-05-04T05:28:45.617Z",
+    "level": "success",
+    "message": "Fetched 2 godowns",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525602.326,
+    "ts": "2026-05-04T05:28:45.602Z",
+    "level": "info",
+    "message": "Fetching godowns from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525594.681,
+    "ts": "2026-05-04T05:28:45.594Z",
+    "level": "success",
+    "message": "Fetched 5 units",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525580.8691,
+    "ts": "2026-05-04T05:28:45.580Z",
+    "level": "info",
+    "message": "Fetching units from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525574.5764,
+    "ts": "2026-05-04T05:28:45.574Z",
+    "level": "success",
+    "message": "Fetched 11 stock categories",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525559.8066,
+    "ts": "2026-05-04T05:28:45.559Z",
+    "level": "info",
+    "message": "Fetching stock categories from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525551.8975,
+    "ts": "2026-05-04T05:28:45.551Z",
+    "level": "success",
+    "message": "Fetched 115 stock items (74 with HSN/SAC, 0 with GST rate)",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525492.2583,
+    "ts": "2026-05-04T05:28:45.492Z",
+    "level": "info",
+    "message": "Fetching stock items from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525484.7017,
+    "ts": "2026-05-04T05:28:45.484Z",
+    "level": "success",
+    "message": "Fetched 6 stock groups",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525465.8657,
+    "ts": "2026-05-04T05:28:45.465Z",
+    "level": "info",
+    "message": "Fetching stock groups from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525459.457,
+    "ts": "2026-05-04T05:28:45.459Z",
+    "level": "success",
+    "message": "Fetched 0 budgets",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525446.9434,
+    "ts": "2026-05-04T05:28:45.446Z",
+    "level": "info",
+    "message": "Fetching budgets from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525439.153,
+    "ts": "2026-05-04T05:28:45.439Z",
+    "level": "success",
+    "message": "Fetched 2 currencies",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525424.3213,
+    "ts": "2026-05-04T05:28:45.424Z",
+    "level": "info",
+    "message": "Fetching currencies from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525417.957,
+    "ts": "2026-05-04T05:28:45.417Z",
+    "level": "success",
+    "message": "Fetched 45 cost centres",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525390.846,
+    "ts": "2026-05-04T05:28:45.390Z",
+    "level": "info",
+    "message": "Fetching cost centres from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525383.4055,
+    "ts": "2026-05-04T05:28:45.383Z",
+    "level": "success",
+    "message": "Fetched 1 cost categories",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525370.3577,
+    "ts": "2026-05-04T05:28:45.370Z",
+    "level": "info",
+    "message": "Fetching cost categories from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525363.4077,
+    "ts": "2026-05-04T05:28:45.363Z",
+    "level": "success",
+    "message": "Fetched 39 voucher types",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525333.7112,
+    "ts": "2026-05-04T05:28:45.333Z",
+    "level": "info",
+    "message": "Fetching voucher types from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872525321.274,
+    "ts": "2026-05-04T05:28:45.321Z",
+    "level": "success",
+    "message": "Fetched 16760 ledgers",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872517701.407,
+    "ts": "2026-05-04T05:28:37.701Z",
+    "level": "info",
+    "message": "Fetching ledgers from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872517692.1943,
+    "ts": "2026-05-04T05:28:37.692Z",
+    "level": "success",
+    "message": "Fetched 243 groups",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872517548.5303,
+    "ts": "2026-05-04T05:28:37.548Z",
+    "level": "info",
+    "message": "Fetching groups from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872517529.9712,
+    "ts": "2026-05-04T05:28:37.529Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1777872517489.358,
+    "ts": "2026-05-04T05:28:37.489Z",
+    "level": "info",
+    "message": "Middleware check started for: Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1777872354956.4763,
+    "ts": "2026-05-04T05:25:54.956Z",
+    "level": "info",
+    "message": "Middleware check complete: ok",
+    "meta": {
+      "companies": 2,
+      "groups": 243,
+      "ledgers": 16760,
+      "voucherTypes": 39,
+      "costCategories": 1,
+      "costCentres": 45,
+      "currencies": 2,
+      "budgets": 0,
+      "stockGroups": 6,
+      "stockItems": 115,
+      "stockCategories": 11,
+      "units": 5,
+      "godowns": 2,
+      "vouchers": 10672
+    },
+    "company": null
+  },
+  {
+    "id": 1777872354941.097,
+    "ts": "2026-05-04T05:25:54.941Z",
+    "level": "success",
+    "message": "Fetched 10672 vouchers (filtered: 2025-01-01 → 2026-01-01) from 10672 total",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872354922.2798,
+    "ts": "2026-05-04T05:25:54.922Z",
+    "level": "info",
+    "message": "Vouchers parsed successfully: 10672",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872354678.5903,
+    "ts": "2026-05-04T05:25:54.678Z",
+    "level": "info",
+    "message": "Raw vouchers received from Tally: 10672",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327333.8198,
+    "ts": "2026-05-04T05:25:27.333Z",
+    "level": "info",
+    "message": "Fetching ALL vouchers from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)",
+      "fromDate": "2025-01-01",
+      "toDate": "2026-01-01"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327324.9236,
+    "ts": "2026-05-04T05:25:27.324Z",
+    "level": "info",
+    "message": "Voucher check: fetching vouchers from 2025-01-01 to 2026-01-01",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327319.0234,
+    "ts": "2026-05-04T05:25:27.319Z",
+    "level": "success",
+    "message": "Fetched 2 godowns",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327303.0056,
+    "ts": "2026-05-04T05:25:27.303Z",
+    "level": "info",
+    "message": "Fetching godowns from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327297.823,
+    "ts": "2026-05-04T05:25:27.297Z",
+    "level": "success",
+    "message": "Fetched 5 units",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327282.1536,
+    "ts": "2026-05-04T05:25:27.282Z",
+    "level": "info",
+    "message": "Fetching units from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327274.6082,
+    "ts": "2026-05-04T05:25:27.274Z",
+    "level": "success",
+    "message": "Fetched 11 stock categories",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327258.4338,
+    "ts": "2026-05-04T05:25:27.258Z",
+    "level": "info",
+    "message": "Fetching stock categories from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327252.2625,
+    "ts": "2026-05-04T05:25:27.252Z",
+    "level": "success",
+    "message": "Fetched 115 stock items (74 with HSN/SAC, 0 with GST rate)",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327180.5286,
+    "ts": "2026-05-04T05:25:27.180Z",
+    "level": "info",
+    "message": "Fetching stock items from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327171.0254,
+    "ts": "2026-05-04T05:25:27.171Z",
+    "level": "success",
+    "message": "Fetched 6 stock groups",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327150.4263,
+    "ts": "2026-05-04T05:25:27.150Z",
+    "level": "info",
+    "message": "Fetching stock groups from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327143.534,
+    "ts": "2026-05-04T05:25:27.143Z",
+    "level": "success",
+    "message": "Fetched 0 budgets",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327130.0208,
+    "ts": "2026-05-04T05:25:27.130Z",
+    "level": "info",
+    "message": "Fetching budgets from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327122.9429,
+    "ts": "2026-05-04T05:25:27.122Z",
+    "level": "success",
+    "message": "Fetched 2 currencies",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327107.4514,
+    "ts": "2026-05-04T05:25:27.107Z",
+    "level": "info",
+    "message": "Fetching currencies from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327099.791,
+    "ts": "2026-05-04T05:25:27.099Z",
+    "level": "success",
+    "message": "Fetched 45 cost centres",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327072.2822,
+    "ts": "2026-05-04T05:25:27.072Z",
+    "level": "info",
+    "message": "Fetching cost centres from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327066.7327,
+    "ts": "2026-05-04T05:25:27.066Z",
+    "level": "success",
+    "message": "Fetched 1 cost categories",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327051.9265,
+    "ts": "2026-05-04T05:25:27.051Z",
+    "level": "info",
+    "message": "Fetching cost categories from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327044.1975,
+    "ts": "2026-05-04T05:25:27.044Z",
+    "level": "success",
+    "message": "Fetched 39 voucher types",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327016.6003,
+    "ts": "2026-05-04T05:25:27.016Z",
+    "level": "info",
+    "message": "Fetching voucher types from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872327002.1738,
+    "ts": "2026-05-04T05:25:27.002Z",
+    "level": "success",
+    "message": "Fetched 16760 ledgers",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872319026.543,
+    "ts": "2026-05-04T05:25:19.026Z",
+    "level": "info",
+    "message": "Fetching ledgers from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872319015.5857,
+    "ts": "2026-05-04T05:25:19.015Z",
+    "level": "success",
+    "message": "Fetched 243 groups",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872318837.4675,
+    "ts": "2026-05-04T05:25:18.837Z",
+    "level": "info",
+    "message": "Fetching groups from Tally",
+    "meta": {
+      "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+    },
+    "company": "Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)"
+  },
+  {
+    "id": 1777872318814.9058,
+    "ts": "2026-05-04T05:25:18.814Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1777872318791.5166,
+    "ts": "2026-05-04T05:25:18.791Z",
+    "level": "info",
+    "message": "Middleware check started for: Rajlaxmi Solutions Private Limited - (From 1-Apr-2016)",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1777872298526.54,
+    "ts": "2026-05-04T05:24:58.526Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1777872298402.9521,
+    "ts": "2026-05-04T05:24:58.402Z",
+    "level": "info",
+    "message": "Fetching companies from Tally",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1777872284857.268,
+    "ts": "2026-05-04T05:24:44.857Z",
+    "level": "warn",
+    "message": "Auto-sync is off. You can turn it on from the Sync settings page and choose how often it should run.",
+    "meta": {
+      "type": "heads_up"
+    },
+    "company": null
+  },
+  {
+    "id": 1777872284853.0073,
+    "ts": "2026-05-04T05:24:44.854Z",
+    "level": "info",
+    "message": "System is ready. You can now run a check to make sure all Tally data is correct.",
+    "meta": {
+      "type": "check_ready"
+    },
+    "company": null
+  },
+  {
+    "id": 1777872284849.0818,
+    "ts": "2026-05-04T05:24:44.849Z",
+    "level": "info",
+    "message": "Tally is connected and reachable at http://localhost:9000.",
+    "meta": {
+      "type": "tally_connected",
+      "url": "http://localhost:9000"
+    },
+    "company": null
+  },
+  {
+    "id": 1777872284844.3027,
+    "ts": "2026-05-04T05:24:44.844Z",
+    "level": "info",
+    "message": "The system is up and ready. You can start using it now. (http://localhost:4000) Auto-sync is off — you can enable it from the Sync settings.",
+    "meta": {
+      "type": "server_ready",
+      "url": "http://localhost:4000"
+    },
+    "company": null
+  },
+  {
+    "id": 1777872284830.0056,
+    "ts": "2026-05-04T05:24:44.830Z",
+    "level": "info",
+    "message": "Auto-sync: loaded ERPNext credentials from creds file",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1777872108713.8064,
+    "ts": "2026-05-04T05:21:48.713Z",
+    "level": "warn",
+    "message": "Auto-sync is off. You can turn it on from the Sync settings page and choose how often it should run.",
+    "meta": {
+      "type": "heads_up"
+    },
+    "company": null
+  },
+  {
+    "id": 1777872108705.2898,
+    "ts": "2026-05-04T05:21:48.705Z",
+    "level": "info",
+    "message": "System is ready. You can now run a check to make sure all Tally data is correct.",
+    "meta": {
+      "type": "check_ready"
+    },
+    "company": null
+  },
+  {
+    "id": 1777872108697.522,
+    "ts": "2026-05-04T05:21:48.697Z",
+    "level": "info",
+    "message": "Tally is connected and reachable at http://localhost:9000.",
+    "meta": {
+      "type": "tally_connected",
+      "url": "http://localhost:9000"
+    },
+    "company": null
+  },
+  {
+    "id": 1777872108692.1836,
+    "ts": "2026-05-04T05:21:48.692Z",
+    "level": "info",
+    "message": "The system is up and ready. You can start using it now. (http://localhost:4000) Auto-sync is off — you can enable it from the Sync settings.",
+    "meta": {
+      "type": "server_ready",
+      "url": "http://localhost:4000"
+    },
+    "company": null
+  },
+  {
+    "id": 1777872108671.9277,
+    "ts": "2026-05-04T05:21:48.671Z",
+    "level": "info",
+    "message": "Auto-sync: loaded ERPNext credentials from creds file",
+    "meta": {},
+    "company": null
+  },
+  {
+    "id": 1777872106074.42,
+    "ts": "2026-05-04T05:21:46.074Z",
+    "level": "warn",
+    "message": "Auto-sync is off. You can turn it on from the Sync settings page and choose how often it should run.",
+    "meta": {
+      "type": "heads_up"
+    },
+    "company": null
+  },
+  {
+    "id": 1777872106071.7043,
+    "ts": "2026-05-04T05:21:46.071Z",
+    "level": "info",
+    "message": "System is ready. You can now run a check to make sure all Tally data is correct.",
+    "meta": {
+      "type": "check_ready"
+    },
+    "company": null
+  },
+  {
+    "id": 1777872106066.0107,
+    "ts": "2026-05-04T05:21:46.066Z",
+    "level": "info",
+    "message": "Tally is connected and reachable at http://localhost:9000.",
+    "meta": {
+      "type": "tally_connected",
+      "url": "http://localhost:9000"
+    },
+    "company": null
+  },
+  {
+    "id": 1777872106061.3813,
+    "ts": "2026-05-04T05:21:46.061Z",
+    "level": "info",
+    "message": "The system is up and ready. You can start using it now. (http://localhost:4000) Auto-sync is off — you can enable it from the Sync settings.",
+    "meta": {
+      "type": "server_ready",
+      "url": "http://localhost:4000"
+    },
+    "company": null
+  },
+  {
+    "id": 1777872106048.0347,
+    "ts": "2026-05-04T05:21:46.048Z",
+    "level": "info",
+    "message": "Auto-sync: loaded ERPNext credentials from creds file",
+    "meta": {},
+    "company": null
+  },
+  {
     "id": 1777871957735.078,
     "ts": "2026-05-04T05:19:17.735Z",
     "level": "warn",
@@ -7812,654 +8640,6 @@
     "ts": "2026-05-02T12:41:36.564Z",
     "level": "info",
     "message": "  [OB] Auto-created missing account: Siddhi Engineerings - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725696489.8743,
-    "ts": "2026-05-02T12:41:36.489Z",
-    "level": "info",
-    "message": "  Shruti Zanzad → Supplier: 950 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725696486.9263,
-    "ts": "2026-05-02T12:41:36.486Z",
-    "level": "info",
-    "message": "  [OB] Auto-created Supplier for OB: Shruti Zanzad",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725696463.366,
-    "ts": "2026-05-02T12:41:36.463Z",
-    "level": "info",
-    "message": "[OB] Control account already exists: Sundry Creditors - C",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725696374.0273,
-    "ts": "2026-05-02T12:41:36.374Z",
-    "level": "info",
-    "message": "  Shri Sai Enterprises (Thane) → GL 'Shri Sai Enterprises (Thane) - C': 1062 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725696368.211,
-    "ts": "2026-05-02T12:41:36.368Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shri Sai Enterprises (Thane) - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725696262.1821,
-    "ts": "2026-05-02T12:41:36.262Z",
-    "level": "info",
-    "message": "  Shri Radhe Krishna Consultancy → Supplier: 33375.3 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725696259.973,
-    "ts": "2026-05-02T12:41:36.259Z",
-    "level": "info",
-    "message": "  [OB] Auto-created Supplier for OB: Shri Radhe Krishna Consultancy",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725696154.5798,
-    "ts": "2026-05-02T12:41:36.154Z",
-    "level": "info",
-    "message": "[OB] Control account already exists: Sundry Creditors - C",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725696055.1697,
-    "ts": "2026-05-02T12:41:36.055Z",
-    "level": "info",
-    "message": "  Shri Nivas Kumar → Supplier: 10000 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725696053.4275,
-    "ts": "2026-05-02T12:41:36.053Z",
-    "level": "info",
-    "message": "  [OB] Auto-created Supplier for OB: Shri Nivas Kumar",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695951.6003,
-    "ts": "2026-05-02T12:41:35.951Z",
-    "level": "info",
-    "message": "[OB] Control account already exists: Sundry Creditors - C",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695850.2302,
-    "ts": "2026-05-02T12:41:35.850Z",
-    "level": "info",
-    "message": "  Shri M S P Sangh → GL 'Shri M S P Sangh - C': 23600 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695847.419,
-    "ts": "2026-05-02T12:41:35.847Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shri M S P Sangh - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695750.105,
-    "ts": "2026-05-02T12:41:35.750Z",
-    "level": "info",
-    "message": "  Shri  Balaji  Enterprises → GL 'Shri  Balaji  Enterprises - C': 8260 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695745.7,
-    "ts": "2026-05-02T12:41:35.745Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shri  Balaji  Enterprises - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695646.4006,
-    "ts": "2026-05-02T12:41:35.646Z",
-    "level": "info",
-    "message": "  Shreyashree Dhandharia → GL 'Shreyashree Dhandharia - C': 397900 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695643.6262,
-    "ts": "2026-05-02T12:41:35.643Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shreyashree Dhandharia - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695543.36,
-    "ts": "2026-05-02T12:41:35.543Z",
-    "level": "info",
-    "message": "  Shree Shubh Creation → GL 'Shree Shubh Creation - C': 32 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695540.681,
-    "ts": "2026-05-02T12:41:35.540Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shree Shubh Creation - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695441.8896,
-    "ts": "2026-05-02T12:41:35.441Z",
-    "level": "info",
-    "message": "  Shree Shakti Enterprises → GL 'Shree Shakti Enterprises - C': 1062 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695438.4543,
-    "ts": "2026-05-02T12:41:35.438Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shree Shakti Enterprises - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695338.438,
-    "ts": "2026-05-02T12:41:35.338Z",
-    "level": "info",
-    "message": "  Shree Shakti → GL 'Shree Shakti - C': 453 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695335.074,
-    "ts": "2026-05-02T12:41:35.335Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shree Shakti - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695239.5083,
-    "ts": "2026-05-02T12:41:35.239Z",
-    "level": "info",
-    "message": "  Shree Ganesh Infotech → GL 'Shree Ganesh Infotech - C': 3824.8 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695234.721,
-    "ts": "2026-05-02T12:41:35.234Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shree Ganesh Infotech - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695134.925,
-    "ts": "2026-05-02T12:41:35.134Z",
-    "level": "info",
-    "message": "  Shree Arihant  Maintenance → GL 'Shree Arihant  Maintenance - C': 8880 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695131.172,
-    "ts": "2026-05-02T12:41:35.131Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shree Arihant  Maintenance - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695031.065,
-    "ts": "2026-05-02T12:41:35.031Z",
-    "level": "info",
-    "message": "  Shree Arbuda Traders → GL 'Shree Arbuda Traders - C': 900 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725695028.5476,
-    "ts": "2026-05-02T12:41:35.028Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shree Arbuda Traders - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694928.368,
-    "ts": "2026-05-02T12:41:34.928Z",
-    "level": "info",
-    "message": "  Shraddha Shivaji Jadhav → GL 'Shraddha Shivaji Jadhav - C': 29359 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694925.99,
-    "ts": "2026-05-02T12:41:34.925Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shraddha Shivaji Jadhav - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694826.204,
-    "ts": "2026-05-02T12:41:34.826Z",
-    "level": "info",
-    "message": "  Shoppers Stop Ltd → Supplier: 1499.99 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694824.912,
-    "ts": "2026-05-02T12:41:34.824Z",
-    "level": "info",
-    "message": "  [OB] Auto-created Supplier for OB: Shoppers Stop Ltd",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694722.8657,
-    "ts": "2026-05-02T12:41:34.722Z",
-    "level": "info",
-    "message": "[OB] Control account already exists: Sundry Creditors - C",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694615.1953,
-    "ts": "2026-05-02T12:41:34.615Z",
-    "level": "info",
-    "message": "  Shivam Singh → Supplier: 25000 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694612.0667,
-    "ts": "2026-05-02T12:41:34.612Z",
-    "level": "info",
-    "message": "  [OB] Auto-created Supplier for OB: Shivam Singh",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694561.3374,
-    "ts": "2026-05-02T12:41:34.561Z",
-    "level": "info",
-    "message": "[OB] Control account already exists: Sundry Creditors - C",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694519.254,
-    "ts": "2026-05-02T12:41:34.519Z",
-    "level": "info",
-    "message": "  Sheltrex karjat pvt ltd → GL 'Sheltrex karjat pvt ltd - C': 760 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694516.0364,
-    "ts": "2026-05-02T12:41:34.516Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Sheltrex karjat pvt ltd - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694417.709,
-    "ts": "2026-05-02T12:41:34.417Z",
-    "level": "info",
-    "message": "  Share Capital → GL 'Share Capital - C': 100000 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694414.6733,
-    "ts": "2026-05-02T12:41:34.414Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Share Capital - C (rootType: Equity)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694285.3926,
-    "ts": "2026-05-02T12:41:34.285Z",
-    "level": "info",
-    "message": "  Sharda Trading Co → GL 'Sharda Trading Co - C': 5310 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694282.4856,
-    "ts": "2026-05-02T12:41:34.282Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Sharda Trading Co - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694245.0854,
-    "ts": "2026-05-02T12:41:34.245Z",
-    "level": "info",
-    "message": "  Shankar Achari → Supplier: 1048 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694239.7344,
-    "ts": "2026-05-02T12:41:34.239Z",
-    "level": "info",
-    "message": "  [OB] Auto-created Supplier for OB: Shankar Achari",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694209.1958,
-    "ts": "2026-05-02T12:41:34.209Z",
-    "level": "info",
-    "message": "[OB] Control account already exists: Sundry Creditors - C",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694109.7969,
-    "ts": "2026-05-02T12:41:34.109Z",
-    "level": "info",
-    "message": "  Shandor Homes Llp → GL 'Shandor Homes Llp - C': 15930 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725694106.315,
-    "ts": "2026-05-02T12:41:34.106Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shandor Homes Llp - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693961.8396,
-    "ts": "2026-05-02T12:41:33.961Z",
-    "level": "info",
-    "message": "  Shakti Infotech Private Limited(Cr) → Supplier: 157992 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693958.95,
-    "ts": "2026-05-02T12:41:33.958Z",
-    "level": "info",
-    "message": "  [OB] Auto-created Supplier for OB: Shakti Infotech Private Limited(Cr)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693912.6882,
-    "ts": "2026-05-02T12:41:33.912Z",
-    "level": "info",
-    "message": "[OB] Control account already exists: Sundry Creditors - C",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693802.2646,
-    "ts": "2026-05-02T12:41:33.802Z",
-    "level": "info",
-    "message": "  Shakti Infotech Private Limited → Customer: 1119277 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693799.8066,
-    "ts": "2026-05-02T12:41:33.799Z",
-    "level": "info",
-    "message": "  [OB] Auto-created Customer for OB: Shakti Infotech Private Limited",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693698.069,
-    "ts": "2026-05-02T12:41:33.698Z",
-    "level": "info",
-    "message": "[OB] Control account already exists: Sundry Debtors - C",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693599.6606,
-    "ts": "2026-05-02T12:41:33.599Z",
-    "level": "info",
-    "message": "  Shakti & Co. → GL 'Shakti & Co. - C': 7965 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693595.991,
-    "ts": "2026-05-02T12:41:33.595Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shakti & Co. - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693498.117,
-    "ts": "2026-05-02T12:41:33.498Z",
-    "level": "info",
-    "message": "  Shahrukh Shaikh → GL 'Shahrukh Shaikh - C': 67 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693493.1184,
-    "ts": "2026-05-02T12:41:33.493Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shahrukh Shaikh - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693395.6536,
-    "ts": "2026-05-02T12:41:33.395Z",
-    "level": "info",
-    "message": "  Shah Engineers → GL 'Shah Engineers - C': 184.37 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693390.4067,
-    "ts": "2026-05-02T12:41:33.390Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Shah Engineers - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693294.1843,
-    "ts": "2026-05-02T12:41:33.294Z",
-    "level": "info",
-    "message": "  SGST → GL 'SGST - C': 1404020.88 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693287.7349,
-    "ts": "2026-05-02T12:41:33.287Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: SGST - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693240.638,
-    "ts": "2026-05-02T12:41:33.240Z",
-    "level": "info",
-    "message": "  Server → GL 'Server - C': 277821 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693236.069,
-    "ts": "2026-05-02T12:41:33.236Z",
-    "level": "info",
-    "message": "  [OB] Account already exists: Server",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693190.673,
-    "ts": "2026-05-02T12:41:33.190Z",
-    "level": "info",
-    "message": "  Selective Minerals & Color Inds. (P) Ltd. → GL 'Selective Minerals & Color Inds. (P) Ltd. - C': 12744 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693185.0652,
-    "ts": "2026-05-02T12:41:33.185Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Selective Minerals & Color Inds. (P) Ltd. - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693091.8315,
-    "ts": "2026-05-02T12:41:33.091Z",
-    "level": "info",
-    "message": "  Security Systems → Customer: 15960 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725693082.0393,
-    "ts": "2026-05-02T12:41:33.082Z",
-    "level": "info",
-    "message": "  [OB] Auto-created Customer for OB: Security Systems",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725692980.9402,
-    "ts": "2026-05-02T12:41:32.980Z",
-    "level": "info",
-    "message": "[OB] Control account already exists: Sundry Debtors - C",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725692881.712,
-    "ts": "2026-05-02T12:41:32.881Z",
-    "level": "info",
-    "message": "  Seafarers Welfare Fund Society(Mumbai) → GL 'Seafarers Welfare Fund Society(Mumbai) - C': 3186 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725692878.817,
-    "ts": "2026-05-02T12:41:32.878Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Seafarers Welfare Fund Society(Mumbai) - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725692780.7942,
-    "ts": "2026-05-02T12:41:32.780Z",
-    "level": "info",
-    "message": "  SBI Bank → GL 'SBI Bank - C': 421124.17 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725692776.4321,
-    "ts": "2026-05-02T12:41:32.776Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: SBI Bank - C (rootType: Asset)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725692678.7937,
-    "ts": "2026-05-02T12:41:32.678Z",
-    "level": "info",
-    "message": "  Sayali Dhamne → GL 'Sayali Dhamne - C': 72685 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725692673.973,
-    "ts": "2026-05-02T12:41:32.673Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Sayali Dhamne - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725692577.9858,
-    "ts": "2026-05-02T12:41:32.577Z",
-    "level": "info",
-    "message": "  Sawant Filtech Pvt. Ltd. → GL 'Sawant Filtech Pvt. Ltd. - C': 11800 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725692572.2937,
-    "ts": "2026-05-02T12:41:32.572Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Sawant Filtech Pvt. Ltd. - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725692472.0322,
-    "ts": "2026-05-02T12:41:32.472Z",
-    "level": "info",
-    "message": "  Satyakala Resource Management & Services Pvt. Ltd. → GL 'Satyakala Resource Management & Services Pvt. Ltd. - C': 1342 Cr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725692469.619,
-    "ts": "2026-05-02T12:41:32.469Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Satyakala Resource Management & Services Pvt. Ltd. - C (rootType: Liability)",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725692316.4927,
-    "ts": "2026-05-02T12:41:32.316Z",
-    "level": "info",
-    "message": "  Saryajani Mahila Utkarsha Sanstha → GL 'Saryajani Mahila Utkarsha Sanstha - C': 4248 Dr",
-    "meta": {},
-    "company": null
-  },
-  {
-    "id": 1777725692312.2864,
-    "ts": "2026-05-02T12:41:32.312Z",
-    "level": "info",
-    "message": "  [OB] Auto-created missing account: Saryajani Mahila Utkarsha Sanstha - C (rootType: Liability)",
     "meta": {},
     "company": null
   }

@@ -1401,13 +1401,19 @@ export async function runMiddlewareCheck(companyName, options = {}) {
 
   // ── 15. Vouchers (transactions) ───────────────────────────────────────────
   // Fetch ALL vouchers — no date filter at all.
-  try {
-    logger.info(`Voucher check: fetching ALL vouchers`, { company: companyName });
-    const today  = new Date().toISOString().slice(0, 10);
-    const from365 = new Date(Date.now() - 365 * 864e5).toISOString().slice(0, 10);
-    const vouchers = await fetchTallyVouchers(companyName, from365, today);
+  // ── 15. Vouchers (transactions) ───────────────────────────────────────────
+try {
+  const today   = new Date().toISOString().slice(0, 10);
+  const from365 = new Date(Date.now() - 365 * 864e5).toISOString().slice(0, 10);
+
+  // Use user-supplied dates from the Data Check form if provided; fall back to last 365 days
+  const voucherFrom = options.fromDate || from365;
+  const voucherTo   = options.toDate   || today;
+
+  logger.info(`Voucher check: fetching vouchers from ${voucherFrom} to ${voucherTo}`, { company: companyName });
+  const vouchers = await fetchTallyVouchers(companyName, voucherFrom, voucherTo);
     const byType = {};
-    
+
     vouchers.forEach((v) => {
       byType[v.voucherType] = (byType[v.voucherType] || 0) + 1;
     });
