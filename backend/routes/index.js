@@ -1,5 +1,13 @@
 import { Router } from "express";
 import {
+  isFullSyncComplete,
+  markFullSyncComplete,
+  markChunkDone,
+  getChunkProgress,
+  resetChunkProgress,
+  listAllTenants,
+} from "../syncChunkState.js";
+import {
   pingTally,
   fetchTallyCompanies,
   // Accounting Masters
@@ -18,6 +26,8 @@ import {
   fetchTallyGodowns,
   // Transactions
   fetchTallyVouchers,
+  fetchTallyVouchersChunked,
+  fetchTallyLedgersChunked,
   // Full check
   runMiddlewareCheck,
 } from "../tally/tallyClient.js";
@@ -693,9 +703,15 @@ router.post("/sync/full", async (req, res) => {
       logger.info("Tally ping OK (" + tallyPing.latencyMs + "ms)");
 
       // ── Load incremental state (scoped to this ERPNext instance) ──────────
-      const state       = getCompanyState(companyName, erpnextUrl);
-      const isFirstSync = !state.lastVoucherSyncDate && !state.lastMasterSyncAt;
-      logger.info(`Sync mode: ${isFirstSync ? "FULL (first run)" : "INCREMENTAL"} for "${companyName}" → ${erpnextUrl}`);
+      const state        = getCompanyState(companyName, erpnextUrl);
+      const isFirstSync  = !state.lastVoucherSyncDate && !state.lastMasterSyncAt;
+      const fullSyncDone = isFullSyncComplete(companyName, erpnextUrl);
+      const needsFullSync = isFirstSync || !fullSyncDone;
+      logger.info(
+        `Sync mode: ${needsFullSync ? "FULL CHUNKED (first run or incomplete)" : "INCREMENTAL"} ` +
+        `for "${companyName}" → ${erpnextUrl}`,
+        { isFirstSync, fullSyncDone }
+      );
 
       // ── Masters — fetch all, sync only changed (via ALTERID) ─────────────
       let groups      = [];
@@ -733,12 +749,49 @@ router.post("/sync/full", async (req, res) => {
       }
 
       if (syncLedgers || syncOpeningBalances) {
-        const allLedgers = await fetchTallyLedgers(companyName);
-        const { toSync: changedLedgers, unchanged: unchangedLedgers } =
-          filterChangedMasters(allLedgers, state.ledgerAlterIds);
-        logger.info(`Ledgers: ${changedLedgers.length} to sync, ${unchangedLedgers} unchanged (skipped)`);
-        ledgers = changedLedgers;
-        newAlterIds.ledgerAlterIds = buildAlterIdMap(allLedgers);
+        if (needsFullSync) {
+          // ── FIRST SYNC: fetch all ledgers, push in batches of N, resume if interrupted ──
+          const batchSize = parseInt(process.env.SYNC_LEDGER_BATCH_SIZE, 10) || 500;
+          logger.info(`Ledgers (first sync): fetching all, batching by ${batchSize}, resumable`, { company: companyName });
+
+          const { batches, total, batchCount } = await fetchTallyLedgersChunked(
+            companyName,
+            erpnextUrl,
+            batchSize,
+            (batchId, count, totalBatches, idx, skipped) => {
+              logger.info(
+                `Ledger batch ${batchId} (${idx}/${totalBatches}): ` +
+                `${skipped ? "skipped (already synced)" : count + " ledgers ready to push"}`
+              );
+            }
+          );
+
+          for (const batch of batches) {
+            logger.info(`Pushing ledger batch ${batch.id} (${batch.ledgers.length} ledgers) to ERPNext`);
+            await syncLedgersToErpNext(batch.ledgers, creds);
+            // Mark this batch done AFTER successful push — if it crashes here, batch is retried next run
+            markChunkDone(companyName, erpnextUrl, "ledgers", batch.id, {
+              from:  batch.from,
+              to:    batch.to,
+              count: batch.ledgers.length,
+            });
+            logger.info(`Ledger batch ${batch.id} pushed and cached ✅`);
+          }
+
+          // Capture alterId map from the full ledger list for future incremental syncs
+          const allLedgersForMap = await fetchTallyLedgers(companyName);
+          newAlterIds.ledgerAlterIds = buildAlterIdMap(allLedgersForMap);
+          logger.info(`All ${batchCount} ledger batches complete (${total} total ledgers)`);
+
+        } else {
+          // ── INCREMENTAL: only changed ledgers via ALTERID ──────────────────
+          const allLedgers = await fetchTallyLedgers(companyName);
+          const { toSync: changedLedgers, unchanged: unchangedLedgers } =
+            filterChangedMasters(allLedgers, state.ledgerAlterIds);
+          logger.info(`Ledgers: ${changedLedgers.length} to sync, ${unchangedLedgers} unchanged (skipped)`);
+          ledgers = changedLedgers;
+          newAlterIds.ledgerAlterIds = buildAlterIdMap(allLedgers);
+        }
       }
 
       if (syncStock || syncTaxes) {
@@ -756,31 +809,64 @@ router.post("/sync/full", async (req, res) => {
       let effectiveToDate   = toDate;
 
       if (syncVouchers || syncInvoices) {
-        const dateWindow = getIncrementalVoucherDates(companyName, req.body.forceFromDate || fromDate || null, toDate, erpnextUrl);
-        effectiveFromDate = dateWindow.fromDate;
-        effectiveToDate   = dateWindow.toDate;
+        if (needsFullSync) {
+          // ── FIRST SYNC: monthly chunks, resumable ────────────────────────────
+          // Get company's books start date from Tally (no hardcoded fallback)
+          const companies   = await fetchTallyCompanies();
+          const thisCompany = companies.find((c) => c.name === companyName);
+          const booksFrom   = thisCompany?.startingFrom || thisCompany?.booksFrom;
+          if (!booksFrom) {
+            throw new Error(
+              `Cannot determine books start date for "${companyName}". ` +
+              `Ensure Tally company has a valid Books Beginning Date.`
+            );
+          }
+          const today = new Date().toISOString().slice(0, 10);
+          logger.info(`First sync: fetching vouchers from ${booksFrom} → ${today} in monthly chunks`);
 
-        const lastSynced = state.lastVoucherSyncDate;
-        const windowIsAlreadyCovered =
-          lastSynced &&
-          effectiveToDate <= lastSynced &&
-          groups.length       === 0 &&
-          ledgers.length      === 0 &&
-          stockItems.length   === 0 &&
-          costCentres.length  === 0 &&
-          godowns.length      === 0;
-
-        if (windowIsAlreadyCovered) {
-          logger.info(
-            "Vouchers: skipping fetch — window " + effectiveFromDate + " → " + effectiveToDate +
-            " already covered by last sync (" + lastSynced + ") and no masters changed"
+          vouchers = await fetchTallyVouchersChunked(
+            companyName,
+            booksFrom,
+            today,
+            erpnextUrl,
+            (chunkId, count, totalChunks, idx, skipped) => {
+              logger.info(
+                `Voucher chunk ${chunkId} (${idx}/${totalChunks}): ` +
+                `${skipped ? "skipped (already synced)" : count + " vouchers fetched"}`
+              );
+            }
           );
+          effectiveFromDate = booksFrom;
+          effectiveToDate   = today;
+
         } else {
-          logger.info(
-            "Vouchers: " + (dateWindow.isIncremental ? "incremental" : "full") +
-            " window " + effectiveFromDate + " → " + effectiveToDate
-          );
-          vouchers = await fetchTallyVouchers(companyName, effectiveFromDate, effectiveToDate);
+          // ── INCREMENTAL: only new vouchers since last sync ──────────────────
+          const dateWindow = getIncrementalVoucherDates(companyName, req.body.forceFromDate || fromDate || null, toDate, erpnextUrl);
+          effectiveFromDate = dateWindow.fromDate;
+          effectiveToDate   = dateWindow.toDate;
+
+          const lastSynced = state.lastVoucherSyncDate;
+          const windowIsAlreadyCovered =
+            lastSynced &&
+            effectiveToDate <= lastSynced &&
+            groups.length       === 0 &&
+            ledgers.length      === 0 &&
+            stockItems.length   === 0 &&
+            costCentres.length  === 0 &&
+            godowns.length      === 0;
+
+          if (windowIsAlreadyCovered) {
+            logger.info(
+              "Vouchers: skipping fetch — window " + effectiveFromDate + " → " + effectiveToDate +
+              " already covered by last sync (" + lastSynced + ") and no masters changed"
+            );
+          } else {
+            logger.info(
+              "Vouchers: " + (dateWindow.isIncremental ? "incremental" : "full") +
+              " window " + effectiveFromDate + " → " + effectiveToDate
+            );
+            vouchers = await fetchTallyVouchers(companyName, effectiveFromDate, effectiveToDate);
+          }
         }
       }
 
@@ -831,6 +917,13 @@ router.post("/sync/full", async (req, res) => {
           ...newAlterIds,
         }, erpnextUrl);
         logger.info(`syncState: checkpoint saved → vouchers up to ${effectiveToDate || today}`);
+
+        // ── If this was a full chunked sync, mark it complete ─────────────────
+        // All subsequent syncs for this tenant will now be incremental.
+        if (needsFullSync) {
+          markFullSyncComplete(companyName, erpnextUrl);
+          logger.info(`Full sync complete — future syncs for "${companyName}" will be incremental ✅`);
+        }
       }
       finishJob(jobId, result);
     } catch (err) {
@@ -882,6 +975,40 @@ router.post("/sync/taxes", async (req, res) => {
       failJob(jobId, err);
     }
   })();
+});
+
+// ── GET /sync/chunk-progress ──────────────────────────────────────────────────
+// Returns how many monthly chunks are done for a tenant.
+// Useful for a progress bar UI during first sync.
+// Query: ?company=X&erpnextUrl=Y
+router.get("/sync/chunk-progress", (req, res) => {
+  const company    = req.query.company    || config.tally.companyName;
+  const erpnextUrl = req.query.erpnextUrl || config.erpnext.url || "default";
+  if (!company) return res.status(400).json({ ok: false, error: "company required" });
+  const progress = getChunkProgress(company, erpnextUrl);
+  res.json({ ok: true, company, erpnextUrl, progress });
+});
+
+// ── POST /sync/reset-full-sync ────────────────────────────────────────────────
+// Clears chunk cache → forces full re-sync next time this tenant syncs.
+// Body: { company, erpnextUrl }
+router.post("/sync/reset-full-sync", (req, res) => {
+  const company    = req.body.company    || config.tally.companyName;
+  const erpnextUrl = req.body.erpnextUrl || config.erpnext.url || "default";
+  if (!company) return res.status(400).json({ ok: false, error: "company required" });
+  resetChunkProgress(company, erpnextUrl);
+  res.json({
+    ok:      true,
+    message: `Chunk progress reset for "${company}" — next sync will be a full chunked sync from scratch`,
+  });
+});
+
+// ── GET /sync/tenants ─────────────────────────────────────────────────────────
+// Lists all (company + erpnext) pairs that have chunk sync state.
+// Useful for admin/debug.
+router.get("/sync/tenants", (_req, res) => {
+  const tenants = listAllTenants();
+  res.json({ ok: true, count: tenants.length, tenants });
 });
 
 export default router;

@@ -7,6 +7,8 @@ import {
   fetchTallyLedgers,
   fetchTallyStockItems,
   fetchTallyVouchers,
+  fetchTallyVouchersChunked,
+  fetchTallyLedgersChunked,
   fetchTallyGroups,
   fetchTallyGodowns,
   fetchTallyCostCentres,
@@ -21,6 +23,11 @@ import {
   buildAlterIdMap,
   resetCompanyState,
 } from "./syncState.js";
+import {
+  isFullSyncComplete,
+  markFullSyncComplete,
+  markChunkDone,
+} from "./syncChunkState.js";
 
 const app = express();
 
@@ -49,8 +56,10 @@ const CREDS_FILE     = path.join(CONFIG_DIR, "auto_sync_creds.json");  // gitign
 
 const DEFAULT_CONFIG = {
   enabled:       false,
-  intervalMs:    24 * 60 * 60 * 1000,
-  intervalLabel: "daily",
+  // FIX: Read from .env instead of hardcoding 24h / 30 days.
+  // Set AUTO_SYNC_INTERVAL_MINUTES and AUTO_SYNC_FROM_DAYS in your .env file.
+  intervalMs:    (parseInt(process.env.AUTO_SYNC_INTERVAL_MINUTES, 10) || 1440) * 60 * 1000,
+  intervalLabel: process.env.AUTO_SYNC_INTERVAL_MINUTES ? `${process.env.AUTO_SYNC_INTERVAL_MINUTES}m` : "daily",
   options: {
     syncChartOfAccounts: false,
     syncLedgers:         true,
@@ -70,7 +79,8 @@ const DEFAULT_CONFIG = {
     erpnextCompany: "",
   },
   companyName: "",
-  fromDays:    30,
+  // FIX: Read fromDays from .env — not hardcoded to 30
+  fromDays:    parseInt(process.env.AUTO_SYNC_FROM_DAYS, 10) || 30,
 };
 
 function loadAutoSyncConfig() {
@@ -324,14 +334,39 @@ async function runAutoSync(triggeredBy = "interval") {
       saveCompanyState(companyName, { stockAlterIds: buildAlterIdMap(allStock) }, erpnextUrl);
     }
 
-    // ── 2. VOUCHERS — incremental date window (same as manual) ──────────────
+    // ── 2. VOUCHERS — incremental or first-sync chunked ─────────────────────
     let vouchers = [];
     if (options.syncVouchers || options.syncInvoices || options.syncSmartLedgers) {
-      const { fromDate, toDate: vToDate } =
-        getIncrementalVoucherDates(companyName, fallbackFromDate, toDate, erpnextUrl);
-      logger.human.syncStepStarting(`Vouchers — reading from ${fromDate} to ${vToDate}`);
-      vouchers = await fetchTallyVouchers(companyName, fromDate, vToDate);
-      logger.human.step(`Read ${vouchers.length} voucher${vouchers.length !== 1 ? "s" : ""} from Tally (${fromDate} → ${vToDate})`);
+      const fullSyncDone  = isFullSyncComplete(companyName, erpnextUrl);
+      const needsFullSync = isFirstSync || !fullSyncDone;
+
+      if (needsFullSync) {
+        // First sync — fetch ALL vouchers in monthly chunks, resumable
+        // Use company start date already resolved above in fallbackFromDate
+        const chunkFrom = fallbackFromDate;
+        const chunkTo   = toDate;
+        logger.human.syncStepStarting(`Vouchers (FIRST SYNC) — reading monthly chunks from ${chunkFrom} to ${chunkTo}`);
+        vouchers = await fetchTallyVouchersChunked(
+          companyName,
+          chunkFrom,
+          chunkTo,
+          erpnextUrl,
+          (chunkId, count, totalChunks, idx, skipped) => {
+            logger.human.step(
+              `Voucher chunk ${chunkId} (${idx}/${totalChunks}): ` +
+              `${skipped ? "already synced, skipping" : count + " vouchers fetched"}`
+            );
+          }
+        );
+        logger.human.step(`First sync: ${vouchers.length} total vouchers fetched across all chunks`);
+      } else {
+        // Incremental — only new vouchers since last sync
+        const { fromDate, toDate: vToDate } =
+          getIncrementalVoucherDates(companyName, fallbackFromDate, toDate, erpnextUrl);
+        logger.human.syncStepStarting(`Vouchers — reading from ${fromDate} to ${vToDate}`);
+        vouchers = await fetchTallyVouchers(companyName, fromDate, vToDate);
+        logger.human.step(`Read ${vouchers.length} voucher${vouchers.length !== 1 ? "s" : ""} from Tally (${fromDate} → ${vToDate})`);
+      }
     }
 
     // ── 3. Run the sync — EXACT same call as manual sync ────────────────────
@@ -350,6 +385,14 @@ async function runAutoSync(triggeredBy = "interval") {
         lastMasterSyncAt:    now.toISOString(),
       }, erpnextUrl);
       logger.human.stateSaved(companyName);
+
+      // If this was the first full chunked sync, mark it complete so next run is incremental
+      const fullSyncDone  = isFullSyncComplete(companyName, erpnextUrl);
+      const needsFullSync = isFirstSync || !fullSyncDone;
+      if (needsFullSync && (options.syncVouchers || options.syncInvoices)) {
+        markFullSyncComplete(companyName, erpnextUrl);
+        logger.human.step(`Full sync complete — future auto-syncs for "${companyName}" will be incremental ✅`);
+      }
     } else {
       logger.human.headsUp(
         `Progress was not saved for "${companyName}" because a critical step failed. ` +

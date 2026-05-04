@@ -10,12 +10,13 @@ import { createHash } from "crypto";
 import { config } from "../config/config.js";
 import { logger } from "../logs/logger.js";
 
-const BATCH_DELAY_MS  = 800;   // 0.8s between each slot — adaptive throttle handles 429s
-const BATCH_BURST     = 10;    // pause after every 10 requests
-const BATCH_BURST_MS  = 4000;  // 4s pause after each burst (was 5s)
+const BATCH_DELAY_MS  = 300;   // 0.3s between each slot — adaptive throttle handles 429s
+const BATCH_BURST     = 15;    // pause after every 15 requests
+const BATCH_BURST_MS  = 2000;  // 2s pause after each burst
 const RETRY_ATTEMPTS  = 5;
 const RETRY_DELAY_MS  = 8000;  // 8s base retry delay
-const CONCURRENCY     = 3;     // 3 parallel requests — stays well within Frappe Cloud limits
+const CONCURRENCY     = 8;     // 8 parallel requests — throttle auto-backs-off on 429
+const ADDR_CONCURRENCY = 5;    // lower concurrency for address/contact calls
 
 // Adaptive throttle: ramps up on 429, cools down slowly after clean runs
 const _throttle = {
@@ -156,35 +157,117 @@ const STATE_TERRITORY_MAP = {
   "andaman and nicobar islands": "Andaman and Nicobar Islands",
 };
 
-function resolveTerritory(state) {
-  if (!state) return _territory || "India";
-  return STATE_TERRITORY_MAP[state.trim().toLowerCase()] || state.trim() || _territory || "India";
+// Cache of verified territories — avoids repeated API calls for the same state
+const _verifiedTerritories = new Set(["India"]); // India always exists in ERPNext
+const _invalidTerritories  = new Set();           // states confirmed missing in ERPNext
+
+async function resolveTerritory(client, state) {
+  // No state → default territory (India or whatever user set)
+  if (!state || !state.trim()) return _territory || "India";
+
+  const mapped = STATE_TERRITORY_MAP[state.trim().toLowerCase()] || state.trim();
+
+  // Already confirmed valid → return immediately
+  if (_verifiedTerritories.has(mapped)) return mapped;
+
+  // Already confirmed invalid → fall back to default
+  if (_invalidTerritories.has(mapped)) return _territory || "India";
+
+  // First time seeing this territory — verify it exists in ERPNext
+  try {
+    await client.get("/api/resource/Territory/" + encodeURIComponent(mapped));
+    _verifiedTerritories.add(mapped);
+    return mapped;
+  } catch (_) {
+    // Territory doesn't exist in this ERPNext instance — use safe fallback
+    _invalidTerritories.add(mapped);
+    logger.info(
+      `Territory "${mapped}" not found in ERPNext — using "${_territory || "India"}" as fallback. ` +
+      `You can create it in ERPNext under Setup → Territory if needed.`
+    );
+    return _territory || "India";
+  }
 }
 
 // Ensure an ERPNext Address record exists for a party
 async function ensureAddress(client, partyName, partyType, ledger) {
-  if (!ledger.address && !ledger.state && !ledger.pincode) return; // nothing to sync
+  // Only skip if there is truly NOTHING to sync — no address, no state, no pincode, no phone, no email
+  if (!ledger.address && !ledger.state && !ledger.pincode && !ledger.phone && !ledger.email) return;
 
-  // ERPNext India requires `state` for Indian addresses — skip if missing
-  if (!ledger.state) {
-    logger.warn("Address sync skipped for " + partyName + ": State is a required field for Indian Address");
-    return;
+  // Map Tally state → ERPNext accepted Indian state name
+  const INDIAN_STATES = {
+    'andhra pradesh':'Andhra Pradesh','arunachal pradesh':'Arunachal Pradesh','assam':'Assam',
+    'bihar':'Bihar','chhattisgarh':'Chhattisgarh','goa':'Goa','gujarat':'Gujarat',
+    'haryana':'Haryana','himachal pradesh':'Himachal Pradesh','jharkhand':'Jharkhand',
+    'karnataka':'Karnataka','kerala':'Kerala','madhya pradesh':'Madhya Pradesh',
+    'maharashtra':'Maharashtra','manipur':'Manipur','meghalaya':'Meghalaya','mizoram':'Mizoram',
+    'nagaland':'Nagaland','odisha':'Odisha','orissa':'Odisha','punjab':'Punjab',
+    'rajasthan':'Rajasthan','sikkim':'Sikkim','tamil nadu':'Tamil Nadu','telangana':'Telangana',
+    'tripura':'Tripura','uttar pradesh':'Uttar Pradesh','uttarakhand':'Uttarakhand',
+    'uttaranchal':'Uttarakhand','west bengal':'West Bengal',
+    'andaman and nicobar islands':'Andaman and Nicobar Islands',
+    'andaman & nicobar islands':'Andaman and Nicobar Islands','chandigarh':'Chandigarh',
+    'dadra and nagar haveli':'Dadra and Nagar Haveli','dadra & nagar haveli':'Dadra and Nagar Haveli',
+    'daman and diu':'Daman and Diu','daman & diu':'Daman and Diu',
+    'delhi':'Delhi','new delhi':'Delhi','jammu and kashmir':'Jammu and Kashmir',
+    'jammu & kashmir':'Jammu and Kashmir','ladakh':'Ladakh','lakshadweep':'Lakshadweep',
+    'puducherry':'Puducherry','pondicherry':'Puducherry',
+  };
+  // Pincode → state prefix map — used to detect pincode/state mismatch
+  const PINCODE_STATE_PREFIX = {
+    '11':'Delhi','12':'Haryana','13':'Haryana','14':'Punjab','15':'Punjab','16':'Punjab',
+    '17':'Himachal Pradesh','18':'Jammu and Kashmir','19':'Jammu and Kashmir',
+    '20':'Uttar Pradesh','21':'Uttar Pradesh','22':'Uttar Pradesh','23':'Uttar Pradesh',
+    '24':'Uttar Pradesh','25':'Uttar Pradesh','26':'Uttar Pradesh','27':'Uttar Pradesh',
+    '28':'Uttar Pradesh','30':'Rajasthan','31':'Rajasthan','32':'Rajasthan','33':'Rajasthan',
+    '34':'Rajasthan','36':'Gujarat','37':'Gujarat','38':'Gujarat','39':'Gujarat',
+    '40':'Maharashtra','41':'Maharashtra','42':'Maharashtra','43':'Maharashtra','44':'Maharashtra',
+    '45':'Madhya Pradesh','46':'Madhya Pradesh','47':'Madhya Pradesh','48':'Madhya Pradesh',
+    '49':'Chhattisgarh','50':'Telangana','51':'Telangana','52':'Andhra Pradesh',
+    '53':'Andhra Pradesh','56':'Karnataka','57':'Karnataka','58':'Karnataka','59':'Karnataka',
+    '60':'Tamil Nadu','61':'Tamil Nadu','62':'Tamil Nadu','63':'Tamil Nadu','64':'Tamil Nadu',
+    '67':'Kerala','68':'Kerala','69':'Kerala','70':'West Bengal','71':'West Bengal',
+    '72':'West Bengal','73':'West Bengal','74':'West Bengal','75':'Odisha','76':'Odisha',
+    '77':'Odisha','78':'Assam','79':'Assam','80':'Bihar','81':'Bihar','82':'Bihar',
+    '83':'Bihar','84':'Bihar','85':'Bihar','82':'Jharkhand','83':'Jharkhand',
+    '90':'Rajasthan','91':'Rajasthan','92':'Rajasthan','93':'Rajasthan',
+  };
+
+  const rawState   = ledger.state && ledger.state.trim() ? ledger.state.trim() : '';
+  const stateVal   = rawState ? (INDIAN_STATES[rawState.toLowerCase()] || null) : null;
+
+  // Validate pincode — must be 6 digits, not starting with 0
+  const rawPin     = ledger.pincode ? String(ledger.pincode).trim().replace(/\D/g, '') : '';
+  const validPin   = /^[1-9]\d{5}$/.test(rawPin);
+
+  // If we have both a valid pincode and a state, check they match
+  // If they don't match → drop pincode to avoid ERPNext GST validation error
+  let pincodeVal = '';
+  if (validPin) {
+    const prefix       = rawPin.slice(0, 2);
+    const expectedState = PINCODE_STATE_PREFIX[prefix];
+    if (!stateVal || !expectedState || expectedState === stateVal) {
+      pincodeVal = rawPin;  // match or unknown — keep pincode
+    }
+    // mismatch — drop pincode, keep state (state is more reliable than pincode)
   }
 
-  const addressName = partyName + "-" + partyType;
+  const addressName = partyName + '-' + partyType;
+  // Always use country=India — ERPNext doesn't have "Other" as a standard country.
+  // When state is unknown, simply omit the state field — ERPNext allows this for non-GST addresses.
   const doc = {
-    doctype:        "Address",
+    doctype:        'Address',
     address_title:  partyName,
-    address_type:   "Billing",
-    address_line1:  ledger.address || "",
-    city:           ledger.state || "",
-    state:          ledger.state || "",
-    country:        "India",
-    pincode:        ledger.pincode || "",
+    address_type:   'Billing',
+    address_line1:  ledger.address || partyName,
+    city:           rawState || 'India',
+    country:        'India',
+    pincode:        pincodeVal,
     links: [{ link_doctype: partyType, link_name: partyName }],
   };
-  if (ledger.email) doc.email_id   = ledger.email;
-  if (ledger.phone) doc.phone      = ledger.phone;
+  if (stateVal) doc.state = stateVal;
+  if (ledger.email) doc.email_id = ledger.email;
+  if (ledger.phone) doc.phone    = ledger.phone;
 
   try {
     const existing = await client.get("/api/resource/Address/" + encodeURIComponent(addressName)).catch(() => null);
@@ -867,8 +950,8 @@ async function batchSync(client, doctype, items, mapper, progressCb) {
     checkCancelled(doctype); // ← stop immediately if user clicked Stop
     const chunk = items.slice(i, i + CONCURRENCY);
     const results = await Promise.allSettled(
-      chunk.map((item) => {
-        const { filters, doc } = mapper(item);
+      chunk.map(async (item) => {
+        const { filters, doc } = await mapper(item);
         return withRetry(() => upsert(client, doctype, filters, doc), doctype + ":" + item.name);
       })
     );
@@ -910,7 +993,7 @@ async function batchSync(client, doctype, items, mapper, progressCb) {
     _throttle.reset();
     await sleep(5000);
     for (const item of failedItems) {
-      const { filters, doc } = mapper(item);
+      const { filters, doc } = await mapper(item);
       try {
         const result = await withRetry(() => upsert(client, doctype, filters, doc), doctype + ":" + item.name + " [final]");
         if      (result.action === "created") created++;
@@ -1031,7 +1114,7 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
 
   logger.info("Ledger breakdown - customers: " + customers.length + ", suppliers: " + suppliers.length + ", skipped (GL-only groups): " + skipped);
 
-  const customerMapper = (l) => {
+  const customerMapper = async (l) => {
     l.name = (l.name || "").trim(); // trim Tally trailing newlines
     // customer_type: use "Company" when GSTIN is present (B2B) or when parentGroup
     // indicates a business debtor; fall back to "Individual" only when truly unknown.
@@ -1042,7 +1125,7 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
       customer_name:       l.name,
       customer_type:       isBusiness ? "Company" : "Individual",
       customer_group:      _customerGroup,
-      territory:           resolveTerritory(l.state),
+      territory:           await resolveTerritory(client, l.state),
       default_currency:    "INR",
       custom_tally_id:     l.guid   || l.masterID || "",   // FIX: Tally GUID
       custom_tally_group:  l.parentGroup || "",            // FIX: Tally parent group
@@ -1050,16 +1133,8 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
     };
     // Statutory
     if (l.gstin)  doc.tax_id          = l.gstin.trim();
-    // FIX: Validate PAN format before sending — ERPNext rejects invalid PANs
-    // (format: 5 letters + 4 digits + 1 letter, e.g. ABCDE1234F)
-    const customerPan = (l.pan || "").trim().toUpperCase();
-    if (/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(customerPan)) {
-      doc.pan = customerPan;
-    } else if (customerPan) {
-      // Invalid PAN format — create customer without PAN rather than skipping
-      logger.info("Invalid PAN ignored for customer \"" + l.name + "\" (will sync without PAN): " + customerPan);
-      // doc.pan intentionally omitted — ERPNext accepts null/missing PAN
-    }
+    // Sync PAN as-is from Tally — no format restriction
+    if (l.pan && l.pan.trim()) doc.pan = l.pan.trim().toUpperCase();
     // Contact info (primary)
     if (l.email)  doc.email_id        = l.email.trim();
     if (l.phone)  doc.mobile_no       = l.phone.trim();
@@ -1097,15 +1172,8 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
     };
     // Statutory
     if (l.gstin)  doc.tax_id          = l.gstin.trim();
-    // FIX: Validate PAN format before sending — ERPNext rejects invalid PANs
-    const supplierPan = (l.pan || "").trim().toUpperCase();
-    if (/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(supplierPan)) {
-      doc.pan = supplierPan;
-    } else if (supplierPan) {
-      // Invalid PAN format — create supplier without PAN rather than skipping
-      logger.info("Invalid PAN ignored for supplier \"" + l.name + "\" (will sync without PAN): " + supplierPan);
-      // doc.pan intentionally omitted
-    }
+    // Sync PAN as-is from Tally — no format restriction
+    if (l.pan && l.pan.trim()) doc.pan = l.pan.trim().toUpperCase();
     // Contact info (primary)
     if (l.email)  doc.email_id        = l.email.trim();
     if (l.phone)  doc.mobile_no       = l.phone.trim();
@@ -1151,23 +1219,26 @@ export async function syncLedgersToErpNext(ledgers, creds = {}) {
     ...supplierResults.errors.map((e) => String(e.item || "")),
   ]);
 
-  // Sync addresses and contacts for all parties that have that data in Tally
+  // Sync addresses and contacts for all parties that successfully synced to ERPNext.
+  // FIX: We no longer skip parties with no address data — ensureAddress now creates
+  // a minimal record with whatever data is available (even just the party name).
+  // This ensures every customer/supplier has an Address record in ERPNext.
   const partiesWithAddr = [
     ...customers.map((l) => ({ l, type: "Customer" })),
     ...suppliers.map((l) => ({ l, type: "Supplier" })),
   ].filter(({ l }) =>
-    !failedPartyNames.has(l.name) &&   // skip parties that failed to create
-    (l.address || l.phone || l.email || l.state || l.pincode)
+    !failedPartyNames.has(l.name)   // only skip parties that failed to create
   );
 
   if (partiesWithAddr.length > 0) {
     logger.info("Syncing addresses/contacts for " + partiesWithAddr.length + " parties from Tally");
-    for (const { l, type } of partiesWithAddr) {
-      try {
+    for (let i = 0; i < partiesWithAddr.length; i += ADDR_CONCURRENCY) {
+      const slice = partiesWithAddr.slice(i, i + ADDR_CONCURRENCY);
+      await Promise.allSettled(slice.map(async ({ l, type }) => {
         await ensureAddress(client, l.name, type, l);
         await ensureContact(client, l.name, type, l);
-        await sleep(300);
-      } catch (_) { /* individual failures don't abort the batch */ }
+      }));
+      await sleep(500); // small pause between address batches
     }
     logger.info("Address/contact sync done");
   }
@@ -4068,16 +4139,15 @@ export async function syncInvoicesToErpNext(vouchers, companyName, creds = {}, v
   async function batchSyncWithBatchRetry(doctype, vouchers, mapper) {
     const primaryResults = await batchSync(client, doctype, vouchers, mapper);
     // Find failed vouchers that had batch errors and retry without batch_no
-    const batchErrVouchers = vouchers.filter((v) => {
-      // We detect batch errors by re-running the mapper and checking if items have batch_no
-      const mapped = mapper(v);
-      return mapped.doc && mapped.doc.items && mapped.doc.items.some((i) => i.batch_no);
-    });
+    const batchErrVouchers = [];
+    for (const v of vouchers) {
+      const mapped = await mapper(v);
+      if (mapped.doc && mapped.doc.items && mapped.doc.items.some((i) => i.batch_no)) batchErrVouchers.push(v);
+    }
     if (batchErrVouchers.length === 0) return primaryResults;
-    // Strip batch_no and retry only vouchers that had batch numbers
     let retryCreated = 0, retryFailed = 0;
     for (const v of batchErrVouchers) {
-      const { filters, doc } = mapper(v);
+      const { filters, doc } = await mapper(v);
       // Check if this voucher already succeeded (look it up)
       try {
         const key = filters.remarks;

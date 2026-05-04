@@ -951,7 +951,11 @@ async function fetchTallyVouchersChunk(companyName, fromDate, toDate) {
   // method across all TallyPrime versions. SVFROMDATE/SVTODATE are set as static
   // variables so Tally applies its own built-in date filter server-side.
   // We do NOT use $$InRange in a TDL filter — it returns 0 on most builds.
-  const tallyFrom = fromDate ? String(fromDate).replace(/-/g, "") : "20160101";
+  // FIX: No hardcoded fallback date — caller must always pass fromDate.
+  // If fromDate is null/undefined, use today (safe fallback for incremental syncs).
+  const tallyFrom = fromDate
+    ? String(fromDate).replace(/-/g, "")
+    : new Date().toISOString().slice(0, 10).replace(/-/g, "");
   const tallyTo   = toDate   ? String(toDate).replace(/-/g, "")   : new Date().toISOString().slice(0,10).replace(/-/g,"");
 
   const xml = `
@@ -1467,4 +1471,207 @@ try {
 
   logger.info(`Middleware check complete: ${result.status}`, result.summary);
   return result;
+}
+// ═════════════════════════════════════════════════════════════════════════════
+// 17. CHUNKED VOUCHER FETCH — monthly chunks with resume support
+//     Used for first-time full sync of large Tally books.
+//     Multi-tenant: chunk cache keyed by (company + erpnextUrl).
+// ═════════════════════════════════════════════════════════════════════════════
+
+import {
+  isChunkDone,
+  markChunkDone,
+} from "../syncChunkState.js";
+
+/**
+ * generateMonthlyChunks(fromDate, toDate)
+ * Splits a date range into monthly chunks.
+ * Returns array of { id: "2016-04", from: "2016-04-01", to: "2016-04-30" }
+ */
+function generateMonthlyChunks(fromDate, toDate) {
+  const chunks  = [];
+  let   current = new Date(fromDate + "T00:00:00Z");
+  const end     = new Date(toDate   + "T00:00:00Z");
+
+  while (current <= end) {
+    const year  = current.getUTCFullYear();
+    const month = current.getUTCMonth(); // 0-indexed
+
+    // Last day of this month
+    const lastDay  = new Date(Date.UTC(year, month + 1, 0));
+    const chunkEnd = lastDay > end ? end : lastDay;
+
+    const fromStr = current.toISOString().slice(0, 10);
+    const toStr   = chunkEnd.toISOString().slice(0, 10);
+    const id      = `${year}-${String(month + 1).padStart(2, "0")}`;
+
+    chunks.push({ id, from: fromStr, to: toStr });
+
+    // Move to first day of next month
+    current = new Date(Date.UTC(year, month + 1, 1));
+  }
+  return chunks;
+}
+
+/**
+ * fetchTallyVouchersChunked(companyName, fromDate, toDate, erpnextUrl, onProgress?)
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Fetches vouchers in monthly chunks with resume support.
+ * If a chunk was already fetched and cached (isChunkDone), it is skipped.
+ * If interrupted, next call resumes from the last incomplete chunk.
+ *
+ * @param companyName  - Tally company name
+ * @param fromDate     - YYYY-MM-DD (company books start date for first sync)
+ * @param toDate       - YYYY-MM-DD
+ * @param erpnextUrl   - ERPNext instance URL (for cache key, multi-tenant)
+ * @param onProgress   - optional callback(chunkId, count, totalChunks, idx, skipped)
+ */
+export async function fetchTallyVouchersChunked(
+  companyName,
+  fromDate,
+  toDate,
+  erpnextUrl  = "default",
+  onProgress  = null
+) {
+  if (!fromDate) {
+    throw new Error(
+      `fetchTallyVouchersChunked: fromDate is required. ` +
+      `Ensure the Tally company has a valid books beginning date.`
+    );
+  }
+
+  const chunks = generateMonthlyChunks(fromDate, toDate);
+  const total  = chunks.length;
+
+  logger.info(
+    `Voucher chunked fetch: ${total} monthly chunks — ${fromDate} → ${toDate}`,
+    { company: companyName, erpnextUrl }
+  );
+
+  const allVouchers = [];
+  const seen        = new Set();
+
+  for (let i = 0; i < chunks.length; i++) {
+    const chunk = chunks[i];
+
+    // ── Resume: skip already-done chunks ────────────────────────────────────
+    if (isChunkDone(companyName, erpnextUrl, "vouchers", chunk.id)) {
+      logger.info(
+        `Voucher chunk ${chunk.id} (${i + 1}/${total}): already done — skipping`,
+        { company: companyName }
+      );
+      if (onProgress) onProgress(chunk.id, 0, total, i + 1, true /* skipped */);
+      continue;
+    }
+
+    logger.info(
+      `Voucher chunk ${chunk.id} (${i + 1}/${total}): fetching ${chunk.from} → ${chunk.to}`,
+      { company: companyName }
+    );
+
+    try {
+      const raw = await fetchTallyVouchersChunk(companyName, chunk.from, chunk.to);
+
+      // Deduplicate across chunks
+      const unique = raw.filter((v) => {
+        if (seen.has(v.guid)) return false;
+        seen.add(v.guid);
+        return true;
+      });
+
+      allVouchers.push(...unique);
+
+      // ── Save chunk progress immediately after successful fetch ────────────
+      markChunkDone(companyName, erpnextUrl, "vouchers", chunk.id, {
+        from:  chunk.from,
+        to:    chunk.to,
+        count: unique.length,
+      });
+
+      logger.info(
+        `Voucher chunk ${chunk.id}: ${unique.length} vouchers — ${i + 1}/${total} done`,
+        { company: companyName }
+      );
+
+      if (onProgress) onProgress(chunk.id, unique.length, total, i + 1, false);
+
+    } catch (err) {
+      // Do NOT mark as done — will retry this chunk on next run
+      logger.error(
+        `Voucher chunk ${chunk.id} failed: ${err.message} — will retry on next run`,
+        { company: companyName }
+      );
+      throw err; // bubble up — sync job fails cleanly, resumes next time
+    }
+  }
+
+  logger.info(
+    `All ${total} voucher chunks complete: ${allVouchers.length} total vouchers`,
+    { company: companyName }
+  );
+  return allVouchers;
+}
+
+/**
+ * fetchTallyLedgersChunked(companyName, erpnextUrl, batchSize?, onProgress?)
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Fetches all ledgers from Tally then splits into batches for ERPNext push.
+ * Returns { batches, total, batchCount } — caller pushes each batch and marks done.
+ *
+ * @param companyName - Tally company name
+ * @param erpnextUrl  - ERPNext instance URL (for cache key, multi-tenant)
+ * @param batchSize   - ledgers per batch (default from env or 500)
+ * @param onProgress  - optional callback(batchId, count, totalBatches, idx, skipped)
+ */
+export async function fetchTallyLedgersChunked(
+  companyName,
+  erpnextUrl  = "default",
+  batchSize   = parseInt(process.env.SYNC_LEDGER_BATCH_SIZE, 10) || 500,
+  onProgress  = null
+) {
+  logger.info(
+    `Ledger chunked fetch: fetching all ledgers then batching by ${batchSize}`,
+    { company: companyName }
+  );
+
+  // Fetch all at once from Tally (Tally doesn't support offset/pagination)
+  const allLedgers = await fetchTallyLedgers(companyName);
+  const total      = allLedgers.length;
+  const batches    = [];
+
+  // Split into batches
+  for (let i = 0; i < total; i += batchSize) {
+    batches.push({
+      id:      `batch-${Math.floor(i / batchSize)}`,
+      from:    i,
+      to:      Math.min(i + batchSize, total),
+      ledgers: allLedgers.slice(i, i + batchSize),
+    });
+  }
+
+  logger.info(
+    `Ledger chunked fetch: ${total} ledgers → ${batches.length} batches of ${batchSize}`,
+    { company: companyName }
+  );
+
+  // Return only batches that are NOT already done (resume support)
+  const pendingBatches = [];
+
+  for (let i = 0; i < batches.length; i++) {
+    const batch = batches[i];
+
+    if (isChunkDone(companyName, erpnextUrl, "ledgers", batch.id)) {
+      logger.info(
+        `Ledger batch ${batch.id} (${i + 1}/${batches.length}): already done — skipping`,
+        { company: companyName }
+      );
+      if (onProgress) onProgress(batch.id, 0, batches.length, i + 1, true);
+      continue;
+    }
+
+    pendingBatches.push({ ...batch, index: i });
+    if (onProgress) onProgress(batch.id, batch.ledgers.length, batches.length, i + 1, false);
+  }
+
+  return { batches: pendingBatches, total, batchCount: batches.length };
 }
