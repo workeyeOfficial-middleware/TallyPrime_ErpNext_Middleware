@@ -27,6 +27,7 @@ import {
   isFullSyncComplete,
   markFullSyncComplete,
   markChunkDone,
+  resetChunkProgress,
 } from "./syncChunkState.js";
 
 const app = express();
@@ -42,6 +43,7 @@ app.use("/api", router);
 // ─────────────────────────────────────────────────────────────────────────────
 import fs   from "fs";
 import path from "path";
+import os   from "os";
 import { fileURLToPath } from "url";
 
 const __dirname      = path.dirname(fileURLToPath(import.meta.url));
@@ -49,7 +51,8 @@ const __dirname      = path.dirname(fileURLToPath(import.meta.url));
 // DATA_DIR lives OUTSIDE the project folder so nodemon never watches it.
 // Default: a sibling folder "<project>-data" next to your project root.
 // Override by setting DATA_DIR in your .env file.
-const DATA_DIR_DEFAULT = path.join(__dirname, "..", "tally-erp-data");
+// Always write to AppData — works in Electron, PKG exe, and dev.
+const DATA_DIR_DEFAULT = path.join(os.homedir(), "AppData", "Roaming", "TallyERPNextIntegration", "data");
 const CONFIG_DIR     = process.env.DATA_DIR || DATA_DIR_DEFAULT;
 const CONFIG_FILE    = path.join(CONFIG_DIR, "auto_sync_config.json");
 const CREDS_FILE     = path.join(CONFIG_DIR, "auto_sync_creds.json");  // gitignore this
@@ -380,9 +383,19 @@ async function runAutoSync(triggeredBy = "interval") {
     // ── 4. Save incremental state (same logic as manual) ────────────────────
     const shouldSaveState = result.status === "ok" || result.status === "warning";
     if (shouldSaveState) {
+      // Only save lastVoucherSyncDate if vouchers were actually requested AND
+      // either some were synced OR the voucher step explicitly reported ok/uptodate.
+      // This prevents the date advancing when 0 vouchers matched the window,
+      // which would cause all future runs to also get 0 vouchers (stale window).
+      const voucherStepOk = result.steps?.vouchers?.status === "ok" ||
+                            result.steps?.vouchers?.status === "uptodate";
+      const vouchersWereRequested = options.syncVouchers || options.syncInvoices || options.syncSmartLedgers;
+      const shouldSaveVoucherDate = !vouchersWereRequested || voucherStepOk || vouchers.length > 0;
+
       saveCompanyState(companyName, {
-        lastVoucherSyncDate: toDate,
-        lastMasterSyncAt:    now.toISOString(),
+        // Only advance the voucher checkpoint if vouchers actually synced
+        ...(shouldSaveVoucherDate ? { lastVoucherSyncDate: toDate } : {}),
+        lastMasterSyncAt: now.toISOString(),
       }, erpnextUrl);
       logger.human.stateSaved(companyName);
 
@@ -404,9 +417,12 @@ async function runAutoSync(triggeredBy = "interval") {
       ...result,
       steps:        result.steps || {},
       triggeredBy,
+      runNumber:    _runNum,
       fromDate:     state.lastVoucherSyncDate || fallbackFromDate,
       toDate,
       isIncremental: !isFirstSync,
+      startedAt:    now.toISOString(),
+      finishedAt:   new Date().toISOString(),
     };
 
     logger.human.syncDone(
@@ -436,6 +452,12 @@ async function runAutoSync(triggeredBy = "interval") {
     logger.human.syncFailed(companyName, err.message);
   } finally {
     _syncRunning = false;
+    // Recalculate nextRunAt AFTER run finishes so frontend countdown stays accurate.
+    // Without this, _nextRunAt is stale (points to when the run STARTED) and the
+    // frontend ring shows "–" for the entire duration of the next interval.
+    if (_autoSyncConfig.enabled && _autoSyncTimer) {
+      _nextRunAt = new Date(Date.now() + _autoSyncConfig.intervalMs);
+    }
     // Log when the next run is scheduled so Live Logs shows the countdown
     if (_autoSyncConfig.enabled && _nextRunAt) {
       logger.human.autoSyncNextScheduled(
@@ -544,11 +566,14 @@ app.post("/api/auto-sync/configure", (req, res) => {
   // Only restart (and log) the scheduler if a scheduling-relevant field changed.
   // When the frontend re-injects creds on mount it sends only {creds} — in that
   // case we do NOT restart the scheduler so the countdown timer is not reset.
+  // Only restart scheduler when scheduling-relevant fields change.
+  // options/creds changes do NOT need a restart — they are read at run time.
+  // Restarting on every checkbox toggle was causing multiple "Auto-sync active"
+  // log messages and resetting the countdown unnecessarily.
   const scheduleFieldChanged = (
     body.enabled !== undefined ||
     body.interval !== undefined ||
-    body.companyName !== undefined ||
-    body.options !== undefined
+    body.companyName !== undefined
   );
   if (scheduleFieldChanged) {
     startScheduler();
@@ -622,7 +647,9 @@ app.post("/api/auto-sync/reset-state", (req, res) => {
   const company = (req.body || {}).company || _autoSyncConfig.companyName;
   if (!company) return res.status(400).json({ ok: false, error: "company required" });
   const erpnextUrl = _autoSyncConfig.creds.url || config.erpnext.url || "default";
+  // Reset both sync state AND chunk progress so next run starts completely fresh
   resetCompanyState(company, erpnextUrl);
+  resetChunkProgress(company, erpnextUrl);
   res.json({ ok: true, message: `Incremental state cleared for "${company}" — next sync will be a full sync` });
 });
 
@@ -660,16 +687,32 @@ if (_autoSyncConfig.enabled) {
   startScheduler(true); // silent=true — startup log comes from app.listen below
 }
 
+
+ 
+// ── Serve bundled React frontend ─────────────────────────────────────────────────────
+// In the EXE, the frontend-build folder sits next to the executable.
+// process.pkg is set by pkg at runtime; falls back to __dirname for dev.
+const FRONTEND_BUILD = path.join(
+  process.pkg ? path.dirname(process.execPath) : __dirname,
+  "frontend-build"
+);
+if (fs.existsSync(FRONTEND_BUILD)) {
+  app.use(express.static(FRONTEND_BUILD));
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(FRONTEND_BUILD, "index.html"));
+  });
+}
+
 app.listen(config.port, () => {
   logger.human.serverReady(`http://localhost:${config.port}`, {
-    enabled:  _autoSyncConfig.enabled,
-    interval: _autoSyncConfig.intervalLabel,
+    enabled  : _autoSyncConfig.enabled,
+    interval : _autoSyncConfig.intervalLabel,
   });
   logger.human.tallyConnected(config.tally.url);
   logger.human.checkReady();
   if (!_autoSyncConfig.enabled) {
     logger.human.headsUp(
-      "Auto-sync is off. You can turn it on from the Sync settings page and choose how often it should run."
+      'Auto-sync is off. You can turn it on from the Sync settings page and choose how often it should run.'
     );
   }
 });

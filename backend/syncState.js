@@ -27,14 +27,16 @@
 
 import fs   from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
+import os   from "os";
 import { logger } from "./logs/logger.js";
 
-const __dirname  = path.dirname(fileURLToPath(import.meta.url));
-const STATE_DIR  = path.join(__dirname, "data");
-// Use .dat extension so nodemon (which only watches js/mjs) never triggers
-// a restart when this file is written. Previously sync_state.json caused
-// nodemon to restart on every saveCompanyState() call.
+// ── ONLY THIS CHANGES: write to AppData so it's always writable ──────────────
+// Always write to AppData — works correctly in Electron, PKG exe, and dev.
+// process.pkg is only set by PKG bundler (not Electron), so we can't rely on it.
+const STATE_DIR = path.join(
+  os.homedir(), "AppData", "Roaming", "TallyERPNextIntegration", "data"
+);
+
 const STATE_FILE = path.join(STATE_DIR, "sync_state.dat");
 const OVERLAP_DAYS = 3;
 
@@ -48,18 +50,13 @@ function loadState() {
   ensureDir();
   if (!fs.existsSync(STATE_FILE)) return {};
 
-  // Retry up to 3 times with a small delay — nodemon can briefly lock or
-  // partially overwrite the file when it detects a change and restarts the
-  // process.  A short wait is enough for the rename to complete.
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       const raw = fs.readFileSync(STATE_FILE, "utf8");
-      if (!raw.trim()) return {};       // empty file → treat as no state
+      if (!raw.trim()) return {};
       return JSON.parse(raw);
     } catch (err) {
       if (attempt < 3) {
-        // Synchronous 50 ms busy-wait — small enough to be invisible, big
-        // enough to let any in-flight rename/write finish.
         const until = Date.now() + 50;
         while (Date.now() < until) { /* spin */ }
       } else {
@@ -67,7 +64,6 @@ function loadState() {
           "syncState: could not parse sync_state.json after 3 attempts — starting fresh" +
           " (" + err.message + ")"
         );
-        // Back up the corrupt file so it can be inspected
         try {
           fs.copyFileSync(STATE_FILE, STATE_FILE + ".corrupt." + Date.now());
         } catch (_) { /* best-effort */ }
@@ -80,10 +76,6 @@ function loadState() {
 
 function saveState(state) {
   ensureDir();
-  // Write to a .bak extension so nodemon does NOT watch it (nodemon watches
-  // .js/.mjs/.cjs/.json by default — .bak is ignored).
-  // Then rename atomically to the real path.  This prevents nodemon from
-  // seeing a partial write and trying to read a half-written JSON file.
   const tmp = STATE_FILE + ".tmp";
   fs.writeFileSync(tmp, JSON.stringify(state, null, 2), "utf8");
   fs.renameSync(tmp, STATE_FILE);
@@ -91,17 +83,6 @@ function saveState(state) {
 
 // ── Composite key helper ──────────────────────────────────────────────────────
 
-/**
- * stateKey(company, erpnextUrl)
- *
- * Builds a composite key that is unique per (Tally company, ERPNext instance).
- * Normalising the URL (strip trailing slash, lowercase) prevents accidental
- * duplicates from minor formatting differences.
- *
- * Examples:
- *   "Tally::https://site1.frappe.cloud"
- *   "Tally::https://site2.frappe.cloud"
- */
 function stateKey(company, erpnextUrl) {
   const url = (erpnextUrl || "default").replace(/\/+$/, "").toLowerCase();
   return `${company}::${url}`;
@@ -109,10 +90,6 @@ function stateKey(company, erpnextUrl) {
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
-/**
- * getCompanyState(company, erpnextUrl)
- * Returns the persisted state object for this company+url, or an empty default.
- */
 export function getCompanyState(company, erpnextUrl) {
   const all = loadState();
   const key = stateKey(company, erpnextUrl);
@@ -127,17 +104,12 @@ export function getCompanyState(company, erpnextUrl) {
   };
 }
 
-/**
- * saveCompanyState(company, partial, erpnextUrl)
- * Merges `partial` into the stored state for this company+url.
- */
 export function saveCompanyState(company, partial, erpnextUrl) {
   const all  = loadState();
   const key  = stateKey(company, erpnextUrl);
   const prev = all[key] || {};
   all[key]   = Object.assign({}, prev, partial);
 
-  // Deep-merge alterIds maps so individual keys don't get wiped
   if (partial.ledgerAlterIds) {
     all[key].ledgerAlterIds = Object.assign({}, prev.ledgerAlterIds || {}, partial.ledgerAlterIds);
   }
@@ -161,10 +133,6 @@ export function saveCompanyState(company, partial, erpnextUrl) {
   });
 }
 
-/**
- * resetCompanyState(company, erpnextUrl)
- * Clears all incremental state for a company+url — forces a full re-sync next run.
- */
 export function resetCompanyState(company, erpnextUrl) {
   const all = loadState();
   const key = stateKey(company, erpnextUrl);
@@ -173,17 +141,6 @@ export function resetCompanyState(company, erpnextUrl) {
   logger.info(`syncState: reset state for "${key}" — next sync will be full`);
 }
 
-/**
- * getIncrementalVoucherDates(company, requestedFromDate, requestedToDate, erpnextUrl)
- *
- * Returns { fromDate, toDate, isIncremental } to use for the voucher fetch.
- *
- * Logic:
- *  - First ever sync           → use requestedFromDate / requestedToDate as-is
- *  - Subsequent syncs          → start from (lastVoucherSyncDate − OVERLAP_DAYS)
- *  - If user explicitly passed a fromDate earlier than our checkpoint
- *    (e.g. they want to re-sync a specific old range) → honour the user's date
- */
 export function getIncrementalVoucherDates(company, requestedFromDate, requestedToDate, erpnextUrl) {
   const state = getCompanyState(company, erpnextUrl);
   const today = new Date().toISOString().slice(0, 10);
@@ -209,12 +166,6 @@ export function getIncrementalVoucherDates(company, requestedFromDate, requested
   return { fromDate, toDate, isIncremental };
 }
 
-/**
- * filterChangedMasters(items, storedAlterIds, keyField = "name")
- *
- * Compares Tally items against the last-known alterIds map.
- * Returns { toSync: [...], unchanged: number }
- */
 export function filterChangedMasters(items, storedAlterIds, keyField = "name") {
   if (!storedAlterIds || Object.keys(storedAlterIds).length === 0) {
     return { toSync: items, unchanged: 0 };
@@ -237,10 +188,6 @@ export function filterChangedMasters(items, storedAlterIds, keyField = "name") {
   return { toSync, unchanged };
 }
 
-/**
- * buildAlterIdMap(items, keyField = "name")
- * Builds a { name → alterId } map from a list of Tally master objects.
- */
 export function buildAlterIdMap(items, keyField = "name") {
   const map = {};
   for (const item of items) {

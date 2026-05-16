@@ -10,13 +10,13 @@ import { createHash } from "crypto";
 import { config } from "../config/config.js";
 import { logger } from "../logs/logger.js";
 
-const BATCH_DELAY_MS  = 300;   // 0.3s between each slot — adaptive throttle handles 429s
-const BATCH_BURST     = 15;    // pause after every 15 requests
-const BATCH_BURST_MS  = 2000;  // 2s pause after each burst
+const BATCH_DELAY_MS  = 800;   // 0.8s between each slot — safer for free ERPNext tier
+const BATCH_BURST     = 5;     // pause after every 5 requests to avoid rate limit
+const BATCH_BURST_MS  = 5000;  // 5s pause after each burst — gives ERPNext time to breathe
 const RETRY_ATTEMPTS  = 5;
 const RETRY_DELAY_MS  = 8000;  // 8s base retry delay
-const CONCURRENCY     = 8;     // 8 parallel requests — throttle auto-backs-off on 429
-const ADDR_CONCURRENCY = 5;    // lower concurrency for address/contact calls
+const CONCURRENCY     = 2;     // 2 parallel requests — free tier can't handle more
+const ADDR_CONCURRENCY = 2;    // lower concurrency for address/contact calls
 
 // Adaptive throttle: ramps up on 429, cools down slowly after clean runs
 const _throttle = {
@@ -602,7 +602,10 @@ async function resolveAccount(client, ledgerName, companyAbbr, companyName) {
     } catch (_) {}
   }
 
-  // Try 2: exact account_name without company filter (fallback)
+  // Try 2: exact account_name without company filter — but only cache if the
+  // returned account actually belongs to our company (suffix check).
+  // Without this guard, "Purchase - N" from a prior company sync gets cached
+  // under "Purchase::c5" and poisons all subsequent account lookups for c5.
   try {
     const res = await client.get("/api/resource/Account", {
       params: {
@@ -612,7 +615,15 @@ async function resolveAccount(client, ledgerName, companyAbbr, companyName) {
       },
     });
     const found = res.data && res.data.data && res.data.data[0] && res.data.data[0].name;
-    if (found) { _accountCache.set(cacheKey, found); return found; }
+    if (found) {
+      // Only use this result if it ends with our company abbreviation suffix
+      const expectedSuffix = " - " + companyAbbr;
+      if (!companyAbbr || found.endsWith(expectedSuffix)) {
+        _accountCache.set(cacheKey, found);
+        return found;
+      }
+      // Account exists but belongs to a different company — don't cache, fall through
+    }
   } catch (_) {}
 
   // Try 3: look up the suffixed name directly (e.g. "Kotak Mahindra Bank - TC")
@@ -2048,9 +2059,11 @@ export async function syncVouchersToErpNext(vouchers, companyName, creds = {}, v
         if (accountType === "Receivable") {
           row.party_type = "Customer";
           row.party      = e.ledger.trim();
+          row.is_advance = "No";
         } else if (accountType === "Payable") {
           row.party_type = "Supplier";
           row.party      = e.ledger.trim();
+          row.is_advance = "No";
         }
 
         resolved.push(row);
@@ -2061,8 +2074,8 @@ export async function syncVouchersToErpNext(vouchers, companyName, creds = {}, v
       const { name: acct, accountType } = await resolveAccountWithType(client, v.partyName, companyAbbr, companyName);
       const row1 = { account: acct, debit_in_account_currency: v.netAmount || 0, credit_in_account_currency: 0 };
       const row2 = { account: acct, debit_in_account_currency: 0, credit_in_account_currency: v.netAmount || 0 };
-      if (accountType === "Receivable") { row1.party_type = row2.party_type = "Customer"; row1.party = row2.party = v.partyName.trim(); }
-      else if (accountType === "Payable") { row1.party_type = row2.party_type = "Supplier"; row1.party = row2.party = v.partyName.trim(); }
+      if (accountType === "Receivable") { row1.party_type = row2.party_type = "Customer"; row1.party = row2.party = v.partyName.trim(); row1.is_advance = row2.is_advance = "No"; }
+      else if (accountType === "Payable") { row1.party_type = row2.party_type = "Supplier"; row1.party = row2.party = v.partyName.trim(); row1.is_advance = row2.is_advance = "No"; }
       v.resolvedAccounts = [row1, row2];
 
     } else {
@@ -2220,6 +2233,80 @@ export async function syncVouchersToErpNext(vouchers, companyName, creds = {}, v
     "Payment Entry: +" + peResults.created + "/~" + peResults.updated + "/=" + (peResults.skipped||0) + "/x" + peResults.failed + " | " +
     "Journal Entry: +" + jeResults.created + "/~" + jeResults.updated + "/=" + (jeResults.skipped||0) + "/x" + jeResults.failed
   );
+
+  // ── PRE-FLIGHT: Ensure all required Fiscal Years exist before submitting ─────
+  // Collect unique FY ranges from all vouchers and create any missing ones NOW,
+  // before the submit loops — so we don't hit fiscal year errors mid-batch.
+  {
+    const fyRangesSeen = new Set();
+    for (const v of [...paymentVouchers, ...journalVouchers]) {
+      if (!v.voucherDate) continue;
+      const d = new Date(v.voucherDate);
+      const year = d.getFullYear();
+      const month = d.getMonth() + 1;
+      const fyStart = month >= 4 ? year : year - 1;
+      const fyKey = fyStart + "-" + (fyStart + 1);
+      if (!fyRangesSeen.has(fyKey)) {
+        fyRangesSeen.add(fyKey);
+        await autoCreateFiscalYear(client, v.voucherDate, companyName);
+      }
+    }
+  }
+  // ── END pre-flight fiscal year ────────────────────────────────────────────────
+
+  // Auto-submit Payment Entries
+  const peSubmitted = { submitted: 0, failed: 0 };
+  if (paymentVouchers.length > 0) {
+    logger.info("Submitting Payment Entries...");
+    for (const v of paymentVouchers) {
+      if (v._skip || !v.resolvedAccounts) continue;
+      const remarkKey = "Tally:" + (v.voucherNumber || v.guid);
+      try {
+        const list = await client.get("/api/resource/Payment Entry", {
+          params: { filters: JSON.stringify([["Payment Entry", "remarks", "like", remarkKey + "%"]]), fields: '["name","docstatus"]', limit: 1 }
+        });
+        const stub = list?.data?.data?.[0];
+        if (!stub || stub.docstatus === 1) continue;
+        const fullRes = await client.get("/api/resource/Payment Entry/" + encodeURIComponent(stub.name));
+        const fullDoc = fullRes?.data?.data;
+        if (!fullDoc) continue;
+        await client.post("/api/method/frappe.client.submit", { doc: fullDoc });
+        peSubmitted.submitted++;
+      } catch (e) {
+        peSubmitted.failed++;
+        logger.warn("Payment Entry submit failed for " + (v.voucherNumber || v.guid) + ": " + parseErpError(e));
+      }
+      await sleep(200);
+    }
+    logger.info("Submit Payment Entry: " + peSubmitted.submitted + " submitted, " + peSubmitted.failed + " failed");
+  }
+
+  // Auto-submit Journal Entries
+  const jeSubmitted = { submitted: 0, failed: 0 };
+  if (journalVouchers.length > 0) {
+    logger.info("Submitting Journal Entries...");
+    for (const v of journalVouchers) {
+      const remarkKey = "Tally:" + (v.voucherNumber || v.guid);
+      try {
+        const list = await client.get("/api/resource/Journal Entry", {
+          params: { filters: JSON.stringify([["Journal Entry", "user_remark", "like", remarkKey + "%"]]), fields: '["name","docstatus"]', limit: 1 }
+        });
+        const stub = list?.data?.data?.[0];
+        if (!stub || stub.docstatus === 1) continue;
+        const fullRes = await client.get("/api/resource/Journal Entry/" + encodeURIComponent(stub.name));
+        const fullDoc = fullRes?.data?.data;
+        if (!fullDoc) continue;
+        await client.post("/api/method/frappe.client.submit", { doc: fullDoc });
+        jeSubmitted.submitted++;
+      } catch (e) {
+        jeSubmitted.failed++;
+        logger.warn("Journal Entry submit failed for " + (v.voucherNumber || v.guid) + ": " + parseErpError(e));
+      }
+      await sleep(200);
+    }
+    logger.info("Submit Journal Entry: " + jeSubmitted.submitted + " submitted, " + jeSubmitted.failed + " failed");
+  }
+
   return { paymentEntries: peResults, journalEntries: jeResults, salesInvoices: { created: 0, updated: 0, failed: salesVouchers.length } };
 }
 
@@ -4556,26 +4643,40 @@ export async function runFullSync(companyName, tallyData, options, creds = {}) {
   try {
     if (options.syncChartOfAccounts  && tallyData.groups    && tallyData.groups.length    > 0)
       await runStep("chartOfAccounts", () => syncChartOfAccountsToErpNext(tallyData.groups, companyName, creds));
+    else if (options.syncChartOfAccounts)
+      result.steps.chartOfAccounts = { status: "skipped", skipped: tallyData.groups?.length ?? 0 };
 
     if (options.syncLedgers          && tallyData.ledgers   && tallyData.ledgers.length   > 0)
       await runStep("ledgers",         () => syncLedgersToErpNext(tallyData.ledgers, creds));
+    else if (options.syncLedgers)
+      result.steps.ledgers = { status: "skipped", skipped: tallyData.ledgers?.length ?? 0 };
 
     // syncSmartLedgers: filter tallyData.ledgers to only those used in vouchers
     if (options.syncSmartLedgers     && tallyData.ledgers   && tallyData.ledgers.length   > 0
                                      && tallyData.vouchers  && tallyData.vouchers.length  > 0)
       await runStep("smartLedgers",   () => smartSyncLedgersToErpNext(tallyData.vouchers, tallyData.ledgers, creds));
+    else if (options.syncSmartLedgers)
+      result.steps.smartLedgers = { status: "skipped", skipped: tallyData.ledgers?.length ?? 0 };
 
     if (options.syncOpeningBalances  && tallyData.ledgers   && tallyData.ledgers.length   > 0)
       await runStep("openingBalances", () => syncOpeningBalancesToErpNext(tallyData.ledgers, companyName, creds));
+    else if (options.syncOpeningBalances)
+      result.steps.openingBalances = { status: "skipped", skipped: tallyData.ledgers?.length ?? 0 };
 
     if (options.syncGodowns          && tallyData.godowns   && tallyData.godowns.length   > 0)
       await runStep("godowns",         () => syncGodownsToErpNext(tallyData.godowns, companyName, creds));
+    else if (options.syncGodowns)
+      result.steps.godowns = { status: "skipped", skipped: tallyData.godowns?.length ?? 0 };
 
     if (options.syncCostCentres      && tallyData.costCentres && tallyData.costCentres.length > 0)
       await runStep("costCentres",     () => syncCostCentresToErpNext(tallyData.costCentres, companyName, creds));
+    else if (options.syncCostCentres)
+      result.steps.costCentres = { status: "skipped", skipped: tallyData.costCentres?.length ?? 0 };
 
     if (options.syncStock            && tallyData.stockItems && tallyData.stockItems.length   > 0)
       await runStep("stockItems",      () => syncStockToErpNext(tallyData.stockItems, creds));
+    else if (options.syncStock)
+      result.steps.stockItems = { status: "skipped", skipped: tallyData.stockItems?.length ?? 0 };
 
     if ((options.syncVouchers || options.syncInvoices) && tallyData.vouchers && tallyData.vouchers.length > 0) {
       // Build a custom-voucher-type resolver so "Tax Invoice Mumbai" → "Sales" etc.
@@ -4596,11 +4697,18 @@ export async function runFullSync(companyName, tallyData, options, creds = {}) {
 
       if (options.syncInvoices)
         await runStep("invoices", () => syncInvoicesToErpNext(tallyData.vouchers, companyName, creds, voucherTypeResolver));
+    } else {
+      if (options.syncVouchers)
+        result.steps.vouchers = { status: "skipped", skipped: tallyData.vouchers?.length ?? 0 };
+      if (options.syncInvoices)
+        result.steps.invoices = { status: "skipped", skipped: tallyData.vouchers?.length ?? 0 };
     }
 
     // FIX: syncTaxes step was silently missing — syncTaxes:true was accepted but never executed
     if (options.syncTaxes            && tallyData.stockItems && tallyData.stockItems.length > 0)
       await runStep("taxes",           () => syncTaxesToErpNext(tallyData.stockItems, companyName, creds));
+    else if (options.syncTaxes)
+      result.steps.taxes = { status: "skipped", skipped: tallyData.stockItems?.length ?? 0 };
   } catch (e) {
     if (e._cancelled) {
       // Already marked inside runStep — just return the partial result

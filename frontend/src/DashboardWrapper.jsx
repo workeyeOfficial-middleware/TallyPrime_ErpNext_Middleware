@@ -3,7 +3,6 @@ import { useState } from "react";
 import { SyncToErpNext } from "./pages/SyncToErpNext";
 import { MiddlewareCheck } from "./pages/MiddlewareCheck";
 import { LiveLogs } from "./pages/LiveLogs";
-
 const NAV = [
   { id: "check", label: "Data Check",  icon: "⬡", desc: "Validate connection" },
   { id: "sync",  label: "Sync",        icon: "⟳", desc: "Push to ERPNext"   },
@@ -11,9 +10,9 @@ const NAV = [
 ];
 
 const PAGE_META = {
-  check: { title: "Data Check",      sub: "Validates full Tally data connection" },
-  sync:  { title: "Sync to ERPNext", sub: "Push Tally data into ERPNext"         },
-  logs:  { title: "Live Logs",       sub: "Real-time middleware event stream"     },
+  check:   { title: "Data Check",      sub: "Validates full Tally data connection" },
+  sync:    { title: "Sync to ERPNext", sub: "Push Tally data into ERPNext"         },
+  logs:    { title: "Live Logs",       sub: "Real-time middleware event stream"     },
 };
 
 export default function DashboardWrapper({ companies }) {
@@ -236,8 +235,8 @@ export default function DashboardWrapper({ companies }) {
         <main style={{ flex: 1, overflowY: "auto", padding: "28px 32px" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
             {activeTab === "check" && <MiddlewareCheck companies={companies} />}
-            {activeTab === "sync"  && <SyncToErpNext companies={companies} />}
-            {activeTab === "logs"  && <LiveLogs />}
+<div style={{display:activeTab==="sync"?"block":"none"}}><SyncToErpNext companies={companies} /></div>
+{activeTab === "logs"  && <LiveLogs />}
           </div>
         </main>
       </div>

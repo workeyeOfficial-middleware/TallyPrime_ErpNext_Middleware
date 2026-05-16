@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { tallyAPI } from "../api/tallyAPI";
 import { CheckRow } from "../components/CheckRow";
-import { DataTable } from "../components/DataTable";
 
 // ── Logic constants (unchanged) ──────────────────────────────────────────────
 const TODAY      = new Date().toISOString().slice(0, 10);
@@ -97,6 +96,36 @@ const STATUS_CFG = {
   fail: { bg:C.redL,   border:C.redB,    text:C.red,    icon:"✗", label:"CHECKS FAILED"             },
 };
 
+// ── Per-check stat boxes row ─────────────────────────────────────────────────
+function StatBox({ label, value, color = C.accent, bg = C.accentL, bd = C.accentB }) {
+  if (value === undefined || value === null) return null;
+  return (
+    <div style={{
+      display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+      padding:"10px 18px", borderRadius:11,
+      background:bg, border:`1.5px solid ${bd}`,
+      boxShadow:`0 3px 10px ${bd}60, 0 1px 0 rgba(255,255,255,.9) inset`,
+      minWidth:68, flex:"0 0 auto",
+    }}>
+      <span style={{ fontFamily:C.title, fontSize:20, fontWeight:800, color, lineHeight:1 }}>
+        {typeof value === "number" ? value.toLocaleString() : value}
+      </span>
+      <span style={{ fontFamily:C.mono, fontSize:9, color:C.muted, marginTop:4, textTransform:"uppercase", letterSpacing:"0.12em", whiteSpace:"nowrap" }}>
+        {label}
+      </span>
+    </div>
+  );
+}
+function StatRow({ children }) {
+  const boxes = Array.isArray(children) ? children.filter(Boolean) : [children].filter(Boolean);
+  if (!boxes.length) return null;
+  return (
+    <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginLeft:48, marginTop:10, marginBottom:2 }}>
+      {boxes}
+    </div>
+  );
+}
+
 // ── Summary stat pill ────────────────────────────────────────────────────────
 function StatBadge({ label, value, color = C.accent, bg = C.accentL, bd = C.accentB }) {
   return (
@@ -126,7 +155,7 @@ export function MiddlewareCheck({ companies }) {
   const [report,      setReport]      = useState(null);
   const [rawResponse, setRawResponse] = useState(null);
   const [error,       setError]       = useState(null);
-  const [showRaw,     setShowRaw]     = useState(false);
+  const [showRaw,     setShowRaw]     = useState(false); // kept for error fallback
   const resultsRef = useRef(null);
 
   // ── Effects (unchanged) ────────────────────────────────────────────────────
@@ -284,45 +313,6 @@ export function MiddlewareCheck({ companies }) {
       {(report || rawResponse) && (
         <div ref={resultsRef} style={{ display:"flex", flexDirection:"column", gap:14, animation:"mc-pop .25s ease" }}>
 
-          {/* Raw response toggle */}
-          <div style={{
-            background:C.card, border:`1.5px solid ${C.border}`,
-            borderRadius:14, overflow:"hidden",
-            boxShadow:"0 4px 20px rgba(13,21,50,.07), 0 1px 0 rgba(255,255,255,.9) inset",
-          }}>
-            <button
-              onClick={() => setShowRaw((s) => !s)}
-              style={{
-                width:"100%", textAlign:"left", padding:"12px 18px",
-                background:"transparent", border:"none", cursor:"pointer",
-                display:"flex", alignItems:"center", justifyContent:"space-between",
-              }}
-            >
-              <span style={{ fontFamily:C.mono, fontSize:10, color:C.muted, letterSpacing:"0.08em" }}>
-                Raw JSON Response
-              </span>
-              <span style={{ fontFamily:C.mono, fontSize:11, color:C.accent, fontWeight:600 }}>
-                {showRaw ? "▲ hide" : "▼ show"}
-              </span>
-            </button>
-            {showRaw && rawResponse && (
-              <div style={{
-                borderTop:`1px solid ${C.border}`,
-                padding:"14px 18px",
-                background:"#0d1117",
-                maxHeight:260, overflowY:"auto",
-              }}>
-                <pre style={{
-                  fontFamily:C.mono, fontSize:10, color:"#e6edf3",
-                  margin:0, whiteSpace:"pre-wrap", wordBreak:"break-all",
-                  lineHeight:1.7,
-                }}>
-                  {JSON.stringify(rawResponse, null, 2)}
-                </pre>
-              </div>
-            )}
-          </div>
-
           {/* Status banner */}
           {(() => {
             if (!effectiveStatus) return null;
@@ -372,111 +362,140 @@ export function MiddlewareCheck({ companies }) {
           {/* Check results */}
           {report && (
             <>
+              {/* Connection */}
               <div style={{
-                background:C.card, border:`1.5px solid ${C.border}`,
-                borderRadius:14, overflow:"hidden",
-                boxShadow:"0 1px 4px rgba(0,0,0,.04)",
+                background:C.card,
+                border:`1.5px solid ${C.border}`,
+                borderRadius:16,
+                boxShadow:"0 8px 32px rgba(13,21,50,.10), 0 2px 0 rgba(255,255,255,.95) inset, 0 1px 0 rgba(13,21,50,.06)",
+                overflow:"hidden",
               }}>
-                {/* Card header */}
                 <div style={{
-                  padding:"14px 20px", borderBottom:`1px solid ${C.border}`,
+                  padding:"13px 20px",
+                  background:`linear-gradient(135deg,${C.accentL},${C.surface})`,
+                  borderBottom:`1.5px solid ${C.accentB}`,
                   display:"flex", alignItems:"center", gap:10,
-                  background:C.surface,
                 }}>
-                  <div style={{ width:3, height:16, background:C.accent, borderRadius:2 }}/>
-                  <h3 style={{ fontFamily:C.title, fontWeight:700, fontSize:13, color:C.ink, margin:0, letterSpacing:"-0.2px" }}>
-                    Check Results
-                  </h3>
+                  <div style={{ width:28, height:28, borderRadius:8, background:C.accent, display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, boxShadow:`0 3px 10px ${C.accent}55` }}>🔌</div>
+                  <span style={{ fontFamily:C.title, fontWeight:800, fontSize:12, color:C.ink, letterSpacing:"-0.2px" }}>Connection</span>
                 </div>
+                <div style={{ padding:"8px 16px 14px" }}>
+                  <CheckRow icon="🔌" label="Tally Ping" check={report.checks?.ping}/>
+                  <CheckRow icon="🏢" label="Companies" check={report.checks?.companies}/>
+                </div>
+              </div>
 
-                <div style={{ padding:"0 20px" }}>
-                  {/* Connection */}
-                  <SectionHeader label="Connection" />
-                  <CheckRow icon="🔌" label="Tally Ping" check={report.checks?.ping} />
-                  <CheckRow icon="🏢" label="Companies"  check={report.checks?.companies}>
-                    {report.checks?.companies?.data?.length > 0 && (
-                      <div style={{ display:"flex", flexWrap:"wrap", gap:6, marginLeft:36, marginTop:6 }}>
-                        {report.checks.companies.data.map((c) => (
-                          <span key={c.guid || c.name} style={{
-                            fontFamily:C.sans, fontSize:11, fontWeight:600,
-                            background:C.accentL, border:`1px solid ${C.accentB}`,
-                            color:C.accent, borderRadius:20,
-                            padding:"3px 10px",
-                          }}>
-                            {c.name}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </CheckRow>
-
-                  {/* Accounting Masters */}
-                  <SectionHeader label="Accounting Masters" />
+              {/* Accounting Masters */}
+              <div style={{
+                background:C.card,
+                border:`1.5px solid ${C.border}`,
+                borderRadius:16,
+                boxShadow:"0 8px 32px rgba(13,21,50,.10), 0 2px 0 rgba(255,255,255,.95) inset, 0 1px 0 rgba(13,21,50,.06)",
+                overflow:"hidden",
+              }}>
+                <div style={{
+                  padding:"13px 20px",
+                  background:`linear-gradient(135deg,#f5f3ff,${C.surface})`,
+                  borderBottom:`1.5px solid #ddd6fe`,
+                  display:"flex", alignItems:"center", gap:10,
+                }}>
+                  <div style={{ width:28, height:28, borderRadius:8, background:"#7c3aed", display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, boxShadow:"0 3px 10px #7c3aed55" }}>📒</div>
+                  <span style={{ fontFamily:C.title, fontWeight:800, fontSize:12, color:C.ink, letterSpacing:"-0.2px" }}>Accounting Masters</span>
+                </div>
+                <div style={{ padding:"8px 16px 14px" }}>
                   <CheckRow icon="📒" label="Ledgers" check={report.checks?.ledgers}>
-                    <DataTable rows={report.checks?.ledgers?.sample} columns={[
-                      { key:"name",           label:"Ledger" },
-                      { key:"parentGroup",    label:"Group" },
-                      { key:"closingBalance", label:"Balance", render:(v)=>v?`₹${Number(v).toLocaleString("en-IN")}`:"—" },
-                      { key:"gstin",          label:"GSTIN" },
-                    ]}/>
+                    <StatRow>
+                      <StatBox label="Total"     value={report.checks?.ledgers?.count}         color={C.accent} bg={C.accentL} bd={C.accentB}/>
+                      <StatBox label="Customers" value={report.checks?.ledgers?.customerCount}  color={C.green}  bg={C.greenL}  bd={C.greenB}/>
+                      <StatBox label="Suppliers" value={report.checks?.ledgers?.supplierCount}  color={C.amber}  bg={C.amberL}  bd={C.amberB}/>
+                      <StatBox label="Party"     value={report.checks?.ledgers?.partyCount}     color="#0d9488"  bg="#f0fdfa"    bd="#99f6e4"/>
+                      <StatBox label="GST"       value={report.checks?.ledgers?.withGstin}      color="#7c3aed"  bg="#f5f3ff"    bd="#ddd6fe"/>
+                      <StatBox label="Email"     value={report.checks?.ledgers?.withEmail}      color="#0d9488"  bg="#f0fdfa"    bd="#99f6e4"/>
+                    </StatRow>
                   </CheckRow>
-                  <CheckRow icon="🗂"  label="Groups"          check={report.checks?.groups}>
-                    <DataTable rows={report.checks?.groups?.sample} columns={[{key:"name",label:"Group"},{key:"parent",label:"Parent"}]}/>
+                  <CheckRow icon="🗂" label="Groups" check={report.checks?.groups}><StatRow><StatBox label="Total" value={report.checks?.groups?.count} color={C.accent} bg={C.accentL} bd={C.accentB}/></StatRow></CheckRow>
+                  <CheckRow icon="🏷" label="Voucher Types" check={report.checks?.voucherTypes}>
+                    <StatRow>
+                      <StatBox label="Total"  value={report.checks?.voucherTypes?.count}       color={C.accent} bg={C.accentL} bd={C.accentB}/>
+                      <StatBox label="Active" value={report.checks?.voucherTypes?.activeCount} color={C.green}  bg={C.greenL}  bd={C.greenB}/>
+                    </StatRow>
                   </CheckRow>
-                  <CheckRow icon="🏷"  label="Voucher Types"   check={report.checks?.voucherTypes}>
-                    <DataTable rows={report.checks?.voucherTypes?.sample} columns={[{key:"name",label:"Type"},{key:"parent",label:"Parent"},{key:"numberingMethod",label:"Numbering"},{key:"isActive",label:"Active",render:(v)=>v?"Yes":"No"}]}/>
-                  </CheckRow>
-                  <CheckRow icon="📂"  label="Cost Categories" check={report.checks?.costCategories}>
-                    <DataTable rows={report.checks?.costCategories?.sample} columns={[{key:"name",label:"Category"},{key:"allocateRevenue",label:"Revenue",render:(v)=>v?"Yes":"No"},{key:"allocateNonRevenue",label:"Non-Revenue",render:(v)=>v?"Yes":"No"}]}/>
-                  </CheckRow>
-                  <CheckRow icon="🏬"  label="Cost Centres"    check={report.checks?.costCentres}>
-                    <DataTable rows={report.checks?.costCentres?.sample} columns={[{key:"name",label:"Centre"},{key:"parent",label:"Parent"}]}/>
-                  </CheckRow>
-                  <CheckRow icon="💱"  label="Currencies"      check={report.checks?.currencies}>
-                    <DataTable rows={report.checks?.currencies?.sample} columns={[{key:"name",label:"Currency"},{key:"symbol",label:"Symbol"}]}/>
-                  </CheckRow>
-                  <CheckRow icon="📊"  label="Budgets"         check={report.checks?.budgets}>
-                    <DataTable rows={report.checks?.budgets?.sample} columns={[{key:"name",label:"Budget"},{key:"startDate",label:"From"},{key:"endDate",label:"To"}]}/>
-                  </CheckRow>
+                  <CheckRow icon="📂" label="Cost Categories" check={report.checks?.costCategories}><StatRow><StatBox label="Total" value={report.checks?.costCategories?.count} color={C.accent} bg={C.accentL} bd={C.accentB}/></StatRow></CheckRow>
+                  <CheckRow icon="🏬" label="Cost Centres" check={report.checks?.costCentres}><StatRow><StatBox label="Total" value={report.checks?.costCentres?.count} color={C.accent} bg={C.accentL} bd={C.accentB}/></StatRow></CheckRow>
+                  <CheckRow icon="💱" label="Currencies" check={report.checks?.currencies}><StatRow><StatBox label="Total" value={report.checks?.currencies?.count} color={C.accent} bg={C.accentL} bd={C.accentB}/></StatRow></CheckRow>
+                  <CheckRow icon="📊" label="Budgets" check={report.checks?.budgets}><StatRow><StatBox label="Total" value={report.checks?.budgets?.count} color={C.accent} bg={C.accentL} bd={C.accentB}/></StatRow></CheckRow>
+                </div>
+              </div>
 
-                  {/* Inventory Masters */}
-                  <SectionHeader label="Inventory Masters" />
-                  <CheckRow icon="🗃"  label="Stock Groups"     check={report.checks?.stockGroups}>
-                    <DataTable rows={report.checks?.stockGroups?.sample} columns={[{key:"name",label:"Group"},{key:"parent",label:"Parent"}]}/>
+              {/* Inventory Masters */}
+              <div style={{
+                background:C.card,
+                border:`1.5px solid ${C.border}`,
+                borderRadius:16,
+                boxShadow:"0 8px 32px rgba(13,21,50,.10), 0 2px 0 rgba(255,255,255,.95) inset, 0 1px 0 rgba(13,21,50,.06)",
+                overflow:"hidden",
+              }}>
+                <div style={{
+                  padding:"13px 20px",
+                  background:`linear-gradient(135deg,${C.amberL},${C.surface})`,
+                  borderBottom:`1.5px solid ${C.amberB}`,
+                  display:"flex", alignItems:"center", gap:10,
+                }}>
+                  <div style={{ width:28, height:28, borderRadius:8, background:C.amber, display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, boxShadow:`0 3px 10px ${C.amber}55` }}>📦</div>
+                  <span style={{ fontFamily:C.title, fontWeight:800, fontSize:12, color:C.ink, letterSpacing:"-0.2px" }}>Inventory Masters</span>
+                </div>
+                <div style={{ padding:"8px 16px 14px" }}>
+                  <CheckRow icon="🗃" label="Stock Groups" check={report.checks?.stockGroups}><StatRow><StatBox label="Total" value={report.checks?.stockGroups?.count} color={C.accent} bg={C.accentL} bd={C.accentB}/></StatRow></CheckRow>
+                  <CheckRow icon="📦" label="Stock Items"      check={report.checks?.stockItems}>
+                    <StatRow>
+                      <StatBox label="Total"    value={report.checks?.stockItems?.count}    color={C.accent} bg={C.accentL} bd={C.accentB}/>
+                      <StatBox label="With HSN" value={report.checks?.stockItems?.hsnCount} color="#0d9488"  bg="#f0fdfa"   bd="#99f6e4"/>
+                      {report.checks?.stockItems?.totalClosingValue > 0 && (
+                        <StatBox label="Closing Value" value={`₹${Number(report.checks.stockItems.totalClosingValue).toLocaleString("en-IN")}`} color={C.green} bg={C.greenL} bd={C.greenB}/>
+                      )}
+                    </StatRow>
                   </CheckRow>
-                  <CheckRow icon="📦"  label="Stock Items"      check={report.checks?.stockItems}>
-                    {report.checks?.stockItems?.totalClosingValue > 0 && (
-                      <p style={{ fontFamily:C.mono, fontSize:11, color:C.muted, marginLeft:36, marginTop:4 }}>
-                        Closing value: ₹{Number(report.checks.stockItems.totalClosingValue).toLocaleString("en-IN")}
-                      </p>
-                    )}
-                    <DataTable rows={report.checks?.stockItems?.sample} columns={[{key:"name",label:"Item"},{key:"group",label:"Group"},{key:"closingQty",label:"Qty"},{key:"closingValue",label:"Value",render:(v)=>v?`₹${Number(v).toLocaleString("en-IN")}`:"—"}]}/>
+                  <CheckRow icon="🏷" label="Stock Categories" check={report.checks?.stockCategories}><StatRow><StatBox label="Total" value={report.checks?.stockCategories?.count} color={C.accent} bg={C.accentL} bd={C.accentB}/></StatRow></CheckRow>
+                  <CheckRow icon="📐" label="Units of Measure" check={report.checks?.units}>
+                    <StatRow>
+                      <StatBox label="Total"    value={report.checks?.units?.count}         color={C.accent} bg={C.accentL} bd={C.accentB}/>
+                      <StatBox label="Simple"   value={report.checks?.units?.simpleCount}   color={C.green}  bg={C.greenL}  bd={C.greenB}/>
+                      <StatBox label="Compound" value={report.checks?.units?.compoundCount} color={C.muted}  bg={C.surface} bd={C.border}/>
+                    </StatRow>
                   </CheckRow>
-                  <CheckRow icon="🏷"  label="Stock Categories" check={report.checks?.stockCategories}>
-                    <DataTable rows={report.checks?.stockCategories?.sample} columns={[{key:"name",label:"Category"},{key:"parent",label:"Parent"}]}/>
-                  </CheckRow>
-                  <CheckRow icon="📐"  label="Units of Measure" check={report.checks?.units}>
-                    <DataTable rows={report.checks?.units?.sample} columns={[{key:"name",label:"Unit"},{key:"isSimple",label:"Type",render:(v)=>v?"Simple":"Compound"}]}/>
-                  </CheckRow>
-                  <CheckRow icon="🏭"  label="Godowns"          check={report.checks?.godowns}>
-                    <DataTable rows={report.checks?.godowns?.sample} columns={[{key:"name",label:"Godown"},{key:"parent",label:"Parent"}]}/>
-                  </CheckRow>
+                  <CheckRow icon="🏭" label="Godowns" check={report.checks?.godowns}><StatRow><StatBox label="Total" value={report.checks?.godowns?.count} color={C.accent} bg={C.accentL} bd={C.accentB}/></StatRow></CheckRow>
+                </div>
+              </div>
 
-                  {/* Transactions */}
-                  <SectionHeader label="Transactions" />
+              {/* Transactions */}
+              <div style={{
+                background:C.card,
+                border:`1.5px solid ${C.border}`,
+                borderRadius:16,
+                boxShadow:"0 8px 32px rgba(13,21,50,.10), 0 2px 0 rgba(255,255,255,.95) inset, 0 1px 0 rgba(13,21,50,.06)",
+                overflow:"hidden",
+              }}>
+                <div style={{
+                  padding:"13px 20px",
+                  background:`linear-gradient(135deg,${C.greenL},${C.surface})`,
+                  borderBottom:`1.5px solid ${C.greenB}`,
+                  display:"flex", alignItems:"center", gap:10,
+                }}>
+                  <div style={{ width:28, height:28, borderRadius:8, background:C.green, display:"flex", alignItems:"center", justifyContent:"center", fontSize:13, boxShadow:`0 3px 10px ${C.green}55` }}>🧾</div>
+                  <span style={{ fontFamily:C.title, fontWeight:800, fontSize:12, color:C.ink, letterSpacing:"-0.2px" }}>Transactions</span>
+                </div>
+                <div style={{ padding:"8px 16px 14px" }}>
                   <CheckRow icon="🧾" label="Vouchers" check={report.checks?.vouchers}>
+                    <StatRow>
+                      <StatBox label="Total"   value={report.checks?.vouchers?.count}      color={C.green}  bg={C.greenL}  bd={C.greenB}/>
+                      <StatBox label="Types"   value={report.checks?.vouchers?.typeCount}  color={C.accent} bg={C.accentL} bd={C.accentB}/>
+                      <StatBox label="Parties" value={report.checks?.vouchers?.partyCount} color="#0d9488"  bg="#f0fdfa"   bd="#99f6e4"/>
+                    </StatRow>
                     {report.checks?.vouchers?.count === 0 && (
-                      <p style={{ fontFamily:C.mono, fontSize:11, color:C.amber, marginLeft:36, marginTop:4 }}>
+                      <p style={{ fontFamily:C.mono, fontSize:11, color:C.amber, marginLeft:48, marginTop:8 }}>
                         ⚠ No vouchers in this date range — try a wider range.
                       </p>
                     )}
-                    <DataTable rows={report.checks?.vouchers?.sample} columns={[
-                      {key:"voucherDate",   label:"Date"},
-                      {key:"voucherType",   label:"Type"},
-                      {key:"voucherNumber", label:"No."},
-                      {key:"partyName",     label:"Party"},
-                      {key:"netAmount",     label:"Amount", render:(v)=>v?`₹${Number(v).toLocaleString("en-IN")}`:"—"},
-                    ]}/>
                   </CheckRow>
                 </div>
               </div>

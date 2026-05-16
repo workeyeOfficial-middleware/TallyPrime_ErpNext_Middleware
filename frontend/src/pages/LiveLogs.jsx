@@ -282,21 +282,23 @@ export function LiveLogs({ currentCompany = null }) {
           ) : logs.map((log, idx) => {
             const lvl = LEVEL[log.level] || LEVEL.info;
             return (
-              <div key={log.id} className="ll-row" style={{
-                display:"flex", alignItems:"center",
+              <div key={`${log.id}-${idx}`} className="ll-row" style={{
+                display:"flex", alignItems:"flex-start",
                 padding:"5px 0",
                 background: lvl.bg,
                 borderLeft: log.level !== "info" ? `3px solid ${lvl.dot}` : "3px solid transparent",
                 transition:"background 0.1s",
                 minHeight:32,
+                flexShrink:0,       // prevents rows from collapsing/overlapping in flex column
+                width:"100%",       // ensures row fills full width
               }}>
                 {/* Line no */}
-                <span style={{ fontFamily:C.mono, fontSize:11, color:"#6e7681", flexShrink:0, width:46, textAlign:"right", paddingRight:12, userSelect:"none", fontVariantNumeric:"tabular-nums" }}>
+                <span style={{ fontFamily:C.mono, fontSize:11, color:"#6e7681", flexShrink:0, width:46, textAlign:"right", paddingRight:12, userSelect:"none", fontVariantNumeric:"tabular-nums", paddingTop:3 }}>
                   {String(idx + 1).padStart(3, " ")}
                 </span>
 
                 {/* Timestamp */}
-                <span style={{ fontFamily:C.mono, fontSize:11, color:"#8b949e", flexShrink:0, paddingRight:10, fontVariantNumeric:"tabular-nums", width:140 }}>
+                <span style={{ fontFamily:C.mono, fontSize:11, color:"#8b949e", flexShrink:0, paddingRight:10, fontVariantNumeric:"tabular-nums", width:140, paddingTop:3 }}>
                   {new Date(log.ts).toLocaleDateString("en-IN", { day:"2-digit", month:"short", year:"2-digit" })}
                   {"  "}{new Date(log.ts).toLocaleTimeString("en-IN", { hour12:false })}
                 </span>
@@ -309,6 +311,7 @@ export function LiveLogs({ currentCompany = null }) {
                   padding:"2px 7px", borderRadius:4,
                   flexShrink:0, width:54, textAlign:"center",
                   marginRight:10, letterSpacing:"0.06em",
+                  marginTop:2,
                 }}>
                   {lvl.tag}
                 </span>
@@ -318,7 +321,8 @@ export function LiveLogs({ currentCompany = null }) {
                   fontFamily:C.mono, fontSize:12, fontWeight: log.level === "info" ? 400 : 600,
                   color: log.level === "info" ? "#cdd9e5" : lvl.color,
                   flex:1, lineHeight:1.5,
-                  wordBreak:"break-word", paddingRight:18,
+                  wordBreak:"break-word", overflowWrap:"anywhere",
+                  paddingRight:18, minWidth:0,  // minWidth:0 allows flex child to shrink below content size
                 }}>
                   {log.message}
                 </span>

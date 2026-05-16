@@ -1286,10 +1286,14 @@ export async function runMiddlewareCheck(companyName, options = {}) {
   try {
     const ledgers = await fetchTallyLedgers(companyName);
     const partyLedgers = ledgers.filter((l) => l.type === "Party");
+    const customerCount  = ledgers.filter((l) => l.parentGroup === "Sundry Debtors").length;
+    const supplierCount  = ledgers.filter((l) => l.parentGroup === "Sundry Creditors").length;
     result.checks.ledgers = {
       status: ledgers.length > 0 ? "ok" : "warn",
       count: ledgers.length,
       partyCount: partyLedgers.length,
+      customerCount,
+      supplierCount,
       withGstin: ledgers.filter((l) => l.gstin).length,
       withEmail: ledgers.filter((l) => l.email).length,
       withPhone: ledgers.filter((l) => l.phone).length,

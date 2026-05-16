@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
+  "main": "electron.cjs",
+  "bin": "server.js",
   "dependencies": {
     "agentkeepalive": "^4.5.0",
     "axios": "^1.14.0",
@@ -10,13 +12,69 @@
     "dotenv": "^16.3.0",
     "express": "^4.18.0",
     "node-cron": "^4.2.1",
+    "object-assign": "^4.1.1",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
-    "nodemon": "^3.0.0"
+    "electron": "^36.0.0",
+    "electron-builder": "^26.0.0",
+    "esbuild": "^0.28.0",
+    "nodemon": "^3.0.0",
+    "pkg": "^5.8.1"
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "electron": "electron electron.cjs",
+    "build:exe": "node build.mjs"
+  },
+  "pkg": {
+    "assets": [
+      "node_modules/**/*",
+      "config/**/*",
+      "data/**/*",
+      "logs/**/*",
+      "routes/**/*",
+      "tally/**/*",
+      "syncState.js",
+      "syncChunkState.js",
+      "agent/agent.cjs"
+    ],
+    "targets": [
+      "node18-win-x64"
+    ],
+    "outputPath": "dist"
+  },
+  "build": {
+    "appId": "com.tally.erpnext.integration",
+    "productName": "Tally ERPNext Integration",
+    "directories": {
+      "output": "electron-dist"
+    },
+    "files": [
+      "electron.cjs",
+      "assets/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "dist/tally-middleware-backend.exe",
+        "to": "backend/tally-middleware-backend.exe"
+      },
+      {
+        "from": "dist/frontend-build",
+        "to": "backend/frontend-build"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "installerHeaderIcon": "assets/icon.png"
+    }
   }
 }

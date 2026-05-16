@@ -8,34 +8,23 @@
  * chunk progress. Switching ERPNext accounts never reuses another account's state.
  *
  * Chunk progress file: data/chunk_progress.dat
- *
- * Structure:
- * {
- *   "Rajlaxmi::https://site1.frappe.cloud": {
- *     fullSyncComplete: false,
- *     vouchers: {
- *       "2016-04": { from: "2016-04-01", to: "2016-04-30", count: 45, doneAt: "..." },
- *       "2016-05": { from: "2016-05-01", to: "2016-05-31", count: 82, doneAt: "..." },
- *     },
- *     ledgers: {
- *       "batch-0": { from: 0, to: 500, count: 500, doneAt: "..." },
- *       "batch-1": { from: 500, to: 1000, count: 500, doneAt: "..." },
- *     }
- *   },
- *   "OtherCompany::https://site2.frappe.cloud": { ... }
- * }
  */
 
 import fs   from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
+import os   from "os";
 import { logger } from "./logs/logger.js";
 
-const __dirname   = path.dirname(fileURLToPath(import.meta.url));
-const STATE_DIR   = path.join(__dirname, "data");
+// ── ONLY THIS CHANGES: write to AppData so it's always writable ──────────────
+// Always write to AppData — works correctly in Electron, PKG exe, and dev.
+// process.pkg is only set by PKG bundler (not Electron), so we can't rely on it.
+const STATE_DIR = path.join(
+  os.homedir(), "AppData", "Roaming", "TallyERPNextIntegration", "data"
+);
+
 const CHUNK_FILE  = path.join(STATE_DIR, "chunk_progress.dat");
 
-// ── File helpers (same pattern as syncState.js) ───────────────────────────────
+// ── File helpers ───────────────────────────────────────────────────────────────
 
 function ensureDir() {
   if (!fs.existsSync(STATE_DIR)) fs.mkdirSync(STATE_DIR, { recursive: true });
@@ -64,12 +53,7 @@ function saveChunkState(state) {
   fs.renameSync(tmp, CHUNK_FILE);
 }
 
-// ── Composite key — same pattern as syncState.js ──────────────────────────────
-// Key: "<companyName>::<erpnextUrl>"
-// Examples:
-//   "Rajlaxmi Solutions::https://site1.frappe.cloud"
-//   "Rajlaxmi Solutions::https://site2.frappe.cloud"  ← different ERPNext = separate state
-//   "OtherCompany::https://site1.frappe.cloud"        ← different Tally company = separate state
+// ── Composite key ──────────────────────────────────────────────────────────────
 
 function stateKey(company, erpnextUrl) {
   const url = (erpnextUrl || "default").replace(/\/+$/, "").toLowerCase();
@@ -98,20 +82,10 @@ function saveTenantState(company, erpnextUrl, tenantState) {
 
 // ── PUBLIC API ────────────────────────────────────────────────────────────────
 
-/**
- * isFullSyncComplete(company, erpnextUrl)
- * Returns true if the first full sync has ever completed for this tenant.
- * Once true → all subsequent syncs are incremental.
- */
 export function isFullSyncComplete(company, erpnextUrl) {
   return getTenantState(company, erpnextUrl).fullSyncComplete === true;
 }
 
-/**
- * markFullSyncComplete(company, erpnextUrl)
- * Called once ALL chunks (vouchers + ledgers) are done.
- * Next sync will be incremental.
- */
 export function markFullSyncComplete(company, erpnextUrl) {
   const state = getTenantState(company, erpnextUrl);
   state.fullSyncComplete = true;
@@ -120,22 +94,11 @@ export function markFullSyncComplete(company, erpnextUrl) {
   logger.info(`syncChunkState: full sync marked complete for "${stateKey(company, erpnextUrl)}"`);
 }
 
-/**
- * isChunkDone(company, erpnextUrl, dataType, chunkId)
- * dataType = "vouchers" | "ledgers"
- * chunkId  = "2016-04" for vouchers, "batch-0" for ledgers
- */
 export function isChunkDone(company, erpnextUrl, dataType, chunkId) {
   const state = getTenantState(company, erpnextUrl);
   return !!(state[dataType]?.[chunkId]?.doneAt);
 }
 
-/**
- * markChunkDone(company, erpnextUrl, dataType, chunkId, meta)
- * Saves progress after each chunk completes.
- * meta = { from, to, count } for vouchers
- *        { from, to, count } for ledgers (from/to are batch index numbers)
- */
 export function markChunkDone(company, erpnextUrl, dataType, chunkId, meta = {}) {
   const state = getTenantState(company, erpnextUrl);
   if (!state[dataType]) state[dataType] = {};
@@ -153,11 +116,6 @@ export function markChunkDone(company, erpnextUrl, dataType, chunkId, meta = {})
   );
 }
 
-/**
- * getChunkProgress(company, erpnextUrl)
- * Returns a summary of chunk progress for this tenant.
- * Useful for a progress UI or /api/sync/chunk-progress endpoint.
- */
 export function getChunkProgress(company, erpnextUrl) {
   const state   = getTenantState(company, erpnextUrl);
   const vDone   = Object.keys(state.vouchers || {}).length;
@@ -177,12 +135,6 @@ export function getChunkProgress(company, erpnextUrl) {
   };
 }
 
-/**
- * resetChunkProgress(company, erpnextUrl)
- * Clears ALL chunk progress for this tenant.
- * Next sync will start from scratch (full sync again).
- * Use this when user explicitly wants to re-sync everything.
- */
 export function resetChunkProgress(company, erpnextUrl) {
   const all = loadChunkState();
   const key = stateKey(company, erpnextUrl);
@@ -191,11 +143,6 @@ export function resetChunkProgress(company, erpnextUrl) {
   logger.info(`syncChunkState: reset chunk progress for "${key}" — next sync will be full`);
 }
 
-/**
- * listAllTenants()
- * Returns all (company, erpnextUrl) pairs that have chunk progress.
- * Useful for admin/debug endpoint.
- */
 export function listAllTenants() {
   const all = loadChunkState();
   return Object.keys(all).map((key) => {

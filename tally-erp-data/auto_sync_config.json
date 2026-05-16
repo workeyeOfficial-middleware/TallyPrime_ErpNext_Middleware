@@ -1,7 +1,7 @@
 {
   "enabled": false,
-  "intervalMs": 1800000,
-  "intervalLabel": "30 min",
+  "intervalMs": 900000,
+  "intervalLabel": "15 min",
   "options": {
     "syncChartOfAccounts": true,
     "syncLedgers": true,
@@ -15,8 +15,8 @@
     "syncTaxes": false
   },
   "creds": {
-    "url": "https://timscdrmumbai.m.frappe.cloud/",
-    "erpnextCompany": "Company3"
+    "url": "https://johnerpnext.m.frappe.cloud/",
+    "erpnextCompany": "JohnCompany"
   },
   "companyName": "Tally",
   "fromDays": 30

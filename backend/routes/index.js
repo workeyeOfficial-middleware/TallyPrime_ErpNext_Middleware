@@ -664,6 +664,7 @@ router.post("/sync/full", async (req, res) => {
     toDate,
     syncChartOfAccounts = false,
     syncLedgers         = false,
+    syncSmartLedgers    = false,
     syncOpeningBalances = false,
     syncGodowns         = false,
     syncCostCentres     = false,
@@ -781,6 +782,7 @@ router.post("/sync/full", async (req, res) => {
           // Capture alterId map from the full ledger list for future incremental syncs
           const allLedgersForMap = await fetchTallyLedgers(companyName);
           newAlterIds.ledgerAlterIds = buildAlterIdMap(allLedgersForMap);
+          ledgers = allLedgersForMap; // pass to runFullSync for openingBalances + smartLedgers
           logger.info(`All ${batchCount} ledger batches complete (${total} total ledgers)`);
 
         } else {
@@ -901,7 +903,7 @@ router.post("/sync/full", async (req, res) => {
         { groups, ledgers, stockItems, vouchers, godowns, costCentres },
         {
           syncChartOfAccounts, syncCostCentres, syncGodowns,
-          syncLedgers, syncStock, syncTaxes,
+          syncLedgers, syncSmartLedgers, syncStock, syncTaxes,
           syncOpeningBalances, syncVouchers, syncInvoices,
         },
         creds
