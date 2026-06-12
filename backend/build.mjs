@@ -5,6 +5,15 @@ import fs           from "fs";
 import path         from "path";
 import { fileURLToPath } from "url";
 
+import { rmSync } from "fs";
+
+// Clean sensitive data before packaging
+rmSync("data", { recursive: true, force: true });
+rmSync("dist/logs", { recursive: true, force: true });
+rmSync("dist/data", { recursive: true, force: true });
+console.log("✓ Cleaned sensitive data before build");
+
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT      = path.resolve(__dirname, "..");
 const FRONTEND  = path.join(ROOT, "frontend");

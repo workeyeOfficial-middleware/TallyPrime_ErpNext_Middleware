@@ -305,10 +305,13 @@ export async function fetchTallyLedgers(companyName) {
   const xml = buildCollectionXml(
     "Ledger Collection",
     "Ledger",
-    "NAME,GUID,PARENT,ALTERID,ADDRESS,MAILINGNAME,MAILINGDETAILS.LIST,OPENINGBALANCE,CLOSINGBALANCE,ISBILLWISEON,LEDGERPHONE,LEDGERMOBILE,EMAIL,INCOMETAXNUMBER,GSTIN.LIST,COUNTRYNAME,STATENAME,PINCODE,BANKACCNO,IFSCODE,SWIFTCODE,BANKNAME",
+    "NAME,GUID,PARENT,ALTERID,ADDRESS,ADDRESS.LISTADDRESS.LIST.STATENAME,ADDRESS.LIST.PINCODE,MAILINGNAME,MAILINGDETAILS.LIST,MAILINGDETAILS.LIST.STATENAME,MAILINGDETAILS.LIST.PINCODE,MAILINGDETAILS.LIST.COUNTRYNAME,STATE,STATENAME,OPENINGBALANCE,CLOSINGBALANCE,ISBILLWISEON,LEDGERPHONE,LEDGERMOBILE,EMAIL,INCOMETAXNUMBER,PARTYGSTIN,LEDGSTREGDETAILS.LIST,COUNTRYNAME,PINCODE,BANKDETAILS,BANKDETAILS.LIST,IFSCODE,SWIFTCODE,BANKINGCONFIGBANK,BANKACCHOLDERNAME,BRANCHNAME,BANKBSRCODE,MSMEREGISTRATIONDETAILS.LIST.MSMEENTERPRISETYPE,MSMEREGISTRATIONDETAILS.LIST.UDYAMREGISTRATIONNUMBER,MSMEREGISTRATIONDETAILS.LIST.MSMEACTIVITYTYPE,CREDITLIMIT,ISCREDITCHECK,CREDITDAYS,ISOVERRIDECREDITLIMIT,LANGUAGENAME.LIST,LANGUAGENAME.LIST.LANGUAGEALIASLABEL,UPIID,ACCOUNTNUMBER,BANKNAME,TRANSACTIONTYPE",
     companyName
   );
   const raw = await postXml(xml);
+
+
+
   const parsed = await parseXml(raw, false);
 
   const rawLedgers =
@@ -317,7 +320,12 @@ export async function fetchTallyLedgers(companyName) {
 
   const ledgers = [];
   for (const l of ledgersArr) {
+
+   
+
+
     const name = l.$?.NAME || val(l.NAME) || null;
+    
     const guid = val(l.GUID) || null;
     if (!name || !guid) continue;
 
@@ -331,12 +339,27 @@ export async function fetchTallyLedgers(companyName) {
     // If a client's Tally has custom fields (e.g. CREDITLIMIT, TRANSPORTERNAME),
     // they arrive as extra XML keys. We collect them here so they are not silently
     // lost — Erpnextclient.js will map them to custom_* fields in ERPNext.
-    const KNOWN_LEDGER_KEYS = new Set([
+const KNOWN_LEDGER_KEYS = new Set([
       "$", "GUID", "NAME", "PARENT", "ALTERID", "ADDRESS", "MAILINGNAME",
       "MAILINGDETAILS.LIST", "MAILINGDETAILS", "OPENINGBALANCE", "CLOSINGBALANCE",
       "ISBILLWISEON", "LEDGERPHONE", "LEDGERMOBILE", "EMAIL", "INCOMETAXNUMBER",
-      "GSTIN.LIST", "COUNTRYNAME", "STATENAME", "PINCODE", "BANKACCNO",
-      "IFSCODE", "SWIFTCODE", "BANKNAME",
+      "GSTIN.LIST", "PARTYGSTIN", "LEDGSTREGDETAILS.LIST", "COUNTRYNAME", "STATENAME", "PINCODE", "BANKDETAILS",
+      "IFSCODE", "SWIFTCODE", "BANKINGCONFIGBANK", "BANKACCHOLDERNAME", "BRANCHNAME", "BANKBSRCODE",
+      "MSMEREGISTRATIONDETAILS.LIST",
+      "MSMEREGISTRATIONDETAILS.LIST.ENTERPRISETYPE",
+      "MSMEREGISTRATIONDETAILS.LIST.UDYAMREGNUMBER",
+      "MSMEREGISTRATIONDETAILS.LIST.MSMEACTIVITYTYPE",
+     "CREDITLIMIT",
+"CREDITPERIOD",
+"ISCREDITCHECK",
+"ISOVERRIDECREDITLIMIT", 
+ "ALIAS", 
+ "LANGUAGEINFOLIST.LIST",
+"LANGUAGEINFOLIST.LIST.LANGUAGEALIASLABEL",
+"ADDRESS.LIST",
+"LANGUAGENAME.LIST",   
+"BANKDETAILS.LIST",
+    
     ]);
     const customFields = {};
     for (const key of Object.keys(l)) {
@@ -347,11 +370,10 @@ export async function fetchTallyLedgers(companyName) {
         }
       }
     }
-    if (Object.keys(customFields).length > 0) {
-      logger.human
-        ? logger.human.headsUp(`Ledger "${name}" has ${Object.keys(customFields).length} extra field(s) from Tally: ${Object.keys(customFields).join(", ")}. These will be synced as custom fields in ERPNext.`)
-        : logger.info(`Ledger "${name}" has extra Tally fields: ${Object.keys(customFields).join(", ")}`);
-    }
+    
+  
+
+
 
     ledgers.push({
       guid,
@@ -365,47 +387,581 @@ export async function fetchTallyLedgers(companyName) {
       email: extractEmail(rawEmail),
       pan: val(l.INCOMETAXNUMBER) || null,
       gstin: (() => {
-        const g = l["GSTIN.LIST"];
-        if (!g) return null;
-        const a = Array.isArray(g) ? g : [g];
-        return a[0]?.GSTIN || null;
-      })(),
-      state: (() => {
-        const s = val(l.STATENAME) || "";
-        const clean = s.replace(/[♦◆\u0004\u2297\u2666\u25c6*]/g, "").trim();
-        return (clean && clean.toLowerCase() !== "not applicable") ? clean : null;
-      })(),
-      pincode: val(l.PINCODE) || null,
-      mailingName: val(l.MAILINGNAME) || null,   // alias / trade name
-      bankAccount: val(l.BANKACCNO)  || null,
-      ifsc:        val(l.IFSCODE)    || null,
-      swiftCode:   val(l.SWIFTCODE)  || null,
-      bankName:    val(l.BANKNAME)   || null,
-      country: (() => {
-        const c = val(l.COUNTRYNAME) || "";
-        return (c && c.toLowerCase() !== "not applicable") ? c : "India";
-      })(),
-      address: (() => {
-        // Try MAILINGDETAILS.LIST first (multi-line address), fall back to ADDRESS
-        const md = l["MAILINGDETAILS.LIST"] || l.MAILINGDETAILS;
-        if (md) {
-          const arr = Array.isArray(md) ? md : [md];
-          const lines = arr.flatMap((m) => {
-            if (!m || typeof m !== "object") return [];
-            const list = m.LIST || m.ADDRESSLIST || m["MAILINGDETAILS.LIST"];
+        // Try 1: PARTYGSTIN — simplest direct field, works on most Tally versions
+        const direct = val(l.PARTYGSTIN);
+        if (direct && direct.trim().length > 5) return direct.trim();
+
+        // Try 2: LEDGSTREGDETAILS.LIST — Tax Registration Details list (Tally Prime)
+        const reg = l["LEDGSTREGDETAILS.LIST"];
+        if (reg) {
+          const regArr = Array.isArray(reg) ? reg : [reg];
+          for (const item of regArr) {
+            if (!item) continue;
+            const list = item.LIST;
             if (list) {
-              const la = Array.isArray(list) ? list : [list];
-              return la.map((x) => val(x.ADDRESS || x) || "").filter(Boolean);
+              const listArr = Array.isArray(list) ? list : [list];
+              for (const li of listArr) {
+                const v = val(li?.GSTIN) || val(li?.GSTREGISTRATIONNUMBER) || null;
+                if (v && v.trim().length > 5) return v.trim();
+              }
             }
-            return [val(m.ADDRESS || m.NAME) || ""].filter(Boolean);
-          });
-          if (lines.length > 0) return lines.join(", ");
+            const v = val(item.GSTIN) || val(item.GSTREGISTRATIONNUMBER) || null;
+            if (v && v.trim().length > 5) return v.trim();
+          }
         }
-        return extractAddress(l.ADDRESS) || null;
+
+        // Try 3: Legacy GSTIN.LIST (older Tally versions)
+        const g = l["GSTIN.LIST"];
+        if (g) {
+          const arr = Array.isArray(g) ? g : [g];
+          for (const item of arr) {
+            if (!item) continue;
+            if (typeof item === "string" && item.trim().length > 5) return item.trim();
+            const list = item.LIST;
+            if (list) {
+              const listArr = Array.isArray(list) ? list : [list];
+              for (const li of listArr) {
+                const v = val(li?.GSTIN) || val(li?._) || null;
+                if (v && v.trim().length > 5) return v.trim();
+              }
+            }
+            const v = val(item.GSTIN) || val(item._) || null;
+            if (v && v.trim().length > 5) return v.trim();
+          }
+        }
+
+        return null;
       })(),
+
+registrationType: (() => {
+  const reg = l["LEDGSTREGDETAILS.LIST"];
+  if (!reg) return null;
+
+  const arr = Array.isArray(reg)
+    ? reg
+    : [reg];
+
+  for (const item of arr) {
+    if (!item) continue;
+
+    const v =
+      val(item.GSTREGISTRATIONTYPE) ||
+      val(item.REGISTRATIONTYPE);
+
+    if (v && v.trim()) {
+      return v.trim();
+    }
+  }
+
+  return null;
+})(),
+
+placeOfSupply: (() => {
+  const reg = l["LEDGSTREGDETAILS.LIST"];
+  if (!reg) return null;
+
+  const arr = Array.isArray(reg)
+    ? reg
+    : [reg];
+
+  for (const item of arr) {
+    if (!item) continue;
+
+    const v =
+      val(item.PLACEOFSUPPLY) ||
+      val(item.PPLACEOFSUPPLY);
+
+    if (v && v.trim()) {
+      return v.trim();
+    }
+  }
+
+  return null;
+})(),
+
+
+placeOfSupply: (() => {
+  const gst = l["LEDGSTREGDETAILS.LIST"];
+  if (!gst) return null;
+
+  const arr = Array.isArray(gst)
+    ? gst
+    : [gst];
+
+  for (const item of arr) {
+    if (!item) continue;
+
+    const place =
+      val(item.PLACEOFSUPPLY) ||
+      val(item.PPLACEOFSUPPLY);
+
+    if (place && place.trim()) {
+      return place.trim();
+    }
+  }
+
+  return null;
+})(),
+
+
+
+isTransporter: (() => {
+  const gst = l["LEDGSTREGDETAILS.LIST"];
+  if (!gst) return "Undefined";
+
+  const arr = Array.isArray(gst)
+    ? gst
+    : [gst];
+
+  for (const item of arr) {
+    if (!item) continue;
+
+    const v = val(item.ISTRANSPORTER);
+
+    if (v && v.trim()) {
+      return v.trim();
+    }
+  }
+
+  return "Undefined";
+})(),
+
+transporterId: (() => {
+  const gst = l["LEDGSTREGDETAILS.LIST"];
+  if (!gst) return "Undefined";
+
+  const arr = Array.isArray(gst)
+    ? gst
+    : [gst];
+
+  for (const item of arr) {
+    if (!item) continue;
+
+    const v = val(item.TRANSPORTERID);
+
+    if (v && v.trim()) {
+      return v.trim();
+    }
+  }
+
+  return "Undefined";
+})(),
+
+bankTransactionType: (() => {
+  const b =
+    l["BANKDETAILS.LIST"] ||
+    l.BANKDETAILS ||
+    {};
+
+  return (
+    val(b.TRANSACTIONTYPE) ||
+    null
+  );
+})(),
+
+bankDetailsRaw: (() => {
+  return l["BANKDETAILS.LIST"] || null;
+})(),
+
+upiId: (() => {
+  const b =
+    l["BANKDETAILS.LIST"] ||
+    l.BANKDETAILS ||
+    {};
+
+  return (
+    val(b.UPIID) ||
+    null
+  );
+})(),
+
+popupBankAccountNo: (() => {
+  const b =
+    l["BANKDETAILS.LIST"] ||
+    l.BANKDETAILS ||
+    {};
+
+  return (
+    val(b.ACCOUNTNUMBER) ||
+    val(b.ACNO) ||
+    null
+  );
+})(),
+
+popupIfscCode: (() => {
+  const b =
+    l["BANKDETAILS.LIST"] ||
+    l.BANKDETAILS ||
+    {};
+
+  return (
+    val(b.IFSCODE) ||
+    null
+  );
+})(),
+
+popupBankName: (() => {
+  const b =
+    l["BANKDETAILS.LIST"] ||
+    l.BANKDETAILS ||
+    {};
+
+  return (
+    val(b.BANKNAME) ||
+    null
+  );
+})(),
+
+  state: (() => {
+  const possible = [];
+
+  // 1. Direct top-level fields (usually company state, but try anyway)
+  possible.push(val(l.STATENAME), val(l.STATE), val(l.LEDSTATENAME));
+
+  // 2. MAILINGDETAILS.LIST — this is where TallyPrime stores ledger mailing state
+  const mailing = l["MAILINGDETAILS.LIST"] || l.MAILINGDETAILS;
+  if (mailing) {
+    const arr = Array.isArray(mailing) ? mailing : [mailing];
+    for (const m of arr) {
+      if (!m || typeof m !== "object") continue;
+      // Try all known state field names TallyPrime uses
+      possible.push(
+        val(m.STATENAME),
+        val(m["MAILINGDETAILS.LIST.STATENAME"]),
+        val(m.STATE),
+        val(m.LEDSTATENAME)
+      );
+    }
+  }
+
+  // 3. ADDRESS.LIST
+  const addrList = l["ADDRESS.LIST"];
+  if (addrList) {
+    const arr = Array.isArray(addrList) ? addrList : [addrList];
+    for (const a of arr) {
+      if (!a || typeof a !== "object") continue;
+      possible.push(val(a.STATENAME), val(a.STATE));
+    }
+  }
+
+  // 4. Filter and return first valid value
+  for (const s of possible) {
+    const clean = String(s || "")
+      .replace(/[♦◆\u0004\u2297\u2666\u25c6*]/g, "")
+      .trim();
+    if (clean && clean.toLowerCase() !== "not applicable" && clean.length > 1) {
+      return clean;
+    }
+  }
+  return null;
+})(),
+
+pincode: (() => {
+  // Try direct field first
+  const direct = val(l.PINCODE);
+  if (direct && direct.trim()) return direct.trim();
+  
+  // Then check MAILINGDETAILS.LIST
+  const mailing = l["MAILINGDETAILS.LIST"] || l.MAILINGDETAILS;
+  if (mailing) {
+    const arr = Array.isArray(mailing) ? mailing : [mailing];
+    for (const m of arr) {
+      if (!m) continue;
+      const v = val(m.PINCODE) || val(m["MAILINGDETAILS.LIST.PINCODE"]);
+      if (v && v.trim()) return v.trim();
+    }
+  }
+  return null;
+})(),
+      bankAccount: val
+      (l.BANKDETAILS)       || null,   // Tally XML: BANKDETAILS (was BANKACCNO)
+      ifsc:        val(l.IFSCODE)           || null,   // Tally XML: IFSCODE ✓
+      swiftCode:   val(l.SWIFTCODE)         || null,   // Tally XML: SWIFTCODE ✓
+      bankName:    val(l.BANKINGCONFIGBANK) || null,   // Tally XML: BANKINGCONFIGBANK (was BANKNAME)
+      holderName:  val(l.BANKACCHOLDERNAME) || null,   // Tally XML: BANKACCHOLDERNAME (was ACHOLDERNAM)
+      bankBranch:  val(l.BRANCHNAME)        || null,   // Tally XML: BRANCHNAME (was BANKBRANCH)
+      bsrCode:     val(l.BANKBSRCODE)       || null,   // Tally XML: BANKBSRCODE (was BSRCODE)
+      msmeType: (() => {
+  const m = l["MSMEREGISTRATIONDETAILS.LIST"];
+  if (!m) return null;
+  const arr = Array.isArray(m) ? m : [m];
+  for (const item of arr) {
+    if (!item) continue;
+    const v = val(item.ENTERPRISETYPE);
+    if (v && v.trim().toLowerCase() !== "not applicable") return v.trim();
+  }
+  return null;
+})(),
+udyamNo: (() => {
+  const m = l["MSMEREGISTRATIONDETAILS.LIST"];
+  if (!m) return null;
+  const arr = Array.isArray(m) ? m : [m];
+  for (const item of arr) {
+    if (!item) continue;
+    const v = val(item.UDYAMREGNUMBER);
+    if (v && v.trim()) return v.trim();
+  }
+  return null;
+})(),
+msmeActivity: (() => {
+  const m = l["MSMEREGISTRATIONDETAILS.LIST"];
+  if (!m) return null;
+  const arr = Array.isArray(m) ? m : [m];
+  for (const item of arr) {
+    if (!item) continue;
+    const v = val(item.MSMEACTIVITYTYPE);
+    if (v && v.trim().toLowerCase() !== "not applicable") return v.trim();
+  }
+  return null;
+})(),
+
+creditLimit: parseTallyAmount(l.CREDITLIMIT?._ || l.CREDITLIMIT) || 0,
+creditDays:
+  val(l.DEFAULTCREDITPERIOD) ||
+  val(l.CREDITPERIOD) ||
+  val(l.CREDITDAYS) ||
+  "",
+isCreditCheck:
+  String(
+    val(l.CHECKFORCREDITDAYS) ||
+    val(l.ISCREDITCHECK) ||
+    "No"
+  ).trim(),
+isOverrideCreditLimit:
+  String(
+    val(l.OVERRIDECREDITLIMIT) ||
+    val(l.ISOVERRIDECREDITLIMIT) ||
+    "No"
+  ).trim(),
+      country: (() => {
+
+  const possible = [
+    l.COUNTRYNAME,
+    l.COUNTRY,
+    l.TERRITORYNAME,
+    l.TERRITORY
+  ];
+
+  for (let c of possible) {
+
+    if (typeof c === "object" && c._) {
+      c = c._;
+    }
+
+    c = String(c || "").trim();
+
+    if (
+      c &&
+      c.toLowerCase() !== "not applicable"
+    ) {
+      return c;
+    }
+  }
+
+  return null;
+
+})(),
+
+
+      address: (() => {
+  // Try MAILINGDETAILS.LIST first (multi-line address)
+  const md = l["MAILINGDETAILS.LIST"] || l.MAILINGDETAILS;
+  if (md) {
+    const arr = Array.isArray(md) ? md : [md];
+    const lines = arr.flatMap((m) => {
+      if (!m || typeof m !== "object") return [];
+      const list = m.LIST || m.ADDRESSLIST || m["MAILINGDETAILS.LIST"];
+      if (list) {
+        const la = Array.isArray(list) ? list : [list];
+        return la.map((x) => val(x.ADDRESS || x) || "").filter(Boolean);
+      }
+      return [val(m.ADDRESS || m.NAME) || ""].filter(Boolean);
+    });
+    if (lines.length > 0) return lines.join(", ");
+  }
+
+  // FIX: Try ADDRESS.LIST (Tally Prime structure)
+  // XML: <ADDRESS.LIST><ADDRESS TYPE="String">123 Test Street</ADDRESS></ADDRESS.LIST>
+  // xml2js parses this as: { "$": { TYPE: "String" }, ADDRESS: { "_": "123 Test Street", "$": {...} } }
+  const addrList = l["ADDRESS.LIST"];
+  if (addrList) {
+    const arr = Array.isArray(addrList) ? addrList : [addrList];
+    const lines = arr.flatMap((item) => {
+      if (!item || typeof item !== "object") return [];
+      // item.ADDRESS can be: string, { _: "value" }, or array of those
+      const addrField = item.ADDRESS;
+      if (!addrField) return [];
+      if (Array.isArray(addrField)) {
+        return addrField.map((a) => (typeof a === "object" ? a._ : a)).filter(Boolean);
+      }
+      if (typeof addrField === "object" && addrField._) return [addrField._];
+      if (typeof addrField === "string") return [addrField];
+      return [];
+    }).filter(Boolean);
+    if (lines.length > 0) return lines.join(", ");
+  }
+
+  // Fallback: flat ADDRESS field
+  return extractAddress(l.ADDRESS) || null;
+})(),
+
+hsnCode: (() => {
+  const gst = l["LEDGSTREGDETAILS.LIST"];
+  if (!gst) return null;
+
+  const arr = Array.isArray(gst) ? gst : [gst];
+
+  for (const item of arr) {
+    if (!item) continue;
+
+    const code =
+      val(item.HSNCODE) ||
+      val(item.GSTHSNNAME) ||
+      val(item.SACCODE);
+
+    if (code && code.trim()) {
+      return code.trim();
+    }
+  }
+
+  return null;
+})(),
+
+gstRate: (() => {
+  const gst = l["LEDGSTREGDETAILS.LIST"];
+  if (!gst) return null;
+
+  const arr = Array.isArray(gst) ? gst : [gst];
+
+  for (const item of arr) {
+    if (!item) continue;
+
+    const rate =
+      val(item.GSTRATE) ||
+      val(item.GSTREGRATE);
+
+    if (rate) {
+      const parsed = parseFloat(
+        String(rate).replace(/[^0-9.]/g, "")
+      );
+
+      if (!isNaN(parsed)) {
+        return parsed;
+      }
+    }
+  }
+
+  return null;
+})(),
+
+taxability: (() => {
+  const gst = l["LEDGSTREGDETAILS.LIST"];
+  if (!gst) return null;
+
+  const arr = Array.isArray(gst) ? gst : [gst];
+
+  for (const item of arr) {
+    if (!item) continue;
+
+    const tax =
+      val(item.TAXABILITY);
+
+    if (tax && tax.trim()) {
+      return tax.trim();
+    }
+  }
+
+  return null;
+})(),
+////////////////////
+gstRegistrationType: (() => {
+  const gst = l["LEDGSTREGDETAILS.LIST"];
+  if (!gst) return null;
+
+  const arr = Array.isArray(gst)
+    ? gst
+    : [gst];
+
+  for (const item of arr) {
+    if (!item) continue;
+
+    const reg =
+      val(item.GSTREGISTRATIONTYPE) ||
+      val(item.REGISTRATIONTYPE);
+
+    if (reg && reg.trim()) {
+      return reg.trim();
+    }
+  }
+
+  return null;
+})(),
+/////////////
+
+placeOfSupply: (() => {
+  const gst = l["LEDGSTREGDETAILS.LIST"];
+  if (!gst) return null;
+
+  const arr = Array.isArray(gst)
+    ? gst
+    : [gst];
+
+  for (const item of arr) {
+    if (!item) continue;
+
+    const place =
+      val(item.PLACEOFSUPPLY) ||
+      val(item.PPLACEOFSUPPLY);
+
+    if (place && place.trim()) {
+      return place.trim();
+    }
+  }
+
+  return null;
+})(),
+////////////
+
+typeOfSupply: (() => {
+  const gst = l["LEDGSTREGDETAILS.LIST"];
+  if (!gst) return null;
+
+  const arr = Array.isArray(gst) ? gst : [gst];
+
+  for (const item of arr) {
+    if (!item) continue;
+
+    const supply =
+      val(item.GSTTYPEOFSUPPLY) ||
+      val(item.TYPEOFSUPPLY);
+
+    if (supply && supply.trim()) {
+      return supply.trim();
+    }
+  }
+
+  return null;
+})(),
+      
+      alias: (() => {
+  const langList = l["LANGUAGENAME.LIST"];
+  if (!langList) return null;
+  const nameList = langList["NAME.LIST"];
+  if (!nameList) return null;
+  const nameField = nameList.NAME;
+  // NAME is an array when alias exists: ["TestCustomer4", "Project"]
+  if (Array.isArray(nameField) && nameField.length >= 2) {
+    const a = nameField[1];
+    if (a && String(a).trim()) return String(a).trim();
+  }
+  return null;
+})(),
       customFields: Object.keys(customFields).length > 0 ? customFields : undefined,
     });
   }
+
+   
+
 
   logger.success(`Fetched ${ledgers.length} ledgers`, { company: companyName });
   return ledgers;
@@ -423,6 +979,7 @@ export async function fetchTallyVoucherTypes(companyName) {
     companyName
   );
   const raw = await postXml(xml);
+  
   const parsed = await parseXml(raw, false);
   const rawVT =
     parsed?.ENVELOPE?.BODY?.DATA?.COLLECTION?.VOUCHERTYPE ||
@@ -1286,14 +1843,10 @@ export async function runMiddlewareCheck(companyName, options = {}) {
   try {
     const ledgers = await fetchTallyLedgers(companyName);
     const partyLedgers = ledgers.filter((l) => l.type === "Party");
-    const customerCount  = ledgers.filter((l) => l.parentGroup === "Sundry Debtors").length;
-    const supplierCount  = ledgers.filter((l) => l.parentGroup === "Sundry Creditors").length;
     result.checks.ledgers = {
       status: ledgers.length > 0 ? "ok" : "warn",
       count: ledgers.length,
       partyCount: partyLedgers.length,
-      customerCount,
-      supplierCount,
       withGstin: ledgers.filter((l) => l.gstin).length,
       withEmail: ledgers.filter((l) => l.email).length,
       withPhone: ledgers.filter((l) => l.phone).length,
@@ -1677,5 +2230,5 @@ export async function fetchTallyLedgersChunked(
     if (onProgress) onProgress(batch.id, batch.ledgers.length, batches.length, i + 1, false);
   }
 
-  return { batches: pendingBatches, total, batchCount: batches.length };
+  return { batches: pendingBatches, total, batchCount: batches.length, allLedgers };
 }

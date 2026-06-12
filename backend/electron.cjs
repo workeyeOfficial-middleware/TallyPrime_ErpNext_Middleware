@@ -21,21 +21,17 @@ function getBackendPath() {
 // ── Start backend EXE ─────────────────────────────────────────────────────────
 function startBackend() {
   const exePath = getBackendPath();
-  console.log("Starting backend from:", exePath);
+  const exeDir  = path.dirname(exePath);  // resources/backend/
 
   backendProcess = spawn(exePath, [], {
     detached: false,
-    stdio:    "ignore",
+    stdio: "pipe",
     windowsHide: true,
-    cwd: path.dirname(exePath),
-  });
-
-  backendProcess.on("error", (err) => {
-    console.error("Backend failed to start:", err.message);
-  });
-
-  backendProcess.on("exit", (code) => {
-    console.log("Backend exited with code:", code);
+    cwd: exeDir,
+    env: {
+      ...process.env,
+      FRONTEND_DIR: exeDir,   // ← tell the backend where it lives
+    },
   });
 }
 

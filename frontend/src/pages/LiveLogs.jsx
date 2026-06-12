@@ -65,18 +65,81 @@ export function LiveLogs({ currentCompany = null }) {
   const scrollRef = useRef(null);
 
   const fetchLogs = useCallback(() => {
-    const p = new URLSearchParams({ limit: 500 });
-    if (fromDate)    p.set("fromDate", fromDate);
-    if (toDate)      p.set("toDate",   toDate);
-    if (levelFilter) p.set("level",    levelFilter);
-    setLoading(true);
-    fetch(`${BASE_URL}/logs?${p}`)
-      .then(r => r.ok ? r.json() : { logs: [] })
-      .then(d => setLogs(d.logs || []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [fromDate, toDate, levelFilter]);
 
+const p =
+new URLSearchParams({
+limit:500
+});
+
+if (currentCompany) {
+  p.set("company", currentCompany);
+}
+
+if(fromDate){
+p.set(
+"fromDate",
+fromDate
+);
+}
+
+if(toDate){
+p.set(
+"toDate",
+toDate
+);
+}
+
+if(levelFilter){
+p.set(
+"level",
+levelFilter
+);
+}
+
+setLoading(true);
+
+fetch(
+`${BASE_URL}/logs?${p}`
+)
+
+.then(r =>
+r.ok
+? r.json()
+: {logs:[]}
+)
+
+.then(d => {
+
+console.log(
+"Current Company:",
+currentCompany
+);
+
+console.log(
+"Logs Response:",
+d
+);
+
+setLogs(
+d.logs||[]
+);
+
+})
+
+.catch(()=>{})
+
+.finally(()=>
+setLoading(false)
+);
+
+},
+[
+currentCompany,
+fromDate,
+toDate,
+levelFilter
+]);
+      
   useEffect(() => {
     fetchLogs();
     pollRef.current = setInterval(fetchLogs, 3000);
@@ -107,7 +170,7 @@ export function LiveLogs({ currentCompany = null }) {
               Live Logs
             </h2>
             <p style={{ margin:0, fontFamily:C.mono, fontSize:10, color:C.muted, marginTop:2 }}>
-"● All companies · middleware output stream"
+{`● ${currentCompany || "No Company"} · middleware output stream`}
             </p>
           </div>
         </div>
@@ -244,7 +307,7 @@ export function LiveLogs({ currentCompany = null }) {
             ))}
           </div>
           <span style={{ fontFamily:C.mono, fontSize:11, color:"#8b949e", flex:1, textAlign:"center", letterSpacing:"0.06em" }}>
-"middleware.log — all companies"
+{`middleware.log — ${currentCompany || "company"}`}
           </span>
           <span style={{ fontFamily:C.mono, fontSize:10, color:"#6e7681" }}>UTF-8</span>
         </div>

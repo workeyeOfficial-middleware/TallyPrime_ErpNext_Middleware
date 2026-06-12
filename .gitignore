@@ -11,3 +11,9 @@ backend/node_modules/
 frontend/node_modules/
 backend/dist/
 backend/electron-dist/
+data/
+dist/logs/
+dist/data/
+
+backend/.env
+*.docx

@@ -162,7 +162,8 @@ let _autoSyncConfig = loadAutoSyncConfig();
 
 let _autoSyncTimer   = null;   // setInterval handle
 let _syncRunning     = false;  // concurrency guard
-let _lastAutoSync    = null;   // last run result, served by /status
+let _lastAutoSync    = null;
+const _lastSyncByCompany = {}; // { companyName: lastSyncResult }   // last run result, served by /status
 let _nextRunAt       = null;   // timestamp of next scheduled run, exposed in /status
 let _autoSyncRunCount = 0;     // monotonically incrementing run counter for log messages
 
@@ -255,9 +256,12 @@ async function runAutoSync(triggeredBy = "interval") {
     fallbackFromDate = d.toISOString().slice(0, 10);
   }
 
-  // ── Log the trigger so Live Logs shows the run starting immediately ──
-  logger.human.autoSyncTriggered(companyName, _autoSyncConfig.intervalLabel, _runNum);
-  logger.human.syncStarted(companyName, effectiveCreds.url);
+logger.resetLastSeenCompany(companyName);   // ← seed company BEFORE any logs
+// ── Log the trigger so Live Logs shows the run starting immediately ──
+logger.human.autoSyncTriggered(companyName, _autoSyncConfig.intervalLabel, _runNum);
+logger.human.syncStarted(companyName, effectiveCreds.url);
+
+
   _lastAutoSync = {
     startedAt:    now.toISOString(),
     status:       "running",
@@ -593,11 +597,29 @@ app.post("/api/auto-sync/configure", (req, res) => {
  * GET /api/auto-sync/status
  * Returns current scheduler config + last run result.
  */
-app.get("/api/auto-sync/status", (_req, res) => {
+app.get("/api/auto-sync/status", (req, res) => {
+  const requestedCompany = req.query.company || _autoSyncConfig.companyName;
+  // Check completed jobs for this company
+let lastManual = null;
+try {
+  const syncJobs = globalThis._syncJobs;
+  if (syncJobs) {
+    const completed = Array.from(syncJobs.values())
+      .filter(j => j.status === "done" && j.result?.steps)
+      .sort((a, b) => new Date(b.finishedAt) - new Date(a.finishedAt));
+    lastManual = completed[0]?.result || null;
+  }
+} catch(_) {}
+
+const lastSync = _lastSyncByCompany[requestedCompany]
+    || (globalThis._lastSyncByCompany?.[requestedCompany])
+    || _lastAutoSync
+    || lastManual
+    || null;
   res.json({
     config:    _safeConfig(),
     running:   _syncRunning,
-    lastSync:  _lastAutoSync,
+    lastSync,
     nextRunIn: _autoSyncConfig.enabled && _autoSyncTimer
       ? `up to ${_autoSyncConfig.intervalLabel}`
       : "not scheduled",
@@ -692,10 +714,21 @@ if (_autoSyncConfig.enabled) {
 // ── Serve bundled React frontend ─────────────────────────────────────────────────────
 // In the EXE, the frontend-build folder sits next to the executable.
 // process.pkg is set by pkg at runtime; falls back to __dirname for dev.
+// ── Serve bundled React frontend ─────────────────────────────────────────────────────
 const FRONTEND_BUILD = path.join(
-  process.pkg ? path.dirname(process.execPath) : __dirname,
+  process.env.FRONTEND_DIR || (process.pkg ? path.dirname(process.execPath) : __dirname),
   "frontend-build"
 );
+
+// TEMP DEBUG — remove after fixing
+console.log("=== DEBUG ===");
+console.log("FRONTEND_DIR env:", process.env.FRONTEND_DIR);
+console.log("process.pkg:", !!process.pkg);
+console.log("process.execPath:", process.execPath);
+console.log("Resolved FRONTEND_BUILD:", FRONTEND_BUILD);
+console.log("Exists:", fs.existsSync(FRONTEND_BUILD));
+console.log("=============");
+
 if (fs.existsSync(FRONTEND_BUILD)) {
   app.use(express.static(FRONTEND_BUILD));
   app.get("*", (_req, res) => {

@@ -3,20 +3,30 @@ import { useState } from "react";
 import { SyncToErpNext } from "./pages/SyncToErpNext";
 import { MiddlewareCheck } from "./pages/MiddlewareCheck";
 import { LiveLogs } from "./pages/LiveLogs";
+import { SettingsPage } from "./pages/SettingsPage";
+import { DashboardPage } from "./pages/DashboardPage";
+
 const NAV = [
-  { id: "check", label: "Data Check",  icon: "⬡", desc: "Validate connection" },
-  { id: "sync",  label: "Sync",        icon: "⟳", desc: "Push to ERPNext"   },
-  { id: "logs",  label: "Live Logs",   icon: "≡", desc: "Monitor events"    },
+
+  { id: "dashboard", label: "Dashboard", icon: "◈", desc: "Sync overview" },
+  { id: "check",    label: "Data Check",  icon: "⬡", desc: "Validate connection" },
+  { id: "sync",     label: "Sync",        icon: "⟳", desc: "Push to ERPNext"   },
+  { id: "logs",     label: "Live Logs",   icon: "≡", desc: "Monitor events"    },
+  { id: "settings", label: "Settings",    icon: "⚙", desc: "Credentials & License" },
 ];
 
 const PAGE_META = {
-  check:   { title: "Data Check",      sub: "Validates full Tally data connection" },
-  sync:    { title: "Sync to ERPNext", sub: "Push Tally data into ERPNext"         },
-  logs:    { title: "Live Logs",       sub: "Real-time middleware event stream"     },
+  dashboard: { title: "Dashboard", sub: "Sync statistics & history" },
+  check:    { title: "Data Check",      sub: "Validates full Tally data connection" },
+  sync:     { title: "Sync to ERPNext", sub: "Push Tally data into ERPNext"         },
+  logs:     { title: "Live Logs",       sub: "Real-time middleware event stream"     },
+  settings: { title: "Settings",        sub: "ERPNext credentials & license"        },
 };
 
-export default function DashboardWrapper({ companies }) {
-  const [activeTab, setActiveTab] = useState("check");
+export default function DashboardWrapper({ companies, onRefresh, erpCompany }) {
+  const [activeTab, setActiveTab] = useState("settings");
+  const [currentCompany, setCurrentCompany] = useState(null);
+
   const meta = PAGE_META[activeTab] || PAGE_META["check"];
 
   return (
@@ -228,15 +238,41 @@ export default function DashboardWrapper({ companies }) {
             </p>
           </div>
 
+           {/* ── Refresh Button ── */}
+  <button
+  onClick={onRefresh}
+  title="Refresh Tally companies"
+  style={{
+    display: "flex", alignItems: "center", gap: 6,
+    marginLeft: "auto",
+    padding: "8px 16px", borderRadius: 9,
+    border: "1.5px solid #d8dff0",
+      background: "#ffffff", color: "#2563eb",
+      fontFamily: "'JetBrains Mono', monospace",
+      fontSize: 12, fontWeight: 600,
+      cursor: "pointer",
+      boxShadow: "0 2px 8px rgba(13,21,50,.06)",
+      transition: "all .15s",
+    }}
+    onMouseEnter={e => { e.currentTarget.style.borderColor = "#2563eb"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(37,99,235,.15)"; }}
+    onMouseLeave={e => { e.currentTarget.style.borderColor = "#d8dff0"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(13,21,50,.06)"; }}
+  >
+    ⟳ Refresh
+  </button>
+</header>
 
-        </header>
+
 
         {/* Content */}
         <main style={{ flex: 1, overflowY: "auto", padding: "28px 32px" }}>
           <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+            {activeTab === "dashboard" && <DashboardPage currentCompany={currentCompany} />}
             {activeTab === "check" && <MiddlewareCheck companies={companies} />}
-<div style={{display:activeTab==="sync"?"block":"none"}}><SyncToErpNext companies={companies} /></div>
-{activeTab === "logs"  && <LiveLogs />}
+<div style={{display:activeTab==="sync"?"block":"none"}}>
+  <SyncToErpNext companies={companies} onCompanyChange={setCurrentCompany} />
+</div>
+{activeTab === "logs" && <LiveLogs currentCompany={erpCompany || currentCompany} />}
+{activeTab === "settings" && <SettingsPage companies={companies} selectedCompany={currentCompany} />}
           </div>
         </main>
       </div>

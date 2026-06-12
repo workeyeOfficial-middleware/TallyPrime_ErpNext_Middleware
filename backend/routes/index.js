@@ -43,6 +43,7 @@ import {
   syncTaxesToErpNext,
   syncChartOfAccountsToErpNext,
   smartSyncLedgersToErpNext,
+  syncBankLedgersToErpNext,
   runFullSync,
   resolveErpNextCompanyPublic,
   cancelSync,
@@ -90,10 +91,11 @@ function resolveErpUrl(creds) {
 // ASYNC JOB REGISTRY
 // ══════════════════════════════════════════════════════════════════════════════
 const jobs = new Map(); // jobId -> { status, result, error, startedAt, type }
+globalThis._syncJobs = jobs;
 
-function createJob(type) {
+function createJob(type, companyName = "") {
   const id = `${type}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
-  jobs.set(id, { id, type, status: "running", result: null, error: null, startedAt: new Date().toISOString() });
+  jobs.set(id, { id, type, companyName, status: "running", result: null, error: null, startedAt: new Date().toISOString() });
   setTimeout(() => jobs.delete(id), 2 * 60 * 60 * 1000);
   resetCancel(); // clear any prior cancellation so the new job runs cleanly
   return id;
@@ -101,7 +103,21 @@ function createJob(type) {
 
 function finishJob(id, result) {
   const job = jobs.get(id);
-  if (job) Object.assign(job, { status: "done", result, finishedAt: new Date().toISOString() });
+  if (job) {
+    Object.assign(job, { status: "done", result, finishedAt: new Date().toISOString() });
+    if (result?.steps) {
+      const syncResult = {
+        ...result,
+        startedAt:   job.startedAt,
+        finishedAt:  new Date().toISOString(),
+        triggeredBy: "manual",
+      };
+      globalThis._lastManualSyncResult = syncResult;
+      // Save by company for multi-tenant dashboard
+      globalThis._lastSyncByCompany = globalThis._lastSyncByCompany || {};
+      globalThis._lastSyncByCompany[job.companyName || ""] = syncResult;
+    }
+  }
 }
 
 function failJob(id, error) {
@@ -415,7 +431,7 @@ router.post("/sync/ledgers", async (req, res) => {
 
   const creds      = extractCreds(req);
   const erpnextUrl = resolveErpUrl(creds); // FIX: scope state to this ERPNext instance
-  const jobId      = createJob("ledgers");
+  const jobId = createJob("ledgers", company);
   logger.info(`Ledger sync job ${jobId} started for: ${company} → ${erpnextUrl}`);
   res.json({ ok: true, jobId, message: "Ledger sync started — poll /api/sync/status/" + jobId });
 
@@ -432,6 +448,10 @@ router.post("/sync/ledgers", async (req, res) => {
         return;
       }
       const result = await syncLedgersToErpNext(toSync, creds);
+      // Sync bank ledger details (account no, IFSC, SWIFT, holder name, branch, BSR)
+      // into the ERPNext Bank Account master. Always pass the full allLedgers list
+      // so bank ledgers that were unchanged (skipped above) are still updated.
+      await syncBankLedgersToErpNext(allLedgers, company, creds);
       saveCompanyState(company, { ledgerAlterIds: buildAlterIdMap(allLedgers), lastMasterSyncAt: new Date().toISOString() }, erpnextUrl);
       logger.info(`Ledger sync job ${jobId} done`, result);
       finishJob(jobId, result);
@@ -449,7 +469,7 @@ router.post("/sync/smart-ledgers", async (req, res) => {
   if (!companyName) return res.status(400).json({ ok: false, error: "company required" });
 
   const creds = extractCreds(req);
-  const jobId = createJob("smart-ledgers");
+  const jobId = createJob("smart-ledgers", companyName);
   logger.info(`Smart Ledger sync job ${jobId} started for: ${companyName} (${fromDate} to ${toDate})`);
   res.json({ ok: true, jobId, message: "Smart Ledger sync started — poll /api/sync/status/" + jobId });
 
@@ -462,6 +482,8 @@ router.post("/sync/smart-ledgers", async (req, res) => {
       ]);
       logger.info(`Smart Ledger Sync: got ${vouchers.length} vouchers and ${allLedgers.length} total ledgers`);
       const result = await smartSyncLedgersToErpNext(vouchers, allLedgers, creds);
+      // Also sync bank account details for all bank ledgers
+      await syncBankLedgersToErpNext(allLedgers, companyName, creds);
       finishJob(jobId, result);
     } catch (err) {
       logger.error(`Smart Ledger sync job ${jobId} failed: ${err.message}`);
@@ -477,7 +499,7 @@ router.post("/sync/stock", async (req, res) => {
 
   const creds      = extractCreds(req);
   const erpnextUrl = resolveErpUrl(creds); // FIX
-  const jobId      = createJob("stock");
+  const jobId = createJob("stock", company);
   logger.info(`Stock sync job ${jobId} started for: ${company} → ${erpnextUrl}`);
   res.json({ ok: true, jobId, message: "Stock sync started — poll /api/sync/status/" + jobId });
 
@@ -511,7 +533,7 @@ router.post("/sync/vouchers", async (req, res) => {
 
   const creds      = extractCreds(req);
   const erpnextUrl = resolveErpUrl(creds); // FIX
-  const jobId      = createJob("vouchers");
+  const jobId = createJob("vouchers", companyName);
   logger.info(`Voucher sync job ${jobId} started for: ${companyName} → ${erpnextUrl}`);
   res.json({ ok: true, jobId, message: "Voucher sync started — poll /api/sync/status/" + jobId });
 
@@ -545,7 +567,7 @@ router.post("/sync/godowns", async (req, res) => {
 
   const creds      = extractCreds(req);
   const erpnextUrl = resolveErpUrl(creds); // FIX
-  const jobId      = createJob("godowns");
+  const jobId = createJob("godowns", company);
   logger.info(`Godown sync job ${jobId} started for: ${company} → ${erpnextUrl}`);
   res.json({ ok: true, jobId, message: "Godown sync started — poll /api/sync/status/" + jobId });
 
@@ -577,7 +599,7 @@ router.post("/sync/opening-balances", async (req, res) => {
   if (!company) return res.status(400).json({ ok: false, error: "company required" });
 
   const creds = extractCreds(req);
-  const jobId = createJob("opening-balances");
+  const jobId = createJob("opening-balances", company);
   logger.info(`Opening balance sync job ${jobId} started for: ${company}`);
   res.json({ ok: true, jobId, message: "Opening balance sync started — poll /api/sync/status/" + jobId });
 
@@ -607,7 +629,7 @@ router.post("/sync/cost-centres", async (req, res) => {
 
   const creds      = extractCreds(req);
   const erpnextUrl = resolveErpUrl(creds); // FIX
-  const jobId      = createJob("cost-centres");
+  const jobId = createJob("cost-centres", company);
   logger.info(`Cost centre sync job ${jobId} started for: ${company} → ${erpnextUrl}`);
   res.json({ ok: true, jobId, message: "Cost centre sync started — poll /api/sync/status/" + jobId });
 
@@ -640,7 +662,7 @@ router.post("/sync/invoices", async (req, res) => {
   if (!companyName) return res.status(400).json({ ok: false, error: "company required" });
 
   const creds = extractCreds(req);
-  const jobId = createJob("invoices");
+  const jobId = createJob("invoices", companyName);
   logger.info(`Invoice sync job ${jobId} started for: ${companyName}`);
   res.json({ ok: true, jobId, message: "Invoice sync started — poll /api/sync/status/" + jobId });
 
@@ -658,13 +680,12 @@ router.post("/sync/invoices", async (req, res) => {
 
 // ── POST /sync/full ───────────────────────────────────────────────────────────
 router.post("/sync/full", async (req, res) => {
-  const {
+  let {
     company,
     fromDate,
     toDate,
     syncChartOfAccounts = false,
     syncLedgers         = false,
-    syncSmartLedgers    = false,
     syncOpeningBalances = false,
     syncGodowns         = false,
     syncCostCentres     = false,
@@ -679,7 +700,14 @@ router.post("/sync/full", async (req, res) => {
 
   const creds      = extractCreds(req);
   const erpnextUrl = resolveErpUrl(creds); // FIX
-  const jobId      = createJob("full");
+
+const state = getCompanyState(companyName, erpnextUrl);
+const isFirstSync = !state.lastVoucherSyncDate && !state.lastMasterSyncAt;
+if (isFirstSync && (syncLedgers || syncOpeningBalances)) {
+  syncChartOfAccounts = true;
+}
+
+  const jobId = createJob("full", companyName);
   logger.info(`Full sync job ${jobId} started for: ${companyName} → ${erpnextUrl}`, {
     syncLedgers, syncStock, syncVouchers, syncGodowns,
     syncCostCentres, syncOpeningBalances, syncInvoices,
@@ -719,6 +747,7 @@ router.post("/sync/full", async (req, res) => {
       let costCentres = [];
       let godowns     = [];
       let ledgers     = [];
+      let allLedgers  = []; // full ledger list — always passed to syncBankLedgersToErpNext
       let stockItems  = [];
       const newAlterIds = {};
 
@@ -727,7 +756,7 @@ router.post("/sync/full", async (req, res) => {
         const { toSync: changedGroups, unchanged: unchangedGroups } =
           filterChangedMasters(allGroups, state.groupAlterIds);
         logger.info(`Groups: ${changedGroups.length} to sync, ${unchangedGroups} unchanged (skipped)`);
-        groups = changedGroups;
+        groups = changedGroups
         newAlterIds.groupAlterIds = buildAlterIdMap(allGroups);
       }
 
@@ -755,7 +784,8 @@ router.post("/sync/full", async (req, res) => {
           const batchSize = parseInt(process.env.SYNC_LEDGER_BATCH_SIZE, 10) || 500;
           logger.info(`Ledgers (first sync): fetching all, batching by ${batchSize}, resumable`, { company: companyName });
 
-          const { batches, total, batchCount } = await fetchTallyLedgersChunked(
+          // allLedgers is returned directly — no second fetchTallyLedgers call needed
+          const { batches, total, batchCount, allLedgers: fetchedAllLedgers } = await fetchTallyLedgersChunked(
             companyName,
             erpnextUrl,
             batchSize,
@@ -769,7 +799,7 @@ router.post("/sync/full", async (req, res) => {
 
           for (const batch of batches) {
             logger.info(`Pushing ledger batch ${batch.id} (${batch.ledgers.length} ledgers) to ERPNext`);
-            await syncLedgersToErpNext(batch.ledgers, creds);
+            
             // Mark this batch done AFTER successful push — if it crashes here, batch is retried next run
             markChunkDone(companyName, erpnextUrl, "ledgers", batch.id, {
               from:  batch.from,
@@ -779,15 +809,15 @@ router.post("/sync/full", async (req, res) => {
             logger.info(`Ledger batch ${batch.id} pushed and cached ✅`);
           }
 
-          // Capture alterId map from the full ledger list for future incremental syncs
-          const allLedgersForMap = await fetchTallyLedgers(companyName);
-          newAlterIds.ledgerAlterIds = buildAlterIdMap(allLedgersForMap);
-          ledgers = allLedgersForMap; // pass to runFullSync for openingBalances + smartLedgers
+          // Use allLedgers already fetched above — avoids a redundant third Tally call
+          ledgers = batches.flatMap(b => b.ledgers);  // ← ADD THIS ONE LINE
+allLedgers = fetchedAllLedgers;
+newAlterIds.ledgerAlterIds = buildAlterIdMap(allLedgers);
           logger.info(`All ${batchCount} ledger batches complete (${total} total ledgers)`);
 
         } else {
           // ── INCREMENTAL: only changed ledgers via ALTERID ──────────────────
-          const allLedgers = await fetchTallyLedgers(companyName);
+          allLedgers = await fetchTallyLedgers(companyName);
           const { toSync: changedLedgers, unchanged: unchangedLedgers } =
             filterChangedMasters(allLedgers, state.ledgerAlterIds);
           logger.info(`Ledgers: ${changedLedgers.length} to sync, ${unchangedLedgers} unchanged (skipped)`);
@@ -843,7 +873,7 @@ router.post("/sync/full", async (req, res) => {
 
         } else {
           // ── INCREMENTAL: only new vouchers since last sync ──────────────────
-          const dateWindow = getIncrementalVoucherDates(companyName, req.body.forceFromDate || fromDate || null, toDate, erpnextUrl);
+          const dateWindow = getIncrementalVoucherDates(companyName, req.body.forceFromDate || null, toDate, erpnextUrl);
           effectiveFromDate = dateWindow.fromDate;
           effectiveToDate   = dateWindow.toDate;
 
@@ -900,10 +930,10 @@ router.post("/sync/full", async (req, res) => {
       // ── Run ERPNext sync ──────────────────────────────────────────────────
       const result = await runFullSync(
         companyName,
-        { groups, ledgers, stockItems, vouchers, godowns, costCentres },
+        { groups, ledgers, allLedgers, stockItems, vouchers, godowns, costCentres },
         {
           syncChartOfAccounts, syncCostCentres, syncGodowns,
-          syncLedgers, syncSmartLedgers, syncStock, syncTaxes,
+          syncLedgers, syncStock, syncTaxes,
           syncOpeningBalances, syncVouchers, syncInvoices,
         },
         creds
@@ -941,7 +971,7 @@ router.post("/sync/chart-of-accounts", async (req, res) => {
   if (!company) return res.status(400).json({ ok: false, error: "company required" });
 
   const creds = extractCreds(req);
-  const jobId = createJob("chart-of-accounts");
+  const jobId = createJob("chart-of-accounts", company);
   logger.info(`Chart of Accounts sync job ${jobId} started for: ${company}`);
   res.json({ ok: true, jobId, message: "Chart of Accounts sync started — poll /api/sync/status/" + jobId });
 
@@ -963,7 +993,7 @@ router.post("/sync/taxes", async (req, res) => {
   if (!company) return res.status(400).json({ ok: false, error: "company required" });
 
   const creds = extractCreds(req);
-  const jobId = createJob("taxes");
+  const jobId = createJob("taxes", company);
   logger.info(`Tax sync job ${jobId} started for: ${company}`);
   res.json({ ok: true, jobId, message: "Tax sync started — poll /api/sync/status/" + jobId });
 
@@ -1011,6 +1041,27 @@ router.post("/sync/reset-full-sync", (req, res) => {
 router.get("/sync/tenants", (_req, res) => {
   const tenants = listAllTenants();
   res.json({ ok: true, count: tenants.length, tenants });
+});
+
+
+// ── POST /license/verify-email ────────────────────────────────────────────────
+router.post("/license/verify-email", async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ valid: false, reason: "Email required" });
+
+  try {
+    const { validateLicense } = await import("../services/lmsService.js");
+    const result = await validateLicense(email.trim().toLowerCase());
+    res.json({
+      valid:         result.valid,
+      plan:          result.plan,
+      endDate:       result.endDate,
+      customerEmail: result.customerEmail,
+      reason:        result.reason || null,
+    });
+  } catch (e) {
+    res.status(500).json({ valid: false, reason: e.message });
+  }
 });
 
 export default router;
